@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Session Complete - Yogic Guide{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl text-center">
+        <div class="text-6xl mb-4">🎉</div>
+        <h1 class="text-4xl font-bold text-indigo-600 mb-4">Great Job!</h1>
+        <p class="text-gray-600 mb-8">You've completed your yoga session</p>
+        
+        <div class="grid md:grid-cols-4 gap-4 mb-8">
+            <div class="p-4 bg-indigo-50 rounded-lg">
+                <p class="text-3xl font-bold text-indigo-600" id="duration">0</p>
+                <p class="text-gray-600 mt-2">Minutes</p>
+            </div>
+            <div class="p-4 bg-blue-50 rounded-lg">
+                <p class="text-3xl font-bold text-blue-600" id="poses">0</p>
+                <p class="text-gray-600 mt-2">Poses</p>
+            </div>
+            <div class="p-4 bg-green-50 rounded-lg">
+                <p class="text-3xl font-bold text-green-600" id="accuracy">85%</p>
+                <p class="text-gray-600 mt-2">Accuracy</p>
+            </div>
+            <div class="p-4 bg-orange-50 rounded-lg">
+                <p class="text-3xl font-bold text-orange-600" id="calories">0</p>
+                <p class="text-gray-600 mt-2">Calories</p>
+            </div>
+        </div>
+        
+        <!-- Performance Rating -->
+        <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-3">Rate Your Session</h3>
+            <div class="flex justify-center gap-2">
+                <button onclick="rateSession(1)" class="text-4xl hover:scale-110 transition">⭐</button>
+                <button onclick="rateSession(2)" class="text-4xl hover:scale-110 transition">⭐</button>
+                <button onclick="rateSession(3)" class="text-4xl hover:scale-110 transition">⭐</button>
+                <button onclick="rateSession(4)" class="text-4xl hover:scale-110 transition">⭐</button>
+                <button onclick="rateSession(5)" class="text-4xl hover:scale-110 transition">⭐</button>
+            </div>
+        </div>
+        
+        <div class="flex gap-4 justify-center">
+            <a href="{{ url_for('dashboard') }}" 
+                class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                Back to Dashboard
+            </a>
+            <a href="{{ url_for('profile') }}" 
+                class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
+                View Profile
+            </a>
+            <button onclick="shareSession()" 
+                class="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                Share 📤
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load session stats from localStorage
+window.onload = () => {
+    const stats = JSON.parse(localStorage.getItem('sessionStats') || '{}');
+    document.getElementById('duration').textContent = Math.floor((stats.duration || 0) / 60);
+    document.getElementById('poses').textContent = stats.poses_completed || 0;
+    document.getElementById('calories').textContent = stats.calories_burned || 0;
+};
+
+function rateSession(rating) {
+    alert(`Thank you for rating: ${rating} stars!`);
+    // Send rating to backend
+}
+
+function shareSession() {
+    const stats = JSON.parse(localStorage.getItem('sessionStats') || '{}');
+    const text = `I just completed a yoga session! 🧘\n${stats.poses_completed || 0} poses in ${Math.floor((stats.duration || 0) / 60)} minutes`;
+    
+    if (navigator.share) {
+        navigator.share({ title: 'Yogic Guide', text: text });
+    } else {
+        alert('Share feature not supported on this browser');
+    }
+}
+</script>
+{% endblock %}

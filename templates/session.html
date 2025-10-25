@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ module_name }} - Yogic Guide{% endblock %}
+
+{% block content %}
+<div class="min-h-screen p-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">{{ module_name }}</h1>
+                <p class="text-sm text-gray-600 mt-1">Pose <span id="poseProgress">0/0</span></p>
+            </div>
+            <div class="flex gap-2">
+                <button id="pauseBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">Pause</button>
+                <button id="stopBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Stop</button>
+            </div>
+        </div>
+        
+        <!-- Main Session Area -->
+        <div class="grid lg:grid-cols-3 gap-4">
+            <!-- Camera Feed -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <div id="poseInfo" class="mb-4 text-center">
+                        <h2 id="poseName" class="text-2xl font-bold text-indigo-600">Show Namaste Gesture 🙏</h2>
+                        <p id="timer" class="text-5xl font-mono font-bold text-gray-800 mt-2">5</p>
+                        <p class="text-sm text-gray-600 mt-2">Hold your palms together at chest level</p>
+                    </div>
+                    
+                    <div class="relative bg-gray-900 rounded-lg overflow-hidden" style="height: 480px;">
+                        <video id="videoFeed" autoplay playsinline class="w-full h-full object-cover"></video>
+                        <canvas id="poseCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+                        <div id="angleDisplay" class="absolute top-4 left-4 bg-black bg-opacity-60 text-white p-2 rounded text-xs"></div>
+                    </div>
+                    
+                    <div id="feedback" class="mt-4 text-center text-lg font-semibold"></div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mt-4">
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="progressBar" class="bg-indigo-600 h-3 rounded-full transition-all" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Side Panel -->
+            <div class="space-y-4">
+                <!-- Reference Image -->
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Reference Pose</h3>
+                    <div id="referenceImage" class="bg-indigo-100 rounded-lg h-48 flex items-center justify-center">
+                        <span class="text-6xl">🧘</span>
+                    </div>
+                </div>
+                
+                <!-- Benefits -->
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">✨ Benefits</h3>
+                    <ul id="benefits" class="text-sm text-gray-600 space-y-1">
+                        <li>• Improves flexibility</li>
+                        <li>• Strengthens muscles</li>
+                        <li>• Enhances balance</li>
+                    </ul>
+                </div>
+                
+                <!-- Cautions -->
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">⚠️ Cautions</h3>
+                    <ul id="cautions" class="text-sm text-red-600 space-y-1">
+                        <li>• Avoid if you have back pain</li>
+                        <li>• Don't overstretch</li>
+                    </ul>
+                </div>
+                
+                <!-- Next Pose Preview -->
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Next Pose</h3>
+                    <p id="nextPose" class="text-sm text-gray-600">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+<script src="{{ url_for('static', filename='js/pose-detection.js') }}"></script>
+{% endblock %}

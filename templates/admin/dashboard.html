@@ -1,0 +1,174 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Admin Dashboard - Yogic Guide{% endblock %}
+
+{% block content %}
+<div class="space-y-6 sm:space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Admin Dashboard</h1>
+        <div class="text-xs sm:text-sm text-gray-600">
+            Last updated: {{ current_time.strftime('%B %d, %Y at %I:%M %p') if current_time else 'Just now' }}
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6">
+        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-center sm:text-left">
+                    <p class="text-xs sm:text-sm font-medium text-gray-600">Total Users</p>
+                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600">{{ stats.total_users }}</p>
+                </div>
+                <div class="text-2xl sm:text-4xl">👥</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-center sm:text-left">
+                    <p class="text-xs sm:text-sm font-medium text-gray-600">Total Sessions</p>
+                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">{{ stats.total_sessions }}</p>
+                </div>
+                <div class="text-2xl sm:text-4xl">🧘</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-center sm:text-left">
+                    <p class="text-xs sm:text-sm font-medium text-gray-600">Admins</p>
+                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">{{ stats.total_admins }}</p>
+                </div>
+                <div class="text-2xl sm:text-4xl">👑</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-center sm:text-left">
+                    <p class="text-xs sm:text-sm font-medium text-gray-600">Users Today</p>
+                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-orange-600">{{ stats.users_today }}</p>
+                </div>
+                <div class="text-2xl sm:text-4xl">📈</div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div class="text-center sm:text-left">
+                    <p class="text-xs sm:text-sm font-medium text-gray-600">Sessions Today</p>
+                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-600">{{ stats.sessions_today }}</p>
+                </div>
+                <div class="text-2xl sm:text-4xl">🎯</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+        <!-- Recent Users -->
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-4 sm:p-6 border-b border-gray-200">
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Recent Users</h2>
+            </div>
+            <div class="p-4 sm:p-6">
+                {% if recent_users %}
+                    <div class="space-y-4">
+                        {% for user in recent_users[:5] %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ user.profile.name if user.profile and user.profile.name else 'Unknown' }}</p>
+                                <p class="text-sm text-gray-600">{{ user.email }}</p>
+                                <p class="text-xs text-gray-500">
+                                    Joined: {{ user.createdAt.strftime('%b %d, %Y') if user.createdAt else 'Unknown' }}
+                                </p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                {% if user.role == 'admin' %}
+                                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">Admin</span>
+                                {% endif %}
+                                <a href="{{ url_for('admin_user_detail', user_id=user._id) }}" 
+                                   class="text-blue-600 hover:text-blue-800">View</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('admin_users') }}" 
+                           class="text-blue-600 hover:text-blue-800 font-medium">View All Users →</a>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center py-8">No users found</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-4 sm:p-6 border-b border-gray-200">
+                <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Recent Sessions</h2>
+            </div>
+            <div class="p-4 sm:p-6">
+                {% if recent_sessions %}
+                    <div class="space-y-4">
+                        {% for session in recent_sessions[:5] %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ session.moduleType.replace('-', ' ').title() if session.moduleType else 'Unknown' }}</p>
+                                <p class="text-sm text-gray-600">
+                                    Duration: {{ (session.duration // 60) if session.duration else 0 }} minutes
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    {{ session.startTime.strftime('%b %d, %Y at %I:%M %p') if session.startTime else 'Unknown' }}
+                                </p>
+                            </div>
+                            <div class="text-2xl">
+                                {% if session.moduleType == 'breathing' %}🫁
+                                {% elif session.moduleType == 'meditation' %}🧘
+                                {% elif session.moduleType == 'yoga' %}🤸
+                                {% else %}✨
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('admin_sessions') }}" 
+                           class="text-blue-600 hover:text-blue-800 font-medium">View All Sessions →</a>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center py-8">No sessions found</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            <a href="{{ url_for('admin_users') }}" 
+               class="flex items-center justify-center p-4 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
+                <span class="text-2xl mr-2">👥</span>
+                Manage Users
+            </a>
+            <a href="{{ url_for('admin_sessions') }}" 
+               class="flex items-center justify-center p-4 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
+                <span class="text-2xl mr-2">🧘</span>
+                View Sessions
+            </a>
+            <a href="{{ url_for('admin_analytics') }}" 
+               class="flex items-center justify-center p-4 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
+                <span class="text-2xl mr-2">📊</span>
+                Analytics
+            </a>
+            <a href="{{ url_for('admin_settings') }}" 
+               class="flex items-center justify-center p-4 bg-orange-100 text-orange-800 rounded-lg hover:bg-orange-200 transition">
+                <span class="text-2xl mr-2">⚙️</span>
+                Settings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error - Yogic Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full mx-auto text-center">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <!-- Error Icon -->
+            <div class="text-8xl mb-4">🧘‍♂️</div>
+            
+            <!-- Error Message -->
+            <h1 class="text-4xl font-bold text-red-600 mb-2">500</h1>
+            <h2 class="text-xl font-semibold text-gray-600 mb-4">Internal Server Error</h2>
+            <p class="text-gray-500 mb-6">
+                Our server is having a moment of imbalance. We're working to restore harmony. 
+                Please try again in a few moments.
+            </p>
+            
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <button onclick="location.reload()" 
+                        class="block w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                    🔄 Try Again
+                </button>
+                
+                <a href="{{ url_for('index') }}" 
+                   class="block w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition">
+                    🏠 Go Home
+                </a>
+                
+                {% if session.user_id %}
+                <a href="{{ url_for('dashboard') }}" 
+                   class="block w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    📊 Dashboard
+                </a>
+                {% endif %}
+                
+                <button onclick="history.back()" 
+                        class="block w-full bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-700 transition">
+                    ← Go Back
+                </button>
+            </div>
+            
+            <!-- Technical Info (for debugging) -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <details class="text-left">
+                    <summary class="text-sm text-gray-500 cursor-pointer hover:text-gray-700">
+                        Technical Details (for developers)
+                    </summary>
+                    <div class="mt-2 p-3 bg-gray-100 rounded text-xs text-gray-600 font-mono">
+                        <p><strong>Error:</strong> Internal Server Error</p>
+                        <p><strong>Time:</strong> {{ current_time if current_time else 'Unknown' }}</p>
+                        <p><strong>Status:</strong> 500</p>
+                        <p><strong>Suggestion:</strong> Check server logs for details</p>
+                    </div>
+                </details>
+            </div>
+            
+            <!-- Helpful Links -->
+            <div class="mt-4">
+                <p class="text-sm text-gray-500 mb-3">If the problem persists:</p>
+                <div class="flex justify-center space-x-4 text-sm">
+                    <a href="{{ url_for('health_check') }}" class="text-indigo-600 hover:text-indigo-800">System Status</a>
+                    <a href="{{ url_for('index') }}" class="text-indigo-600 hover:text-indigo-800">Home</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <p class="text-gray-400 text-sm mt-6">
+            "In the midst of chaos, find stillness" - We're working on it! 🔧
+        </p>
+    </div>
+</body>
+</html>

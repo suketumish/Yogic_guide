@@ -1,0 +1,509 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Analytics Dashboard - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-4xl font-bold text-gray-800">Analytics Dashboard</h1>
+            <p class="text-gray-600 mt-2">Comprehensive insights and performance metrics</p>
+        </div>
+        <div class="flex space-x-2">
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                📊 Export Report
+            </button>
+            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                🔄 Refresh Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Key Performance Indicators -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-100 text-sm">Total Users</p>
+                    <p class="text-3xl font-bold">{{ analytics.metrics.total_users if analytics.metrics else 0 }}</p>
+                </div>
+                <div class="text-4xl opacity-80">👥</div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-100 text-sm">Total Sessions</p>
+                    <p class="text-3xl font-bold">{{ analytics.metrics.total_sessions if analytics.metrics else 0 }}</p>
+                </div>
+                <div class="text-4xl opacity-80">🧘</div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-purple-100 text-sm">Active Users (7d)</p>
+                    <p class="text-3xl font-bold">{{ analytics.metrics.active_users_7d if analytics.metrics else 0 }}</p>
+                </div>
+                <div class="text-4xl opacity-80">🔥</div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100 text-sm">Avg Session (min)</p>
+                    <p class="text-3xl font-bold">{{ analytics.metrics.avg_session_duration if analytics.metrics else 0 }}</p>
+                </div>
+                <div class="text-4xl opacity-80">⏱️</div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-pink-100 text-sm">Retention Rate</p>
+                    <p class="text-3xl font-bold">{{ analytics.metrics.user_retention_rate if analytics.metrics else 0 }}%</p>
+                </div>
+                <div class="text-4xl opacity-80">📈</div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-indigo-100 text-sm">Active (30d)</p>
+                    <p class="text-3xl font-bold">{{ analytics.metrics.active_users_30d if analytics.metrics else 0 }}</p>
+                </div>
+                <div class="text-4xl opacity-80">📊</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1: Growth & Sessions -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- User Growth Chart -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">User Growth Trend</h2>
+                <div class="text-2xl">📈</div>
+            </div>
+            <div class="h-80">
+                <canvas id="userGrowthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Session Analytics Chart -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Daily Session Analytics</h2>
+                <div class="text-2xl">🧘</div>
+            </div>
+            <div class="h-80">
+                <canvas id="sessionAnalyticsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2: Module Performance & User Engagement -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Module Performance Chart -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Module Performance</h2>
+                <div class="text-2xl">🎯</div>
+            </div>
+            <div class="h-80">
+                <canvas id="modulePerformanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- User Engagement Levels -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">User Engagement Levels</h2>
+                <div class="text-2xl">👤</div>
+            </div>
+            <div class="h-80">
+                <canvas id="userEngagementChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 3: Usage Patterns -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Hourly Usage Pattern -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Hourly Usage Pattern</h2>
+                <div class="text-2xl">🕐</div>
+            </div>
+            <div class="h-80">
+                <canvas id="hourlyUsageChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Weekly Trends -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Weekly Activity Trends</h2>
+                <div class="text-2xl">📅</div>
+            </div>
+            <div class="h-80">
+                <canvas id="weeklyTrendsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Analytics Tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Module Performance Table -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Module Performance Details</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Module</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sessions</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Users</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for module in analytics.module_performance if analytics.module_performance %}
+                        <tr>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="text-2xl mr-2">
+                                        {% if module._id == 'breathing' %}🫁
+                                        {% elif module._id == 'meditation' %}🧘
+                                        {% elif module._id == 'yoga' %}🤸
+                                        {% elif module._id == 'stretching' %}🤸‍♀️
+                                        {% elif module._id == 'surya-namaskar' %}☀️
+                                        {% else %}✨
+                                        {% endif %}
+                                    </span>
+                                    <span class="font-medium">{{ module._id.replace('-', ' ').title() if module._id else 'Unknown' }}</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ module.sessions if module.sessions else 0 }}
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ module.unique_user_count if module.unique_user_count else 0 }}
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ "%.1f"|format((module.avg_duration / 60) if module.avg_duration else 0) }} min
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- User Retention Analysis -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">User Retention Analysis</h2>
+            <div class="h-80">
+                <canvas id="retentionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Insights -->
+    <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-xl p-8">
+        <h2 class="text-2xl font-bold mb-6">📊 Key Insights & Recommendations</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <h3 class="font-semibold mb-2">🚀 Growth Opportunity</h3>
+                <p class="text-sm text-gray-300">
+                    {% if analytics.module_performance and analytics.module_performance|length > 0 %}
+                        {{ analytics.module_performance[0]._id.replace('-', ' ').title() if analytics.module_performance[0]._id else 'Breathing' }} is your most popular module. Consider expanding similar content.
+                    {% else %}
+                        Focus on user acquisition to build your community.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <h3 class="font-semibold mb-2">⏰ Peak Usage</h3>
+                <p class="text-sm text-gray-300">
+                    {% if analytics.hourly_usage and analytics.hourly_usage|length > 0 %}
+                        Most users are active during evening hours. Schedule content updates accordingly.
+                    {% else %}
+                        Monitor usage patterns to optimize content delivery timing.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <h3 class="font-semibold mb-2">💡 Engagement Tip</h3>
+                <p class="text-sm text-gray-300">
+                    {% if analytics.metrics and analytics.metrics.user_retention_rate > 50 %}
+                        Great retention rate! Consider adding advanced features for power users.
+                    {% else %}
+                        Focus on improving user onboarding and first-session experience.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Chart.js Configuration
+Chart.defaults.font.family = 'Inter, system-ui, sans-serif';
+Chart.defaults.color = '#6B7280';
+
+// Color Palettes
+const colors = {
+    primary: ['#3B82F6', '#1D4ED8', '#1E40AF'],
+    success: ['#10B981', '#059669', '#047857'],
+    warning: ['#F59E0B', '#D97706', '#B45309'],
+    danger: ['#EF4444', '#DC2626', '#B91C1C'],
+    purple: ['#8B5CF6', '#7C3AED', '#6D28D9'],
+    gradient: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe']
+};
+
+// 1. User Growth Chart (Area Chart)
+const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+new Chart(userGrowthCtx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for growth in analytics.user_growth if analytics.user_growth %}
+                '{{ growth._id if growth._id else "Unknown" }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'New Users',
+            data: [
+                {% for growth in analytics.user_growth if analytics.user_growth %}
+                    {{ growth.new_users if growth.new_users else 0 }},
+                {% endfor %}
+            ],
+            borderColor: colors.primary[0],
+            backgroundColor: colors.primary[0] + '20',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: colors.primary[0],
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: { beginAtZero: true, grid: { color: '#F3F4F6' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+// 2. Session Analytics Chart (Multi-line)
+const sessionAnalyticsCtx = document.getElementById('sessionAnalyticsChart').getContext('2d');
+new Chart(sessionAnalyticsCtx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for session in analytics.session_analytics if analytics.session_analytics %}
+                '{{ session._id if session._id else "Unknown" }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Sessions',
+            data: [
+                {% for session in analytics.session_analytics if analytics.session_analytics %}
+                    {{ session.sessions if session.sessions else 0 }},
+                {% endfor %}
+            ],
+            borderColor: colors.success[0],
+            backgroundColor: colors.success[0] + '20',
+            yAxisID: 'y'
+        }, {
+            label: 'Avg Duration (min)',
+            data: [
+                {% for session in analytics.session_analytics if analytics.session_analytics %}
+                    {{ (session.avg_duration / 60) if session.avg_duration else 0 }},
+                {% endfor %}
+            ],
+            borderColor: colors.warning[0],
+            backgroundColor: colors.warning[0] + '20',
+            yAxisID: 'y1'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: { type: 'linear', display: true, position: 'left', beginAtZero: true },
+            y1: { type: 'linear', display: true, position: 'right', beginAtZero: true, grid: { drawOnChartArea: false } }
+        }
+    }
+});
+
+// 3. Module Performance Chart (Horizontal Bar)
+const modulePerformanceCtx = document.getElementById('modulePerformanceChart').getContext('2d');
+new Chart(modulePerformanceCtx, {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for module in analytics.module_performance if analytics.module_performance %}
+                '{{ module._id.replace("-", " ").title() if module._id else "Unknown" }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Sessions',
+            data: [
+                {% for module in analytics.module_performance if analytics.module_performance %}
+                    {{ module.sessions if module.sessions else 0 }},
+                {% endfor %}
+            ],
+            backgroundColor: colors.gradient.slice(0, {{ analytics.module_performance|length if analytics.module_performance else 0 }}),
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } }
+    }
+});
+
+// 4. User Engagement Chart (Doughnut)
+const userEngagementCtx = document.getElementById('userEngagementChart').getContext('2d');
+new Chart(userEngagementCtx, {
+    type: 'doughnut',
+    data: {
+        labels: [
+            {% for engagement in analytics.user_engagement if analytics.user_engagement %}
+                '{{ engagement._id if engagement._id != None else "New Users" }} sessions',
+            {% endfor %}
+        ],
+        datasets: [{
+            data: [
+                {% for engagement in analytics.user_engagement if analytics.user_engagement %}
+                    {{ engagement.users if engagement.users else 0 }},
+                {% endfor %}
+            ],
+            backgroundColor: colors.gradient,
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'bottom' }
+        }
+    }
+});
+
+// 5. Hourly Usage Chart (Radar)
+const hourlyUsageCtx = document.getElementById('hourlyUsageChart').getContext('2d');
+new Chart(hourlyUsageCtx, {
+    type: 'radar',
+    data: {
+        labels: [
+            {% for hour in range(24) %}
+                '{{ "%02d:00"|format(hour) }}',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Sessions',
+            data: [
+                {% for hour in range(24) %}
+                    {% set found = false %}
+                    {% for usage in analytics.hourly_usage if analytics.hourly_usage %}
+                        {% if usage._id == hour %}
+                            {{ usage.sessions }},
+                            {% set found = true %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if not found %}0,{% endif %}
+                {% endfor %}
+            ],
+            borderColor: colors.purple[0],
+            backgroundColor: colors.purple[0] + '20',
+            pointBackgroundColor: colors.purple[0]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { r: { beginAtZero: true } }
+    }
+});
+
+// 6. Weekly Trends Chart (Polar Area)
+const weeklyTrendsCtx = document.getElementById('weeklyTrendsChart').getContext('2d');
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+new Chart(weeklyTrendsCtx, {
+    type: 'polarArea',
+    data: {
+        labels: dayNames,
+        datasets: [{
+            data: [
+                {% for day in range(1, 8) %}
+                    {% set found = false %}
+                    {% for trend in analytics.weekly_trends if analytics.weekly_trends %}
+                        {% if trend._id == day %}
+                            {{ trend.sessions }},
+                            {% set found = true %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if not found %}0,{% endif %}
+                {% endfor %}
+            ],
+            backgroundColor: colors.gradient
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
+
+// 7. Retention Chart (Bar)
+const retentionCtx = document.getElementById('retentionChart').getContext('2d');
+new Chart(retentionCtx, {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for retention in analytics.retention_analysis if analytics.retention_analysis %}
+                '{{ retention._id if retention._id != None else "Same Day" }} days',
+            {% endfor %}
+        ],
+        datasets: [{
+            label: 'Users',
+            data: [
+                {% for retention in analytics.retention_analysis if analytics.retention_analysis %}
+                    {{ retention.users if retention.users else 0 }},
+                {% endfor %}
+            ],
+            backgroundColor: colors.primary,
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Auto-refresh every 5 minutes
+setTimeout(() => location.reload(), 300000);
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Breathing Exercises - Yogic Guide{% endblock %}
+
+{% block content %}
+<div class="min-h-screen p-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6">
+            <a href="{{ url_for('dashboard') }}" class="text-indigo-600 hover:underline">← Back to Dashboard</a>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <h1 class="text-4xl font-bold text-indigo-600 mb-4">Breathing Exercises</h1>
+            <p class="text-gray-600 mb-8">Select a pranayama technique to begin</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="p-6 border-2 border-indigo-200 rounded-xl hover:border-indigo-500 transition cursor-pointer"
+                     onclick="selectExercise('anulom-vilom')">
+                    <div class="text-5xl mb-4">🌬️</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Anulom Vilom</h3>
+                    <p class="text-sm text-gray-600 mb-3">Alternate Nostril Breathing</p>
+                    <p class="text-xs text-indigo-600">2 minutes</p>
+                </div>
+                
+                <div class="p-6 border-2 border-blue-200 rounded-xl hover:border-blue-500 transition cursor-pointer"
+                     onclick="selectExercise('bhramari')">
+                    <div class="text-5xl mb-4">🐝</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Bhramari</h3>
+                    <p class="text-sm text-gray-600 mb-3">Bee Breathing</p>
+                    <p class="text-xs text-blue-600">1 minute</p>
+                </div>
+                
+                <div class="p-6 border-2 border-orange-200 rounded-xl hover:border-orange-500 transition cursor-pointer"
+                     onclick="selectExercise('kapalbhati')">
+                    <div class="text-5xl mb-4">💨</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Kapalbhati</h3>
+                    <p class="text-sm text-gray-600 mb-3">Skull Shining Breath</p>
+                    <p class="text-xs text-orange-600">1.5 minutes</p>
+                </div>
+                
+                <div class="p-6 border-2 border-green-200 rounded-xl hover:border-green-500 transition cursor-pointer"
+                     onclick="selectExercise('meditation')">
+                    <div class="text-5xl mb-4">🧘</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Silent Meditation</h3>
+                    <p class="text-sm text-gray-600 mb-3">Mindful Breathing</p>
+                    <p class="text-xs text-green-600">5 minutes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectExercise(type) {
+    window.location.href = `/module/breathing?exercise=${type}`;
+}
+</script>
+{% endblock %}

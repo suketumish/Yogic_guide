@@ -1,0 +1,196 @@
+/* Additional animations for Yogic Guide */
+
+/* Breathing circle animation */
+@keyframes breathe {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+}
+
+.breathe-animation {
+    animation: breathe 8s ease-in-out infinite;
+}
+
+/* Pulse animation for buttons */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+/* Skeleton glow effect */
+@keyframes skeletonGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.8));
+    }
+}
+
+.skeleton-glow {
+    animation: skeletonGlow 2s ease-in-out infinite;
+}
+
+/* Success checkmark animation */
+@keyframes checkmark {
+    0% {
+        transform: scale(0) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+.checkmark-animation {
+    animation: checkmark 0.6s ease-out;
+}
+
+/* Loading spinner */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Progress bar fill */
+@keyframes progressFill {
+    from {
+        width: 0%;
+    }
+}
+
+.progress-fill {
+    animation: progressFill 1s ease-out;
+}
+
+/* Floating animation */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Simple professional styling */
+.professional-card {
+    transition: all 0.3s ease;
+}
+
+.professional-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile-specific responsive improvements */
+@media (max-width: 768px) {
+    /* Reduce animation intensity on mobile for better performance */
+    .breathe-animation {
+        animation: breathe 6s ease-in-out infinite;
+    }
+    
+    .float {
+        animation: float 4s ease-in-out infinite;
+    }
+    
+    /* Disable hover effects on mobile */
+    .professional-card:hover {
+        transform: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Optimize skeleton glow for mobile */
+    .skeleton-glow {
+        animation: skeletonGlow 3s ease-in-out infinite;
+    }
+}
+
+@media (max-width: 640px) {
+    /* Further optimize for small screens */
+    .pulse {
+        animation: pulse 3s ease-in-out infinite;
+    }
+    
+    /* Reduce motion for better mobile experience */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}

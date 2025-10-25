@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Yogic Guide{% endblock %}</title>
+    <meta name="description" content="AI-Powered Yogic Guide - Real-time yoga pose correction with MediaPipe">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+    <style>
+        /* Custom Tailwind config */
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    {% block content %}{% endblock %}
+    
+    <script src="{{ url_for('static', filename='js/session.js') }}"></script>
+    {% block scripts %}{% endblock %}
+    
+    <!-- Footer -->
+    <footer class="text-center py-4 text-gray-600 text-sm">
+        <p>AI-Powered Yogic Guide &copy; 2024 | Made with ❤️ for wellness</p>
+    </footer>
+</body>
+</html>

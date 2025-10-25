@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Yogic Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl sm:text-3xl">🧘</span>
+                    <span class="text-xl sm:text-2xl font-bold text-indigo-600">
+                        Yogic Guide
+                    </span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+                    {% if session.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" 
+                        class="flex items-center space-x-1 sm:space-x-2 bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-full shadow hover:shadow-lg transition text-sm sm:text-base">
+                        <span>👑</span>
+                        <span class="font-semibold hidden sm:inline">Admin Panel</span>
+                        <span class="font-semibold sm:hidden">Admin</span>
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('profile') }}" 
+                        class="flex items-center space-x-1 sm:space-x-2 bg-white px-3 sm:px-4 py-2 rounded-full shadow hover:shadow-lg transition text-sm sm:text-base">
+                        <span>👤</span>
+                        <span class="font-semibold text-gray-700 hidden sm:inline">Profile</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}" 
+                        class="bg-red-500 text-white px-3 sm:px-4 py-2 rounded-full hover:bg-red-600 transition shadow text-sm sm:text-base">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="min-h-screen p-3 sm:p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="mb-6 sm:mb-8 fade-in">
+                <h1 class="text-2xl sm:text-3xl md:text-5xl font-bold text-gray-800 mb-2">Welcome back, {{ session.user_name }}! 🙏</h1>
+                <p class="text-base sm:text-xl text-gray-600">Ready to continue your wellness journey?</p>
+            </div>
+        
+            <!-- Module Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12">
+                <!-- Full Body Stretching -->
+                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 hover:shadow-xl transition professional-card">
+                    <div class="bg-indigo-100 w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 mx-auto">
+                        🧘‍♀️
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">Full Body Stretching</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center">Complete body flexibility routine with guided poses</p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">⏱ Duration</span>
+                            <span class="font-semibold text-gray-700">15-20 min</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">📊 Level</span>
+                            <span class="font-semibold text-indigo-600">Beginner</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">🔥 Calories</span>
+                            <span class="font-semibold text-gray-700">~50 kcal</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('module_session', module_type='stretching') }}" 
+                        class="block w-full bg-indigo-600 text-white text-center py-4 rounded-lg font-bold hover:bg-indigo-700 transition">
+                        Start Session →
+                    </a>
+                </div>
+                
+                <!-- Breathing Exercises -->
+                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 hover:shadow-xl transition professional-card">
+                    <div class="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 mx-auto">
+                        🌬️
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">Breathing Exercises</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center">Pranayama techniques for mind and body balance</p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">⏱ Duration</span>
+                            <span class="font-semibold text-gray-700">10-15 min</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">📊 Level</span>
+                            <span class="font-semibold text-blue-600">All Levels</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">🧘 Focus</span>
+                            <span class="font-semibold text-gray-700">Relaxation</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('module_session', module_type='breathing') }}" 
+                        class="block w-full bg-blue-600 text-white text-center py-4 rounded-lg font-bold hover:bg-blue-700 transition">
+                        Start Session →
+                    </a>
+                </div>
+                
+                <!-- Surya Namaskar -->
+                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 hover:shadow-xl transition professional-card">
+                    <div class="bg-orange-100 w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 mx-auto">
+                        ☀️
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">Surya Namaskar</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center">12-pose sun salutation sequence for energy</p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">⏱ Duration</span>
+                            <span class="font-semibold text-gray-700">10-12 min</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">📊 Level</span>
+                            <span class="font-semibold text-orange-600">Intermediate</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">🔥 Calories</span>
+                            <span class="font-semibold text-gray-700">~80 kcal</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('module_session', module_type='surya-namaskar') }}" 
+                        class="block w-full bg-orange-600 text-white text-center py-4 rounded-lg font-bold hover:bg-orange-700 transition">
+                        Start Session →
+                    </a>
+                </div>
+            </div>
+        
+            <!-- Progress Section -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8">
+                <div class="flex items-center justify-between mb-4 sm:mb-8">
+                    <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">Your Progress</h2>
+                    <span class="text-2xl sm:text-4xl">📊</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="text-center p-6 bg-indigo-50 rounded-xl professional-card">
+                        <div class="text-5xl mb-2">🎯</div>
+                        <p class="text-4xl font-bold text-indigo-600 mb-2">{{ progress.total_sessions or 0 }}</p>
+                        <p class="text-gray-700 font-semibold">Total Sessions</p>
+                        <p class="text-sm text-gray-500 mt-1">Keep it up!</p>
+                    </div>
+                    <div class="text-center p-6 bg-orange-50 rounded-xl professional-card">
+                        <div class="text-5xl mb-2">🔥</div>
+                        <p class="text-4xl font-bold text-orange-600 mb-2">{{ progress.streak_days or 0 }}</p>
+                        <p class="text-gray-700 font-semibold">Day Streak</p>
+                        <p class="text-sm text-gray-500 mt-1">You're on fire!</p>
+                    </div>
+                    <div class="text-center p-6 bg-blue-50 rounded-xl professional-card">
+                        <div class="text-5xl mb-2">⏱️</div>
+                        <p class="text-4xl font-bold text-blue-600 mb-2">{{ progress.total_minutes or 0 }}</p>
+                        <p class="text-gray-700 font-semibold">Minutes Practiced</p>
+                        <p class="text-sm text-gray-500 mt-1">Time well spent</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Quick Access Section -->
+            {% if session.is_admin %}
+            <div class="mt-6 sm:mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl shadow-lg p-4 sm:p-8 text-white">
+                <div class="flex items-center justify-between mb-4 sm:mb-6">
+                    <div>
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">👑 Admin Quick Access</h3>
+                        <p class="text-sm sm:text-base text-purple-100">Manage your Yogic Guide platform</p>
+                    </div>
+                    <div class="text-3xl sm:text-6xl opacity-50">⚙️</div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    <a href="{{ url_for('admin_dashboard') }}" 
+                       class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition">
+                        <div class="text-2xl mb-2">📊</div>
+                        <div class="text-sm font-medium">Dashboard</div>
+                    </a>
+                    <a href="{{ url_for('admin_users') }}" 
+                       class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition">
+                        <div class="text-2xl mb-2">👥</div>
+                        <div class="text-sm font-medium">Users</div>
+                    </a>
+                    <a href="{{ url_for('admin_sessions') }}" 
+                       class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition">
+                        <div class="text-2xl mb-2">🧘</div>
+                        <div class="text-sm font-medium">Sessions</div>
+                    </a>
+                    <a href="{{ url_for('admin_analytics') }}" 
+                       class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition">
+                        <div class="text-2xl mb-2">📈</div>
+                        <div class="text-sm font-medium">Analytics</div>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Quick Tips Section -->
+            <div class="mt-6 sm:mt-8 bg-indigo-600 rounded-2xl shadow-lg p-4 sm:p-8 text-white">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">💡 Daily Tip</h3>
+                        <p class="text-sm sm:text-base text-indigo-100">Practice yoga on an empty stomach for best results. Wait 2-3 hours after meals.</p>
+                    </div>
+                    <div class="text-3xl sm:text-6xl opacity-50 flex-shrink-0">🧘</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-gray-600 text-sm">
+        <p>AI-Powered Yogic Guide &copy; 2024 | Made with ❤️ for wellness</p>
+    </footer>
+</body>
+</html>
