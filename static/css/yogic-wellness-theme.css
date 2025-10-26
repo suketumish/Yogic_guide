@@ -1,0 +1,417 @@
+/* Yogic Wellness Theme - Soft & Calming Colors */
+
+:root {
+    /* Primary Wellness Colors */
+    --color-sage: #8B9D83;           /* Soft sage green */
+    --color-sage-dark: #6B7D63;      /* Darker sage */
+    --color-sage-light: #B5C4AD;     /* Light sage */
+    
+    --color-sand: #E8DCC4;           /* Warm sand */
+    --color-sand-dark: #D4C5A9;      /* Darker sand */
+    
+    --color-earth: #A89F91;          /* Earth tone */
+    --color-earth-dark: #8B8275;     /* Dark earth */
+    
+    --color-cream: #F5F1E8;          /* Soft cream */
+    --color-ivory: #FDFBF7;          /* Ivory white */
+    
+    --color-terracotta: #C9A690;     /* Soft terracotta */
+    --color-olive: #9BA17B;          /* Olive green */
+    
+    /* Text Colors */
+    --text-primary: #3D4035;         /* Dark olive text */
+    --text-secondary: #6B7566;       /* Medium gray-green */
+    --text-muted: #9BA199;           /* Light gray */
+    
+    /* Background Colors */
+    --bg-primary: #FDFBF7;           /* Ivory white */
+    --bg-secondary: #F5F1E8;         /* Soft cream */
+    --bg-accent: #E8DCC4;            /* Warm sand */
+    
+    /* Shadows - Soft and subtle */
+    --shadow-soft: 0 2px 8px rgba(61, 64, 53, 0.08);
+    --shadow-medium: 0 4px 12px rgba(61, 64, 53, 0.12);
+    --shadow-large: 0 8px 24px rgba(61, 64, 53, 0.15);
+}
+
+/* Body & Base */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Navigation - Soft Sage */
+.nav-wellness {
+    background-color: var(--color-sage);
+    color: var(--bg-primary);
+    border-bottom: 2px solid var(--color-sage-dark);
+}
+
+.nav-wellness-light {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--color-sand);
+}
+
+/* Buttons - Wellness Style */
+.btn-wellness {
+    background-color: var(--color-sage);
+    color: var(--bg-primary);
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-sage);
+}
+
+.btn-wellness:hover {
+    background-color: var(--color-sage-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn-wellness-outline {
+    background-color: transparent;
+    color: var(--color-sage-dark);
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-sage);
+}
+
+.btn-wellness-outline:hover {
+    background-color: var(--color-sage);
+    color: var(--bg-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.btn-wellness-terracotta {
+    background-color: var(--color-terracotta);
+    color: var(--bg-primary);
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-terracotta);
+}
+
+.btn-wellness-terracotta:hover {
+    background-color: #B89580;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* Cards - Soft & Calming */
+.card-wellness {
+    background-color: var(--bg-primary);
+    border: 2px solid var(--color-sand);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
+}
+
+.card-wellness:hover {
+    border-color: var(--color-sage);
+    box-shadow: var(--shadow-large);
+    transform: translateY(-4px);
+}
+
+/* Module Cards - Wellness Theme */
+.module-card-wellness {
+    background-color: var(--bg-primary);
+    border: 2px solid var(--color-sand);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.module-card-wellness::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-sage) 0%, var(--color-olive) 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.module-card-wellness:hover::before {
+    transform: scaleX(1);
+}
+
+.module-card-wellness:hover {
+    border-color: var(--color-sage);
+    box-shadow: var(--shadow-large);
+    transform: translateY(-6px);
+}
+
+/* Icon Containers - Soft Colors */
+.icon-container-wellness {
+    width: 4rem;
+    height: 4rem;
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--color-sand);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.module-card-wellness:hover .icon-container-wellness {
+    background-color: var(--color-sage-light);
+    border-color: var(--color-sage);
+    transform: scale(1.1);
+}
+
+/* Stats Cards - Wellness */
+.stat-card-wellness {
+    background-color: var(--bg-primary);
+    border: 2px solid var(--color-sand);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.stat-card-wellness:hover {
+    border-color: var(--color-sage);
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+.stat-number-wellness {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-sage-dark);
+    line-height: 1;
+}
+
+.stat-label-wellness {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+/* Forms - Wellness Style */
+.input-wellness {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--color-sand);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.input-wellness:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    box-shadow: 0 0 0 3px rgba(139, 157, 131, 0.1);
+}
+
+.select-wellness {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--color-sand);
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.select-wellness:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    box-shadow: 0 0 0 3px rgba(139, 157, 131, 0.1);
+}
+
+.label-wellness {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Hero Section - Soft Gradient */
+.hero-wellness {
+    background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-olive) 100%);
+    color: var(--bg-primary);
+}
+
+/* Navigation Links - Wellness */
+.nav-link-wellness {
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: color 0.3s ease;
+    text-transform: capitalize;
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+}
+
+.nav-link-wellness:hover {
+    color: var(--color-sage-dark);
+}
+
+.nav-link-wellness.active {
+    color: var(--color-sage-dark);
+    font-weight: 600;
+}
+
+/* Badges - Wellness Colors */
+.badge-wellness {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-beginner {
+    background-color: var(--color-sage-light);
+    color: var(--color-sage-dark);
+    border: 1px solid var(--color-sage);
+}
+
+.badge-intermediate {
+    background-color: var(--color-sand);
+    color: var(--color-earth-dark);
+    border: 1px solid var(--color-earth);
+}
+
+.badge-advanced {
+    background-color: var(--color-terracotta);
+    color: var(--bg-primary);
+    border: 1px solid #B89580;
+}
+
+/* Alerts - Wellness Style */
+.alert-wellness {
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid;
+    margin-bottom: 1rem;
+}
+
+.alert-success-wellness {
+    background-color: #E8F5E9;
+    border-color: #4CAF50;
+    color: #2E7D32;
+}
+
+.alert-error-wellness {
+    background-color: #FFEBEE;
+    border-color: #EF5350;
+    color: #C62828;
+}
+
+.alert-warning-wellness {
+    background-color: #FFF3E0;
+    border-color: #FF9800;
+    color: #E65100;
+}
+
+.alert-info-wellness {
+    background-color: var(--bg-secondary);
+    border-color: var(--color-sage);
+    color: var(--text-primary);
+}
+
+/* Footer - Wellness */
+.footer-wellness {
+    background-color: var(--color-sage);
+    color: var(--bg-primary);
+    padding: 2rem 0;
+    border-top: 2px solid var(--color-sage-dark);
+}
+
+/* Dividers */
+.divider-wellness {
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--color-sand) 50%, transparent 100%);
+    margin: 2rem 0;
+}
+
+/* Hover Effects */
+.hover-lift-wellness {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift-wellness:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-large);
+}
+
+/* Text Styles */
+.text-wellness-heading {
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.text-wellness-body {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.text-wellness-muted {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .btn-wellness,
+    .btn-wellness-outline,
+    .btn-wellness-terracotta {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .stat-number-wellness {
+        font-size: 2rem;
+    }
+    
+    .module-card-wellness {
+        padding: 1.5rem;
+    }
+}
+
+/* Loading States */
+.skeleton-wellness {
+    background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--color-sand) 50%, var(--bg-secondary) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Smooth Transitions */
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

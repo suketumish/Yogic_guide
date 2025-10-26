@@ -4,82 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Yogic Guide</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    
+    <!-- Google Fonts for Yogic Theme -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .yogic-heading {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.1em;
+        }
+        .yogic-body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="flex items-center justify-center min-h-screen p-3 sm:p-6">
-        <div class="bg-white p-4 sm:p-8 md:p-12 rounded-2xl shadow-lg w-full max-w-md">
-            <!-- Logo and Back Button -->
-            <div class="flex justify-between items-center mb-6 sm:mb-8">
-                <a href="{{ url_for('index') }}" class="text-sm sm:text-base text-gray-600 hover:text-purple-600 transition">
-                    ← Back to Home
-                </a>
+<body style="background-color: #FDFBF7;" class="min-h-screen">
+    <div class="min-h-screen grid md:grid-cols-2">
+        <!-- Left Side - Hero Section with Image (Hidden on mobile) -->
+        <div class="hidden md:flex flex-col relative overflow-hidden"
+            style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
+            
+            <!-- Background Image with Overlay -->
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80" 
+                     alt="Yoga Meditation" 
+                     class="w-full h-full object-cover opacity-30">
+                <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(139, 157, 131, 0.85) 0%, rgba(155, 161, 123, 0.85) 100%);"></div>
             </div>
             
-            <div class="text-center mb-6 sm:mb-8">
-                <div class="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">🧘</div>
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-600 mb-2">
-                    Welcome Back
-                </h1>
-                <p class="text-sm sm:text-base text-gray-600">Continue your yoga journey</p>
-            </div>
-            
-            <!-- Flash Messages -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-100 text-red-700 border border-red-300{% elif category == 'success' %}bg-green-100 text-green-700 border border-green-300{% elif category == 'warning' %}bg-yellow-100 text-yellow-700 border border-yellow-300{% else %}bg-blue-100 text-blue-700 border border-blue-300{% endif %}">
-                            {{ message }}
+            <!-- Content -->
+            <div class="relative z-10 flex flex-col justify-center h-full p-8 lg:p-12">
+                <div class="max-w-lg text-white">
+                    <!-- Welcome Back Message -->
+                    <div class="mb-10">
+                        <div class="inline-block px-4 py-2 bg-white/20 rounded-full mb-6">
+                            <p class="yogic-body text-sm font-semibold">👋 Welcome Back</p>
                         </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            
-            <form method="POST" action="{{ url_for('login') }}" class="space-y-4 sm:space-y-6">
-                <div>
-                    <label class="block text-gray-700 text-xs sm:text-sm font-bold mb-2">Email Address</label>
-                    <input type="email" name="email" required 
-                        class="w-full px-3 sm:px-4 py-2 sm:py-3 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition"
-                        placeholder="your@email.com">
-                </div>
-                
-                <div>
-                    <label class="block text-gray-700 text-xs sm:text-sm font-bold mb-2">Password</label>
-                    <input type="password" name="password" required 
-                        class="w-full px-3 sm:px-4 py-2 sm:py-3 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500 transition"
-                        placeholder="••••••••">
-                </div>
-                
-                <button type="submit" 
-                    class="w-full bg-indigo-600 text-white py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-indigo-700 hover:shadow-lg transition">
-                    Sign In
-                </button>
-            </form>
-            
-            <div class="mt-6 sm:mt-8 text-center space-y-3">
-                <p class="text-sm sm:text-base text-gray-600">
-                    Don't have an account? 
-                    <a href="{{ url_for('register') }}" class="text-indigo-600 hover:text-indigo-700 font-bold transition">
-                        Create Account
-                    </a>
-                </p>
-                <div class="border-t border-gray-200 pt-3">
-                    <p class="text-xs sm:text-sm text-gray-500 mb-2">Administrator?</p>
-                    <a href="{{ url_for('admin_login') }}" 
-                       class="inline-flex items-center space-x-2 text-purple-600 hover:text-purple-700 font-medium transition text-sm sm:text-base">
-                        <span>👑</span>
-                        <span>Admin Login</span>
-                    </a>
+                        <h1 class="yogic-heading text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                            Continue Your Practice
+                        </h1>
+                        <p class="yogic-body text-lg lg:text-xl opacity-90 leading-relaxed mb-8">
+                            Sign in to access your personalized dashboard, track your progress, 
+                            and pick up right where you left off in your wellness journey.
+                        </p>
+                    </div>
+
+                    <!-- What's Waiting -->
+                    <div class="space-y-4 mb-10">
+                        <p class="yogic-body text-sm font-semibold opacity-75 uppercase tracking-wide mb-4">What's Waiting For You</p>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-lg">📊</span>
+                            </div>
+                            <p class="yogic-body text-base">Your personalized dashboard</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-lg">📈</span>
+                            </div>
+                            <p class="yogic-body text-base">Progress tracking and analytics</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-lg">🎯</span>
+                            </div>
+                            <p class="yogic-body text-base">Saved sessions and achievements</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                <span class="text-lg">🌟</span>
+                            </div>
+                            <p class="yogic-body text-base">Personalized recommendations</p>
+                        </div>
+                    </div>
+
+                    <!-- Quote -->
+                    <div class="pt-8 border-t border-white/30">
+                        <p class="yogic-heading text-xl italic opacity-90 mb-3">
+                            "Yoga is the journey of the self, through the self, to the self."
+                        </p>
+                        <p class="yogic-body text-sm opacity-75">— The Bhagavad Gita</p>
+                    </div>
                 </div>
             </div>
-            
-            <div class="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-200">
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
-                    <span>✓ Secure Login</span>
-                    <span class="hidden sm:inline">•</span>
-                    <span>✓ Privacy Protected</span>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="flex items-center justify-center p-4 sm:p-6 lg:p-12" style="background-color: #FDFBF7;">
+            <div class="w-full max-w-md">
+                <!-- Mobile Logo (Visible only on mobile) -->
+                <div class="md:hidden text-center mb-8">
+                    <div class="text-5xl mb-3">🧘</div>
+                    <h1 class="yogic-heading text-3xl font-bold" style="color: #6B7D63;">YOGIC GUIDE</h1>
+                    <p class="yogic-body text-sm" style="color: #A89F91;">AI-Powered Yoga Assistant</p>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mb-6">
+                    <a href="{{ url_for('index') }}"
+                        class="yogic-body inline-flex items-center text-sm hover:opacity-80 transition" style="color: #6B7D63;">
+                        <span class="mr-2">←</span> Back to Home
+                    </a>
+                </div>
+
+                <!-- Form Header -->
+                <div class="mb-8">
+                    <h2 class="yogic-heading text-3xl lg:text-4xl font-bold mb-2" style="color: #6B7D63;">
+                        Welcome Back
+                    </h2>
+                    <p class="yogic-body text-base" style="color: #A89F91;">Sign in to continue your journey</p>
+                </div>
+
+                    <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="mb-6 p-4 rounded-lg {% if category == 'error' %}bg-red-100 text-red-700 border border-red-300{% elif category == 'success' %}bg-green-100 text-green-700 border border-green-300{% elif category == 'warning' %}bg-yellow-100 text-yellow-700 border border-yellow-300{% else %}bg-blue-100 text-blue-700 border border-blue-300{% endif %}">
+                                <p class="yogic-body">{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST" action="{{ url_for('login') }}" class="space-y-5">
+                    <div>
+                        <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Email Address</label>
+                        <input type="email" name="email" required 
+                            class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80" style="border-color: #E8DCC4;"
+                            placeholder="your@email.com">
+                    </div>
+                    
+                    <div>
+                        <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Password</label>
+                        <input type="password" name="password" required 
+                            class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80" style="border-color: #E8DCC4;"
+                            placeholder="••••••••">
+                    </div>
+                    
+                    <button type="submit" class="yogic-body w-full py-4 text-lg text-white rounded-lg font-bold hover:opacity-90 hover:shadow-xl transition transform hover:-translate-y-0.5" style="background-color: #8B9D83;">
+                        Sign In
+                    </button>
+                </form>
+                
+                <!-- Footer Links -->
+                <div class="mt-8 text-center space-y-4">
+                    <p class="yogic-body text-base" style="color: #A89F91;">
+                        Don't have an account?
+                        <a href="{{ url_for('register') }}" class="font-bold hover:opacity-80 transition" style="color: #6B7D63;">
+                            Create Account
+                        </a>
+                    </p>
+                    
+                    <div class="pt-4 border-t" style="border-color: #E8DCC4;">
+                        <p class="yogic-body text-sm mb-2" style="color: #A89F91;">Administrator?</p>
+                        <a href="{{ url_for('admin_login') }}"
+                            class="yogic-body inline-flex items-center space-x-2 font-medium transition hover:opacity-80" style="color: #6B7D63;">
+                            <span>👑</span>
+                            <span>Admin Login</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-8 pt-8 border-t" style="border-color: #E8DCC4;">
+                    <div class="flex flex-wrap items-center justify-center gap-4 text-sm" style="color: #A89F91;">
+                        <div class="flex items-center space-x-2">
+                            <span>✓</span>
+                            <span class="yogic-body">Secure Login</span>
+                        </div>
+                        <span class="hidden sm:inline">•</span>
+                        <div class="flex items-center space-x-2">
+                            <span>✓</span>
+                            <span class="yogic-body">Privacy Protected</span>
+                        </div>
+                        <span class="hidden sm:inline">•</span>
+                        <div class="flex items-center space-x-2">
+                            <span>✓</span>
+                            <span class="yogic-body">Encrypted Data</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

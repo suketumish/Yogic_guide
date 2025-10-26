@@ -4,38 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Yogic Guide</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    
+    <!-- Google Fonts for Yogic Theme -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .yogic-heading {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.1em;
+        }
+        .yogic-body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body style="background-color: #F5F1E8;" class="min-h-screen">
     <!-- Navigation Bar -->
-    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <nav class="nav-wellness sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="flex items-center space-x-2">
                     <span class="text-2xl sm:text-3xl">🧘</span>
-                    <span class="text-xl sm:text-2xl font-bold text-indigo-600">
-                        Yogic Guide
+                    <span class="yogic-heading text-xl sm:text-2xl font-bold text-white">
+                        YOGIC GUIDE
                     </span>
                 </div>
                 <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
                     {% if session.is_admin %}
                     <a href="{{ url_for('admin_dashboard') }}" 
-                        class="flex items-center space-x-1 sm:space-x-2 bg-purple-600 text-white px-3 sm:px-4 py-2 rounded-full shadow hover:shadow-lg transition text-sm sm:text-base">
+                        class="yogic-body flex items-center space-x-1 sm:space-x-2 bg-white/90 px-3 sm:px-4 py-2 rounded shadow hover:shadow-lg transition text-sm sm:text-base" style="color: #6B7D63;">
                         <span>👑</span>
-                        <span class="font-semibold hidden sm:inline">Admin Panel</span>
-                        <span class="font-semibold sm:hidden">Admin</span>
+                        <span class="font-semibold hidden sm:inline">ADMIN</span>
+                        <span class="font-semibold sm:hidden">ADMIN</span>
                     </a>
                     {% endif %}
                     <a href="{{ url_for('profile') }}" 
-                        class="flex items-center space-x-1 sm:space-x-2 bg-white px-3 sm:px-4 py-2 rounded-full shadow hover:shadow-lg transition text-sm sm:text-base">
+                        class="yogic-body flex items-center space-x-1 sm:space-x-2 bg-white/90 px-3 sm:px-4 py-2 rounded shadow hover:shadow-lg transition text-sm sm:text-base" style="color: #6B7D63;">
                         <span>👤</span>
-                        <span class="font-semibold text-gray-700 hidden sm:inline">Profile</span>
+                        <span class="font-semibold hidden sm:inline">PROFILE</span>
                     </a>
                     <a href="{{ url_for('logout') }}" 
-                        class="bg-red-500 text-white px-3 sm:px-4 py-2 rounded-full hover:bg-red-600 transition shadow text-sm sm:text-base">
-                        Logout
+                        class="yogic-body bg-white/90 px-3 sm:px-4 py-2 rounded hover:opacity-90 transition shadow text-sm sm:text-base" style="color: #6B7D63;">
+                        LOGOUT
                     </a>
                 </div>
             </div>
@@ -53,12 +74,12 @@
             <!-- Module Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12">
                 <!-- Full Body Stretching -->
-                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 hover:shadow-xl transition professional-card">
-                    <div class="bg-indigo-100 w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 mx-auto">
+                <div class="module-card-professional">
+                    <div class="icon-container-professional mx-auto mb-4 sm:mb-6">
                         🧘‍♀️
                     </div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">Full Body Stretching</h2>
-                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center">Complete body flexibility routine with guided poses</p>
+                    <h2 class="text-xl sm:text-2xl font-bold text-black mb-2 sm:mb-3 text-center text-professional-heading">FULL BODY STRETCHING</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center text-professional-body">Complete body flexibility routine with guided poses</p>
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-gray-500">⏱ Duration</span>
@@ -74,18 +95,18 @@
                         </div>
                     </div>
                     <a href="{{ url_for('module_session', module_type='stretching') }}" 
-                        class="block w-full bg-indigo-600 text-white text-center py-4 rounded-lg font-bold hover:bg-indigo-700 transition">
-                        Start Session →
+                        class="btn-professional block w-full text-center py-4">
+                        START SESSION →
                     </a>
                 </div>
                 
                 <!-- Breathing Exercises -->
-                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 hover:shadow-xl transition professional-card">
-                    <div class="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 mx-auto">
+                <div class="module-card-professional">
+                    <div class="icon-container-professional mx-auto mb-4 sm:mb-6">
                         🌬️
                     </div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">Breathing Exercises</h2>
-                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center">Pranayama techniques for mind and body balance</p>
+                    <h2 class="text-xl sm:text-2xl font-bold text-black mb-2 sm:mb-3 text-center text-professional-heading">BREATHING EXERCISES</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center text-professional-body">Pranayama techniques for mind and body balance</p>
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-gray-500">⏱ Duration</span>
@@ -101,18 +122,18 @@
                         </div>
                     </div>
                     <a href="{{ url_for('module_session', module_type='breathing') }}" 
-                        class="block w-full bg-blue-600 text-white text-center py-4 rounded-lg font-bold hover:bg-blue-700 transition">
-                        Start Session →
+                        class="btn-professional block w-full text-center py-4">
+                        START SESSION →
                     </a>
                 </div>
                 
                 <!-- Surya Namaskar -->
-                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 hover:shadow-xl transition professional-card">
-                    <div class="bg-orange-100 w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-3xl sm:text-4xl mb-4 sm:mb-6 mx-auto">
+                <div class="module-card-professional">
+                    <div class="icon-container-professional mx-auto mb-4 sm:mb-6">
                         ☀️
                     </div>
-                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 text-center">Surya Namaskar</h2>
-                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center">12-pose sun salutation sequence for energy</p>
+                    <h2 class="text-xl sm:text-2xl font-bold text-black mb-2 sm:mb-3 text-center text-professional-heading">SURYA NAMASKAR</h2>
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 text-center text-professional-body">12-pose sun salutation sequence for energy</p>
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-gray-500">⏱ Duration</span>
@@ -128,8 +149,8 @@
                         </div>
                     </div>
                     <a href="{{ url_for('module_session', module_type='surya-namaskar') }}" 
-                        class="block w-full bg-orange-600 text-white text-center py-4 rounded-lg font-bold hover:bg-orange-700 transition">
-                        Start Session →
+                        class="btn-professional block w-full text-center py-4">
+                        START SESSION →
                     </a>
                 </div>
             </div>

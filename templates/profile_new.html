@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Yogic Guide</title>
+    
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .yogic-heading { font-family: 'Playfair Display', serif; letter-spacing: 0.1em; }
+        .yogic-body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body style="background-color: #F5F1E8;" class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="nav-wellness sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex justify-between items-center">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-2">
+                    <span class="text-2xl sm:text-3xl">🧘</span>
+                    <span class="yogic-heading text-xl sm:text-2xl font-bold text-white">YOGIC GUIDE</span>
+                </a>
+                <div class="flex items-center gap-3">
+                    <a href="{{ url_for('dashboard') }}" class="yogic-body bg-white/90 px-4 py-2 rounded shadow text-sm" style="color: #6B7D63;">Dashboard</a>
+                    <a href="{{ url_for('logout') }}" class="yogic-body bg-white/90 px-4 py-2 rounded shadow text-sm" style="color: #6B7D63;">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- Profile Header -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 mb-6" style="border: 2px solid #E8DCC4;">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                <div class="w-24 h-24 rounded-full flex items-center justify-center text-5xl" style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
+                    👤
+                </div>
+                <div class="flex-1 text-center sm:text-left">
+                    <h1 class="yogic-heading text-3xl font-bold mb-2" style="color: #6B7D63;">{{ user.name }}</h1>
+                    <p class="yogic-body text-base mb-1" style="color: #A89F91;">{{ user.email }}</p>
+                    <p class="yogic-body text-base mb-1" style="color: #A89F91;">📱 {{ user.mobile }}</p>
+                    <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold mt-2" style="background-color: #E8DCC4; color: #6B7D63;">
+                        {{ user.experience_level }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl p-4 text-center shadow" style="border: 2px solid #E8DCC4;">
+                <p class="yogic-heading text-3xl font-bold" style="color: #8B9D83;">{{ user.age }}</p>
+                <p class="yogic-body text-sm" style="color: #A89F91;">Years Old</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 text-center shadow" style="border: 2px solid #E8DCC4;">
+                <p class="yogic-heading text-3xl font-bold" style="color: #8B9D83;">{{ user.total_sessions or 0 }}</p>
+                <p class="yogic-body text-sm" style="color: #A89F91;">Sessions</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 text-center shadow" style="border: 2px solid #E8DCC4;">
+                <p class="yogic-heading text-3xl font-bold" style="color: #8B9D83;">{{ user.total_minutes or 0 }}</p>
+                <p class="yogic-body text-sm" style="color: #A89F91;">Minutes</p>
+            </div>
+            <div class="bg-white rounded-xl p-4 text-center shadow" style="border: 2px solid #E8DCC4;">
+                <p class="yogic-heading text-3xl font-bold" style="color: #8B9D83;">{{ user.gender or 'N/A' }}</p>
+                <p class="yogic-body text-sm" style="color: #A89F91;">Gender</p>
+            </div>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8" style="border: 2px solid #E8DCC4;">
+            <h2 class="yogic-heading text-2xl font-bold mb-6" style="color: #6B7D63;">Recent Sessions</h2>
+            {% if sessions %}
+            <div class="space-y-3">
+                {% for s in sessions %}
+                <div class="p-4 rounded-lg flex justify-between items-center" style="background-color: #F5F1E8;">
+                    <div>
+                        <p class="yogic-body font-semibold" style="color: #6B7D63;">{{ s.module_type.replace('-', ' ').title() }}</p>
+                        <p class="yogic-body text-sm" style="color: #A89F91;">{{ s.start_time.strftime('%B %d, %Y') }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="yogic-heading text-xl font-bold" style="color: #8B9D83;">{{ s.duration // 60 if s.duration else 0 }}</p>
+                        <p class="yogic-body text-xs" style="color: #A89F91;">minutes</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <p class="text-5xl mb-4">🧘‍♀️</p>
+                <p class="yogic-body text-lg" style="color: #A89F91;">No sessions yet. Start your first practice!</p>
+                <a href="{{ url_for('dashboard') }}" class="inline-block mt-4 px-6 py-3 rounded-lg text-white font-bold" style="background-color: #8B9D83;">
+                    Go to Dashboard
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

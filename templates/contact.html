@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Yogic Guide</title>
+    <meta name="description" content="Get in touch with Yogic Guide - We're here to help you on your yoga journey">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .yogic-heading {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.1em;
+        }
+        .yogic-body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .nav-wellness {
+            background-color: rgba(139, 157, 131, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body style="background-color: #F5F1E8;" class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full nav-wellness shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <!-- Logo - Left -->
+                <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
+                    <span class="text-2xl sm:text-3xl">🧘</span>
+                    <div>
+                        <span class="yogic-heading text-lg sm:text-xl md:text-2xl font-bold text-white block leading-tight">
+                            YOGIC GUIDE
+                        </span>
+                        <span class="yogic-body text-xs opacity-75 text-white hidden sm:block">AI-Powered Yoga Assistant</span>
+                    </div>
+                </a>
+
+                <!-- Navigation Links - Center -->
+                <div class="hidden lg:flex items-center gap-2 md:gap-4">
+                    <a href="{{ url_for('index') }}#features" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Features</a>
+                    <a href="{{ url_for('index') }}#how-it-works" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">How It Works</a>
+                    <a href="{{ url_for('index') }}#benefits" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
+                    <a href="{{ url_for('about') }}" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">About</a>
+                    <a href="{{ url_for('contact') }}" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded bg-white/20 transition">Contact</a>
+                </div>
+
+                <!-- Action Buttons - Right -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                {% if session.user_id %}
+                    <!-- Logged in user navigation -->
+                    {% if session.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" 
+                       class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm" 
+                       style="color: #6B7D63;">
+                        <span>👑</span>
+                        <span class="font-semibold">Admin Panel</span>
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('dashboard') }}" 
+                       class="yogic-body flex items-center space-x-1 bg-white/90 px-3 sm:px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm" 
+                       style="color: #6B7D63;">
+                        <span>📊</span>
+                        <span class="font-semibold">Dashboard</span>
+                    </a>
+                    <a href="{{ url_for('logout') }}" 
+                       class="yogic-body bg-transparent text-white px-3 sm:px-4 py-2 rounded hover:bg-white/20 transition border border-white text-xs sm:text-sm">
+                        Logout
+                    </a>
+                {% else %}
+                    <!-- Guest navigation -->
+                    <a href="{{ url_for('login') }}" 
+                       class="yogic-body bg-white/90 px-4 sm:px-6 py-2 rounded hover:bg-white transition shadow-sm text-xs sm:text-sm" 
+                       style="color: #6B7D63;">
+                        Login
+                    </a>
+                    <a href="{{ url_for('register') }}" 
+                       class="yogic-body bg-white text-xs sm:text-sm px-4 sm:px-6 py-2 rounded hover:bg-white/90 transition shadow-sm font-semibold" 
+                       style="color: #6B7D63;">
+                        Get Started
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-20 px-4 sm:px-6" style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
+        <div class="max-w-4xl mx-auto text-center text-white">
+            <h1 class="yogic-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+                Get In Touch
+            </h1>
+            <p class="yogic-body text-base sm:text-lg md:text-xl opacity-90">
+                We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-12 sm:py-20 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-8 sm:gap-12">
+                <!-- Contact Form -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8 md:p-10" style="border: 2px solid #E8DCC4;">
+                    <h2 class="yogic-heading text-2xl sm:text-3xl font-bold mb-6" style="color: #6B7D63;">Send Us a Message</h2>
+                    
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="mb-4 p-4 rounded-lg {% if category == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="POST" action="{{ url_for('contact') }}" class="space-y-4 sm:space-y-6">
+                        <div>
+                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Your Name</label>
+                            <input type="text" name="name" required
+                                class="yogic-body w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition" 
+                                style="border-color: #E8DCC4;"
+                                placeholder="John Doe">
+                        </div>
+                        
+                        <div>
+                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Email Address</label>
+                            <input type="email" name="email" required
+                                class="yogic-body w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition" 
+                                style="border-color: #E8DCC4;"
+                                placeholder="your@email.com">
+                        </div>
+                        
+                        <div>
+                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Subject</label>
+                            <input type="text" name="subject" required
+                                class="yogic-body w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition" 
+                                style="border-color: #E8DCC4;"
+                                placeholder="How can we help?">
+                        </div>
+                        
+                        <div>
+                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Message</label>
+                            <textarea name="message" required rows="5"
+                                class="yogic-body w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition resize-none" 
+                                style="border-color: #E8DCC4;"
+                                placeholder="Tell us more about your inquiry..."></textarea>
+                        </div>
+                        
+                        <button type="submit" 
+                            class="yogic-body w-full py-3 sm:py-4 text-base sm:text-lg text-white rounded-lg font-bold hover:opacity-90 hover:shadow-lg transition" 
+                            style="background-color: #8B9D83;">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="space-y-6 sm:space-y-8">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8" style="border: 2px solid #E8DCC4;">
+                        <div class="flex items-start space-x-4">
+                            <div class="text-3xl sm:text-4xl">📧</div>
+                            <div>
+                                <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-2" style="color: #6B7D63;">Email Us</h3>
+                                <p class="yogic-body" style="color: #A89F91;">support@yogicguide.com</p>
+                                <p class="yogic-body text-sm mt-1" style="color: #A89F91;">We'll respond within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8" style="border: 2px solid #E8DCC4;">
+                        <div class="flex items-start space-x-4">
+                            <div class="text-3xl sm:text-4xl">💬</div>
+                            <div>
+                                <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-2" style="color: #6B7D63;">Live Chat</h3>
+                                <p class="yogic-body" style="color: #A89F91;">Available Mon-Fri, 9AM-6PM</p>
+                                <p class="yogic-body text-sm mt-1" style="color: #A89F91;">Get instant support from our team</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8" style="border: 2px solid #E8DCC4;">
+                        <div class="flex items-start space-x-4">
+                            <div class="text-3xl sm:text-4xl">🌍</div>
+                            <div>
+                                <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-2" style="color: #6B7D63;">Social Media</h3>
+                                <div class="flex space-x-4 mt-3">
+                                    <a href="#" class="yogic-body hover:opacity-80 transition" style="color: #6B7D63;">Twitter</a>
+                                    <a href="#" class="yogic-body hover:opacity-80 transition" style="color: #6B7D63;">Instagram</a>
+                                    <a href="#" class="yogic-body hover:opacity-80 transition" style="color: #6B7D63;">Facebook</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8" style="border: 2px solid #E8DCC4;">
+                        <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-4" style="color: #6B7D63;">FAQ</h3>
+                        <p class="yogic-body mb-3" style="color: #A89F91;">
+                            Looking for quick answers? Check out our frequently asked questions.
+                        </p>
+                        <a href="#" class="yogic-body font-semibold hover:opacity-80 transition" style="color: #6B7D63;">
+                            View FAQ →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <span class="text-3xl">🧘</span>
+                <span class="yogic-heading text-xl font-bold">Yogic Guide</span>
+            </div>
+            <p class="yogic-body text-gray-400 mb-4">AI-powered yoga assistant for everyone</p>
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="{{ url_for('index') }}" class="yogic-body hover:text-white transition">Home</a>
+                <a href="{{ url_for('about') }}" class="yogic-body hover:text-white transition">About</a>
+                <a href="{{ url_for('contact') }}" class="yogic-body hover:text-white transition">Contact</a>
+            </div>
+            <p class="yogic-body text-gray-400 text-sm">&copy; 2024 Yogic Guide. Made with ❤️ for wellness.</p>
+        </div>
+    </footer>
+</body>
+</html>

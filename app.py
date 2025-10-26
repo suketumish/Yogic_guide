@@ -19,12 +19,28 @@ app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
 # Database setup with fallback
 try:
     from pymongo import MongoClient
-    client = MongoClient(os.getenv('MONGO_URI', 'mongodb://localhost:27017/'))
+    from pymongo.server_api import ServerApi
+    
+    mongo_uri = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
+    
+    # Check if it's Atlas URI
+    if 'mongodb+srv://' in mongo_uri or 'mongodb.net' in mongo_uri:
+        # MongoDB Atlas connection
+        client = MongoClient(mongo_uri, server_api=ServerApi('1'))
+        # Test the connection
+        client.admin.command('ping')
+        print("✅ MongoDB Atlas connected successfully!")
+    else:
+        # Local MongoDB connection
+        client = MongoClient(mongo_uri)
+        print("✅ MongoDB local connected")
+    
     db = client.yogic_guide
     MONGO_AVAILABLE = True
-    print("✅ MongoDB connected")
+    
 except Exception as e:
-    print(f"⚠️  MongoDB not available: {e}")
+    print(f"⚠️  MongoDB connection failed: {e}")
+    print(f"⚠️  URI being used: {os.getenv('MONGO_URI', 'Not set')[:50]}...")
     MONGO_AVAILABLE = False
     db = None
 
@@ -131,6 +147,30 @@ def index():
         return redirect(url_for('dashboard'))
     return render_template('landing.html')
 
+@app.route('/about')
+def about():
+    """About Us page"""
+    return render_template('about.html')
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    """Contact Us page"""
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+        
+        if all([name, email, subject, message]):
+            # Here you can add email sending logic or save to database
+            # For now, just show success message
+            flash(f'Thank you {name}! We have received your message and will respond soon.', 'success')
+            return redirect(url_for('contact'))
+        else:
+            flash('Please fill in all fields.', 'error')
+    
+    return render_template('contact.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """Basic user registration"""
@@ -139,35 +179,88 @@ def register():
             email = request.form.get('email', '').lower().strip()
             password = request.form.get('password', '')
             name = request.form.get('name', '').strip()
+            age = request.form.get('age', '')
+            mobile = request.form.get('mobile', '').strip()
+            gender = request.form.get('gender', '')
+            experience = request.form.get('experience', 'Beginner')
             
-            if not all([email, password, name]):
-                flash('All fields are required.', 'error')
+            # Validation
+            if not all([email, password, name, age, mobile]):
+                flash('Name, age, email, mobile and password are required.', 'error')
                 return render_template('register.html')
             
-            if MONGO_AVAILABLE:
-                # Check if user exists
-                if db.users.find_one({'email': email}):
-                    flash('Email already registered.', 'error')
-                    return render_template('register.html')
-                
-                # Create user
-                user_data = {
-                    'email': email,
-                    'password': hash_password(password),
-                    'profile': {'name': name},
-                    'createdAt': datetime.now(),
-                    'stats': {'totalSessions': 0, 'totalMinutes': 0}
+            if len(password) < 6:
+                flash('Password must be at least 6 characters long.', 'error')
+                return render_template('register.html')
+            
+            if len(mobile) != 10 or not mobile.isdigit():
+                flash('Please enter a valid 10-digit mobile number.', 'error')
+                return render_template('register.html')
+            
+            if not MONGO_AVAILABLE:
+                flash('Database connection error. Please try again later.', 'error')
+                print("❌ Registration failed: MongoDB not available")
+                return render_template('register.html')
+            
+            # Check if user exists
+            existing_user = db.users.find_one({'email': email})
+            if existing_user:
+                flash('Email already registered. Please login instead.', 'error')
+                return render_template('register.html')
+            
+            # Check if mobile exists
+            existing_mobile = db.users.find_one({'mobile': mobile})
+            if existing_mobile:
+                flash('Mobile number already registered. Please use a different number.', 'error')
+                return render_template('register.html')
+            
+            # Create user document
+            user_data = {
+                'email': email,
+                'mobile': mobile,
+                'password': hash_password(password),
+                'profile': {
+                    'name': name,
+                    'age': int(age) if age else None,
+                    'gender': gender if gender else None,
+                    'experience': experience
+                },
+                'role': 'user',
+                'createdAt': datetime.now(),
+                'stats': {
+                    'totalSessions': 0,
+                    'totalMinutes': 0,
+                    'totalPoses': 0
+                },
+                'achievements': [],
+                'preferences': {
+                    'notifications': True,
+                    'theme': 'light'
                 }
-                
-                result = db.users.insert_one(user_data)
+            }
+            
+            # Insert user
+            result = db.users.insert_one(user_data)
+            
+            if result.inserted_id:
+                # Set session
                 session['user_id'] = str(result.inserted_id)
-                flash('Registration successful!', 'success')
+                session['is_admin'] = False
+                session['user_name'] = name
+                
+                print(f"✅ User registered successfully: {email}")
+                flash(f'Welcome {name}! Your account has been created successfully.', 'success')
                 return redirect(url_for('dashboard'))
             else:
-                flash('Database not available. Please try again later.', 'error')
+                flash('Registration failed. Please try again.', 'error')
+                print("❌ Registration failed: Insert returned no ID")
                 
         except Exception as e:
-            flash(f'Registration failed: {str(e)}', 'error')
+            error_msg = str(e)
+            flash(f'Registration error: {error_msg}', 'error')
+            print(f"❌ Registration exception: {error_msg}")
+            import traceback
+            traceback.print_exc()
     
     return render_template('register.html')
 
@@ -319,10 +412,13 @@ def profile():
             user = {
                 'name': user_doc.get('profile', {}).get('name', 'User'),
                 'email': user_doc.get('email', ''),
+                'mobile': user_doc.get('mobile', 'Not provided'),
                 'age': user_doc.get('profile', {}).get('age', 'Not specified'),
                 'gender': user_doc.get('profile', {}).get('gender', 'Not specified'),
-                'experience_level': user_doc.get('profile', {}).get('experience_level', 'Beginner'),
-                'created_at': user_doc.get('createdAt', datetime.now())
+                'experience_level': user_doc.get('profile', {}).get('experience', 'Beginner'),
+                'created_at': user_doc.get('createdAt', datetime.now()),
+                'total_sessions': user_doc.get('stats', {}).get('totalSessions', 0),
+                'total_minutes': user_doc.get('stats', {}).get('totalMinutes', 0)
             }
             
             # Get recent sessions for profile
@@ -336,7 +432,7 @@ def profile():
                     'duration': session_doc.get('duration', 0)
                 })
             
-            return render_template('profile.html', user=user, recent_sessions=recent_sessions)
+            return render_template('profile_new.html', user=user, sessions=recent_sessions)
         else:
             # User not found, create default
             user = {
@@ -347,7 +443,7 @@ def profile():
                 'experience_level': 'Beginner',
                 'created_at': datetime.now()
             }
-            return render_template('profile.html', user=user, recent_sessions=[])
+            return render_template('profile_new.html', user=user, sessions=[])
     else:
         # Fallback when database is not available
         user = {

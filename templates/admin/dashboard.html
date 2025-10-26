@@ -6,59 +6,59 @@
 <div class="space-y-6 sm:space-y-8">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Admin Dashboard</h1>
-        <div class="text-xs sm:text-sm text-gray-600">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-black text-professional-heading">ADMIN DASHBOARD</h1>
+        <div class="text-xs sm:text-sm text-gray-600 text-professional-muted">
             Last updated: {{ current_time.strftime('%B %d, %Y at %I:%M %p') if current_time else 'Just now' }}
         </div>
     </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6">
-        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+        <div class="stat-card-wellness hover-lift-wellness">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="text-center sm:text-left">
-                    <p class="text-xs sm:text-sm font-medium text-gray-600">Total Users</p>
-                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600">{{ stats.total_users }}</p>
+                    <p class="stat-label-wellness">Total Users</p>
+                    <p class="stat-number-wellness">{{ stats.total_users }}</p>
                 </div>
                 <div class="text-2xl sm:text-4xl">👥</div>
             </div>
         </div>
 
-        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+        <div class="stat-card-professional hover-lift">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="text-center sm:text-left">
-                    <p class="text-xs sm:text-sm font-medium text-gray-600">Total Sessions</p>
-                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-green-600">{{ stats.total_sessions }}</p>
+                    <p class="stat-label">Total Sessions</p>
+                    <p class="stat-number">{{ stats.total_sessions }}</p>
                 </div>
                 <div class="text-2xl sm:text-4xl">🧘</div>
             </div>
         </div>
 
-        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+        <div class="stat-card-professional hover-lift">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="text-center sm:text-left">
-                    <p class="text-xs sm:text-sm font-medium text-gray-600">Admins</p>
-                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">{{ stats.total_admins }}</p>
+                    <p class="stat-label">Admins</p>
+                    <p class="stat-number">{{ stats.total_admins }}</p>
                 </div>
                 <div class="text-2xl sm:text-4xl">👑</div>
             </div>
         </div>
 
-        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+        <div class="stat-card-professional hover-lift">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="text-center sm:text-left">
-                    <p class="text-xs sm:text-sm font-medium text-gray-600">Users Today</p>
-                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-orange-600">{{ stats.users_today }}</p>
+                    <p class="stat-label">Users Today</p>
+                    <p class="stat-number">{{ stats.users_today }}</p>
                 </div>
                 <div class="text-2xl sm:text-4xl">📈</div>
             </div>
         </div>
 
-        <div class="bg-white p-3 sm:p-6 rounded-lg shadow-md">
+        <div class="stat-card-professional hover-lift">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="text-center sm:text-left">
-                    <p class="text-xs sm:text-sm font-medium text-gray-600">Sessions Today</p>
-                    <p class="text-xl sm:text-2xl md:text-3xl font-bold text-indigo-600">{{ stats.sessions_today }}</p>
+                    <p class="stat-label">Sessions Today</p>
+                    <p class="stat-number">{{ stats.sessions_today }}</p>
                 </div>
                 <div class="text-2xl sm:text-4xl">🎯</div>
             </div>
@@ -145,28 +145,28 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-4 sm:p-6">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">Quick Actions</h2>
+    <div class="card-professional p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-bold text-black mb-3 sm:mb-4 text-professional-heading">QUICK ACTIONS</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <a href="{{ url_for('admin_users') }}" 
-               class="flex items-center justify-center p-4 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
-                <span class="text-2xl mr-2">👥</span>
-                Manage Users
+               class="flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-black hover:shadow-lg transition text-center">
+                <span class="text-2xl mb-2">👥</span>
+                <span class="text-xs sm:text-sm font-semibold uppercase tracking-wide">Manage Users</span>
             </a>
             <a href="{{ url_for('admin_sessions') }}" 
-               class="flex items-center justify-center p-4 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
-                <span class="text-2xl mr-2">🧘</span>
-                View Sessions
+               class="flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-black hover:shadow-lg transition text-center">
+                <span class="text-2xl mb-2">🧘</span>
+                <span class="text-xs sm:text-sm font-semibold uppercase tracking-wide">View Sessions</span>
             </a>
             <a href="{{ url_for('admin_analytics') }}" 
-               class="flex items-center justify-center p-4 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
-                <span class="text-2xl mr-2">📊</span>
-                Analytics
+               class="flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-black hover:shadow-lg transition text-center">
+                <span class="text-2xl mb-2">📊</span>
+                <span class="text-xs sm:text-sm font-semibold uppercase tracking-wide">Analytics</span>
             </a>
             <a href="{{ url_for('admin_settings') }}" 
-               class="flex items-center justify-center p-4 bg-orange-100 text-orange-800 rounded-lg hover:bg-orange-200 transition">
-                <span class="text-2xl mr-2">⚙️</span>
-                Settings
+               class="flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-200 rounded-lg hover:border-black hover:shadow-lg transition text-center">
+                <span class="text-2xl mb-2">⚙️</span>
+                <span class="text-xs sm:text-sm font-semibold uppercase tracking-wide">Settings</span>
             </a>
         </div>
     </div>
