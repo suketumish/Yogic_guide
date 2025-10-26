@@ -103,7 +103,7 @@
     <!-- Navigation -->
     <nav class="fixed w-full nav-wellness shadow-lg z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-            <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center justify-between">
                 <!-- Logo - Left -->
                 <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
                     <span class="text-2xl sm:text-3xl">🧘</span>
@@ -115,53 +115,115 @@
                     </div>
                 </a>
 
-                <!-- Navigation Links - Center -->
+                <!-- Desktop Navigation Links - Center -->
                 <div class="hidden lg:flex items-center gap-2 md:gap-4">
-                    <a href="#features" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Features</a>
-                    <a href="#how-it-works" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">How It Works</a>
-                    <a href="#benefits" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
-                    <a href="{{ url_for('about') }}" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">About</a>
-                    <a href="{{ url_for('contact') }}" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Contact</a>
+                    <a href="#features" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">Features</a>
+                    <a href="#how-it-works" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">How It Works</a>
+                    <a href="#benefits" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
+                    <a href="{{ url_for('about') }}" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">About</a>
+                    <a href="{{ url_for('contact') }}" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">Contact</a>
                 </div>
 
-                <!-- Action Buttons - Right -->
-                <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Desktop Action Buttons - Right -->
+                <div class="hidden lg:flex items-center gap-2 sm:gap-3">
                 {% if session.user_id %}
-                <!-- Logged in user navigation -->
                 {% if session.is_admin %}
                 <a href="{{ url_for('admin_dashboard') }}"
-                    class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm"
+                    class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-sm"
                     style="color: #6B7D63;">
                     <span>👑</span>
-                    <span class="font-semibold">Admin Panel</span>
+                    <span class="font-semibold">Admin</span>
                 </a>
                 {% endif %}
                 <a href="{{ url_for('dashboard') }}"
-                    class="yogic-body flex items-center space-x-1 bg-white/90 px-3 sm:px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm"
+                    class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-sm"
                     style="color: #6B7D63;">
                     <span>📊</span>
                     <span class="font-semibold">Dashboard</span>
                 </a>
                 <a href="{{ url_for('logout') }}"
-                    class="yogic-body bg-transparent text-white px-3 sm:px-4 py-2 rounded hover:bg-white transition border border-white text-xs sm:text-sm">
+                    class="yogic-body bg-transparent text-white px-4 py-2 rounded hover:bg-white transition border border-white text-sm">
                     Logout
                 </a>
                 {% else %}
-                <!-- Guest navigation -->
                 <a href="{{ url_for('login') }}"
-                    class="yogic-body bg-white/90 px-4 sm:px-6 py-2 rounded hover:bg-white transition shadow-sm text-xs sm:text-sm"
+                    class="yogic-body bg-white/90 px-6 py-2 rounded hover:bg-white transition shadow-sm text-sm"
                     style="color: #6B7D63;">
                     Login
                 </a>
                 <a href="{{ url_for('register') }}"
-                    class="yogic-body bg-white text-xs sm:text-sm px-4 sm:px-6 py-2 rounded hover:bg-white/90 transition shadow-sm font-semibold"
+                    class="yogic-body bg-white text-sm px-6 py-2 rounded hover:bg-white/90 transition shadow-sm font-semibold"
                     style="color: #6B7D63;">
                     Get Started
                 </a>
                 {% endif %}
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden lg:hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="#features" class="yogic-body px-4 py-2 text-sm text-white rounded hover:bg-white/20 transition">Features</a>
+                    <a href="#how-it-works" class="yogic-body px-4 py-2 text-sm text-white rounded hover:bg-white/20 transition">How It Works</a>
+                    <a href="#benefits" class="yogic-body px-4 py-2 text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
+                    <a href="{{ url_for('about') }}" class="yogic-body px-4 py-2 text-sm text-white rounded hover:bg-white/20 transition">About</a>
+                    <a href="{{ url_for('contact') }}" class="yogic-body px-4 py-2 text-sm text-white rounded hover:bg-white/20 transition">Contact</a>
+                    <div class="border-t border-white/20 my-2"></div>
+                    {% if session.user_id %}
+                    {% if session.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}"
+                        class="yogic-body bg-white/90 px-4 py-2 rounded transition text-sm text-center"
+                        style="color: #6B7D63;">
+                        👑 Admin Panel
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('dashboard') }}"
+                        class="yogic-body bg-white/90 px-4 py-2 rounded transition text-sm text-center"
+                        style="color: #6B7D63;">
+                        📊 Dashboard
+                    </a>
+                    <a href="{{ url_for('logout') }}"
+                        class="yogic-body bg-transparent text-white px-4 py-2 rounded hover:bg-white transition border border-white text-sm text-center">
+                        Logout
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}"
+                        class="yogic-body bg-white/90 px-4 py-2 rounded hover:bg-white transition text-sm text-center"
+                        style="color: #6B7D63;">
+                        Login
+                    </a>
+                    <a href="{{ url_for('register') }}"
+                        class="yogic-body bg-white px-4 py-2 rounded hover:bg-white/90 transition font-semibold text-sm text-center"
+                        style="color: #6B7D63;">
+                        Get Started
+                    </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+    </script>
 
     <!-- Hero Section -->
     <section class="hero-wellness pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-20 px-4 sm:px-6">

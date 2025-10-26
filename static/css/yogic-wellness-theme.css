@@ -377,21 +377,136 @@ body {
     font-size: 0.875rem;
 }
 
-/* Responsive */
+/* Responsive - Mobile First */
 @media (max-width: 768px) {
+    /* Buttons - Full width on mobile */
     .btn-wellness,
     .btn-wellness-outline,
     .btn-wellness-terracotta {
         width: 100%;
         text-align: center;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
     }
     
+    /* Stats - Smaller on mobile */
     .stat-number-wellness {
         font-size: 2rem;
     }
     
-    .module-card-wellness {
-        padding: 1.5rem;
+    .stat-card-wellness {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Cards - Reduced padding */
+    .module-card-wellness,
+    .card-wellness {
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Icon containers - Smaller */
+    .icon-container-wellness {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.5rem;
+    }
+    
+    /* Forms - Better touch targets */
+    .input-wellness,
+    .select-wellness {
+        padding: 1rem;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .label-wellness {
+        font-size: 0.8rem;
+    }
+    
+    /* Navigation - Stack on mobile */
+    .nav-wellness .container {
+        padding: 0.75rem 1rem;
+    }
+    
+    /* Hero - Smaller text */
+    .hero-wellness h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    .hero-wellness p {
+        font-size: 1rem !important;
+    }
+    
+    /* Text - Responsive sizing */
+    .text-wellness-heading {
+        font-size: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 1.75rem !important;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    h3 {
+        font-size: 1.25rem !important;
+    }
+    
+    /* Spacing - Reduced margins */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Footer - Stack content */
+    .footer-wellness {
+        padding: 1.5rem 0;
+        text-align: center;
+    }
+    
+    /* Grid - Single column */
+    .row > [class*='col-'] {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 576px) {
+    /* Even smaller text */
+    .hero-wellness h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .stat-number-wellness {
+        font-size: 1.75rem;
+    }
+    
+    /* Tighter spacing */
+    .module-card-wellness,
+    .card-wellness {
+        padding: 1rem;
+    }
+    
+    .btn-wellness,
+    .btn-wellness-outline,
+    .btn-wellness-terracotta {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Tablet landscape */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 95%;
+    }
+    
+    .module-card-wellness,
+    .card-wellness {
+        padding: 1.75rem;
     }
 }
 
