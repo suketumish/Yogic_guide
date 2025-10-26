@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Yogic Guide</title>
     <meta name="description" content="Learn about Yogic Guide - Your AI-powered yoga companion">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         .yogic-heading {
             font-family: 'Playfair Display', serif;
             letter-spacing: 0.1em;
         }
+
         .yogic-body {
             font-family: 'Poppins', sans-serif;
         }
+
         .nav-wellness {
             background-color: rgba(139, 157, 131, 0.95);
             backdrop-filter: blur(10px);
         }
     </style>
 </head>
+
 <body style="background-color: #F5F1E8;" class="min-h-screen">
     <!-- Navigation -->
     <nav class="fixed w-full nav-wellness shadow-lg z-50">
@@ -45,63 +51,72 @@
                 <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
                     <span class="text-2xl sm:text-3xl">🧘</span>
                     <div>
-                        <span class="yogic-heading text-lg sm:text-xl md:text-2xl font-bold text-white block leading-tight">
+                        <span
+                            class="yogic-heading text-lg sm:text-xl md:text-2xl font-bold text-white block leading-tight">
                             YOGIC GUIDE
                         </span>
-                        <span class="yogic-body text-xs opacity-75 text-white hidden sm:block">AI-Powered Yoga Assistant</span>
+                        <span class="yogic-body text-xs opacity-75 text-white hidden sm:block">AI-Powered Yoga
+                            Assistant</span>
                     </div>
                 </a>
 
                 <!-- Navigation Links - Center -->
                 <div class="hidden lg:flex items-center gap-2 md:gap-4">
-                    <a href="{{ url_for('index') }}#features" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Features</a>
-                    <a href="{{ url_for('index') }}#how-it-works" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">How It Works</a>
-                    <a href="{{ url_for('index') }}#benefits" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
-                    <a href="{{ url_for('about') }}" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded bg-white/20 transition">About</a>
-                    <a href="{{ url_for('contact') }}" class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Contact</a>
+                    <a href="{{ url_for('index') }}#features"
+                        class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Features</a>
+                    <a href="{{ url_for('index') }}#how-it-works"
+                        class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">How
+                        It Works</a>
+                    <a href="{{ url_for('index') }}#benefits"
+                        class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
+                    <a href="{{ url_for('about') }}"
+                        class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded bg-white/20 transition">About</a>
+                    <a href="{{ url_for('contact') }}"
+                        class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">Contact</a>
                 </div>
 
                 <!-- Action Buttons - Right -->
                 <div class="flex items-center gap-2 sm:gap-3">
-                {% if session.user_id %}
+                    {% if session.user_id %}
                     <!-- Logged in user navigation -->
                     {% if session.is_admin %}
-                    <a href="{{ url_for('admin_dashboard') }}" 
-                       class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm" 
-                       style="color: #6B7D63;">
+                    <a href="{{ url_for('admin_dashboard') }}"
+                        class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm"
+                        style="color: #6B7D63;">
                         <span>👑</span>
                         <span class="font-semibold">Admin Panel</span>
                     </a>
                     {% endif %}
-                    <a href="{{ url_for('dashboard') }}" 
-                       class="yogic-body flex items-center space-x-1 bg-white/90 px-3 sm:px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm" 
-                       style="color: #6B7D63;">
+                    <a href="{{ url_for('dashboard') }}"
+                        class="yogic-body flex items-center space-x-1 bg-white/90 px-3 sm:px-4 py-2 rounded transition shadow-sm text-xs sm:text-sm"
+                        style="color: #6B7D63;">
                         <span>📊</span>
                         <span class="font-semibold">Dashboard</span>
                     </a>
-                    <a href="{{ url_for('logout') }}" 
-                       class="yogic-body bg-transparent text-white px-3 sm:px-4 py-2 rounded hover:bg-white/20 transition border border-white text-xs sm:text-sm">
+                    <a href="{{ url_for('logout') }}"
+                        class="yogic-body bg-transparent text-white px-3 sm:px-4 py-2 rounded hover:bg-white/20 transition border border-white text-xs sm:text-sm">
                         Logout
                     </a>
-                {% else %}
+                    {% else %}
                     <!-- Guest navigation -->
-                    <a href="{{ url_for('login') }}" 
-                       class="yogic-body bg-white/90 px-4 sm:px-6 py-2 rounded hover:bg-white transition shadow-sm text-xs sm:text-sm" 
-                       style="color: #6B7D63;">
+                    <a href="{{ url_for('login') }}"
+                        class="yogic-body bg-white/90 px-4 sm:px-6 py-2 rounded hover:bg-white transition shadow-sm text-xs sm:text-sm"
+                        style="color: #6B7D63;">
                         Login
                     </a>
-                    <a href="{{ url_for('register') }}" 
-                       class="yogic-body bg-white text-xs sm:text-sm px-4 sm:px-6 py-2 rounded hover:bg-white/90 transition shadow-sm font-semibold" 
-                       style="color: #6B7D63;">
+                    <a href="{{ url_for('register') }}"
+                        class="yogic-body bg-white text-xs sm:text-sm px-4 sm:px-6 py-2 rounded hover:bg-white/90 transition shadow-sm font-semibold"
+                        style="color: #6B7D63;">
                         Get Started
                     </a>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
-        </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-20 px-4 sm:px-6" style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
+    <section class="pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-20 px-4 sm:px-6"
+        style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
         <div class="max-w-4xl mx-auto text-center text-white">
             <h1 class="yogic-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
                 About Yogic Guide
@@ -117,13 +132,16 @@
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
                 <div>
-                    <h2 class="yogic-heading text-3xl sm:text-4xl font-bold mb-6" style="color: #6B7D63;">Our Mission</h2>
+                    <h2 class="yogic-heading text-3xl sm:text-4xl font-bold mb-6" style="color: #6B7D63;">Our Mission
+                    </h2>
                     <p class="yogic-body text-base sm:text-lg mb-4" style="color: #A89F91;">
-                        At Yogic Guide, we believe that everyone deserves access to quality yoga instruction. Our mission is to make yoga accessible, 
+                        At Yogic Guide, we believe that everyone deserves access to quality yoga instruction. Our
+                        mission is to make yoga accessible,
                         personalized, and effective for practitioners of all levels.
                     </p>
                     <p class="yogic-body text-base sm:text-lg mb-4" style="color: #A89F91;">
-                        Using advanced MediaPipe technology and AI, we provide real-time pose correction and personalized guidance, 
+                        Using advanced MediaPipe technology and AI, we provide real-time pose correction and
+                        personalized guidance,
                         bringing the expertise of a yoga instructor to your home.
                     </p>
                 </div>
@@ -155,26 +173,31 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-12 sm:mb-16">
                 <h2 class="yogic-heading text-3xl sm:text-4xl font-bold mb-4" style="color: #6B7D63;">Our Values</h2>
-                <p class="yogic-body text-base sm:text-lg" style="color: #A89F91;">The principles that guide everything we do</p>
+                <p class="yogic-body text-base sm:text-lg" style="color: #A89F91;">The principles that guide everything
+                    we do</p>
             </div>
-            
+
             <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
                 <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-lg text-center" style="border: 2px solid #E8DCC4;">
                     <div class="text-4xl sm:text-5xl mb-4">🌱</div>
-                    <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-3" style="color: #6B7D63;">Accessibility</h3>
-                    <p class="yogic-body" style="color: #A89F91;">Making yoga available to everyone, regardless of location or experience level</p>
+                    <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-3" style="color: #6B7D63;">Accessibility
+                    </h3>
+                    <p class="yogic-body" style="color: #A89F91;">Making yoga available to everyone, regardless of
+                        location or experience level</p>
                 </div>
-                
+
                 <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-lg text-center" style="border: 2px solid #E8DCC4;">
                     <div class="text-4xl sm:text-5xl mb-4">🎯</div>
                     <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-3" style="color: #6B7D63;">Precision</h3>
-                    <p class="yogic-body" style="color: #A89F91;">Using advanced AI technology to provide accurate, real-time feedback</p>
+                    <p class="yogic-body" style="color: #A89F91;">Using advanced AI technology to provide accurate,
+                        real-time feedback</p>
                 </div>
-                
+
                 <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-lg text-center" style="border: 2px solid #E8DCC4;">
                     <div class="text-4xl sm:text-5xl mb-4">💚</div>
                     <h3 class="yogic-heading text-xl sm:text-2xl font-bold mb-3" style="color: #6B7D63;">Wellness</h3>
-                    <p class="yogic-body" style="color: #A89F91;">Promoting holistic health through mindful practice and guidance</p>
+                    <p class="yogic-body" style="color: #A89F91;">Promoting holistic health through mindful practice and
+                        guidance</p>
                 </div>
             </div>
         </div>
@@ -186,32 +209,38 @@
             <div class="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
                 <div class="bg-white rounded-3xl shadow-2xl p-8" style="border: 2px solid #E8DCC4;">
                     <div class="text-6xl sm:text-8xl text-center mb-6">🤖</div>
-                    <h3 class="yogic-heading text-2xl sm:text-3xl font-bold text-center mb-4" style="color: #6B7D63;">Powered by MediaPipe</h3>
-                    <p class="yogic-body text-center" style="color: #A89F91;">Advanced pose detection technology for accurate real-time analysis</p>
+                    <h3 class="yogic-heading text-2xl sm:text-3xl font-bold text-center mb-4" style="color: #6B7D63;">
+                        Powered by MediaPipe</h3>
+                    <p class="yogic-body text-center" style="color: #A89F91;">Advanced pose detection technology for
+                        accurate real-time analysis</p>
                 </div>
-                
+
                 <div>
-                    <h2 class="yogic-heading text-3xl sm:text-4xl font-bold mb-6" style="color: #6B7D63;">Our Technology</h2>
+                    <h2 class="yogic-heading text-3xl sm:text-4xl font-bold mb-6" style="color: #6B7D63;">Our Technology
+                    </h2>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-3">
                             <div class="text-2xl">✓</div>
                             <div>
                                 <h4 class="yogic-body font-bold mb-1" style="color: #6B7D63;">Real-Time Analysis</h4>
-                                <p class="yogic-body text-sm" style="color: #A89F91;">Instant feedback on your poses using advanced computer vision</p>
+                                <p class="yogic-body text-sm" style="color: #A89F91;">Instant feedback on your poses
+                                    using advanced computer vision</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-3">
                             <div class="text-2xl">✓</div>
                             <div>
                                 <h4 class="yogic-body font-bold mb-1" style="color: #6B7D63;">AI-Powered Guidance</h4>
-                                <p class="yogic-body text-sm" style="color: #A89F91;">Personalized recommendations based on your practice</p>
+                                <p class="yogic-body text-sm" style="color: #A89F91;">Personalized recommendations based
+                                    on your practice</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-3">
                             <div class="text-2xl">✓</div>
                             <div>
                                 <h4 class="yogic-body font-bold mb-1" style="color: #6B7D63;">Progress Tracking</h4>
-                                <p class="yogic-body text-sm" style="color: #A89F91;">Detailed analytics to monitor your improvement over time</p>
+                                <p class="yogic-body text-sm" style="color: #A89F91;">Detailed analytics to monitor your
+                                    improvement over time</p>
                             </div>
                         </div>
                     </div>
@@ -224,28 +253,61 @@
     <section class="py-12 sm:py-20 px-4 sm:px-6" style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
         <div class="max-w-4xl mx-auto text-center text-white">
             <h2 class="yogic-heading text-3xl sm:text-4xl md:text-5xl font-bold mb-6">Ready to Start Your Journey?</h2>
-            <p class="yogic-body text-base sm:text-lg md:text-xl mb-8 opacity-90">Join thousands of users transforming their yoga practice</p>
-            <a href="{{ url_for('register') }}" class="inline-block bg-white px-8 sm:px-12 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:shadow-lg transition" style="color: #6B7D63;">
+            <p class="yogic-body text-base sm:text-lg md:text-xl mb-8 opacity-90">Join thousands of users transforming
+                their yoga practice</p>
+            <a href="{{ url_for('register') }}"
+                class="inline-block bg-white px-8 sm:px-12 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg hover:shadow-lg transition"
+                style="color: #6B7D63;">
                 Get Started Free
             </a>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="flex items-center justify-center space-x-2 mb-4">
-                <span class="text-3xl">🧘</span>
-                <span class="yogic-heading text-xl font-bold">Yogic Guide</span>
+    <footer class="footer-wellness">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-3 sm:mb-4">
+                        <span class="text-2xl sm:text-3xl">🧘</span>
+                        <span class="yogic-heading text-lg sm:text-xl font-bold">Yogic Guide</span>
+                    </div>
+                    <p class="yogic-body text-xs sm:text-sm opacity-80">AI-powered yoga assistant for everyone</p>
+                </div>
+                <div>
+                    <h4 class="yogic-heading font-bold mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
+                    <ul class="yogic-body space-y-2 text-xs sm:text-sm opacity-80">
+                        <li><a href="{{ url_for('index') }}#features" class="hover:opacity-100 transition">Features</a>
+                        </li>
+                        <li><a href="{{ url_for('index') }}#how-it-works" class="hover:opacity-100 transition">How It
+                                Works</a></li>
+                        <li><a href="{{ url_for('index') }}#benefits" class="hover:opacity-100 transition">Benefits</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="yogic-heading font-bold mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
+                    <ul class="yogic-body space-y-2 text-xs sm:text-sm opacity-80">
+                        <li><a href="{{ url_for('about') }}" class="hover:opacity-100 transition">About Us</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="hover:opacity-100 transition">Contact</a></li>
+                        <li><a href="#" class="hover:opacity-100 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="yogic-heading font-bold mb-3 sm:mb-4 text-sm sm:text-base">Connect</h4>
+                    <ul class="yogic-body space-y-2 text-xs sm:text-sm opacity-80">
+                        <li><a href="#" class="hover:opacity-100 transition">Twitter</a></li>
+                        <li><a href="#" class="hover:opacity-100 transition">Instagram</a></li>
+                        <li><a href="#" class="hover:opacity-100 transition">YouTube</a></li>
+                    </ul>
+                </div>
             </div>
-            <p class="yogic-body text-gray-400 mb-4">AI-powered yoga assistant for everyone</p>
-            <div class="flex justify-center space-x-6 mb-6">
-                <a href="{{ url_for('index') }}" class="yogic-body hover:text-white transition">Home</a>
-                <a href="{{ url_for('about') }}" class="yogic-body hover:text-white transition">About</a>
-                <a href="{{ url_for('contact') }}" class="yogic-body hover:text-white transition">Contact</a>
+            <div class="border-t border-white/20 pt-6 sm:pt-8 text-center">
+                <p class="yogic-body text-xs sm:text-sm opacity-80">&copy; 2024 Yogic Guide. Made with ❤️ for wellness.
+                </p>
             </div>
-            <p class="yogic-body text-gray-400 text-sm">&copy; 2024 Yogic Guide. Made with ❤️ for wellness.</p>
         </div>
     </footer>
 </body>
+
 </html>

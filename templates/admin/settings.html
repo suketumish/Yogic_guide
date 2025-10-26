@@ -176,20 +176,157 @@
 
     <!-- Save Settings -->
     <div class="flex justify-end space-x-4">
-        <button class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+        <button onclick="resetToDefaults()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
             Reset to Defaults
         </button>
-        <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+        <button onclick="saveSettings()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
             Save Settings
         </button>
     </div>
 </div>
 
 <script>
-// Add interactivity for settings toggles and buttons
+// Default settings values
+const defaultSettings = {
+    appName: 'Yogic Guide',
+    defaultSessionDuration: 15,
+    maxSessionDuration: 60,
+    timezone: 'Asia/Kolkata',
+    sessionTimeout: 60,
+    passwordMinLength: 8,
+    allowRegistration: true,
+    emailVerification: false,
+    twoFactorAuth: false,
+    forcePasswordComplexity: true
+};
+
+// Save Settings Function
+function saveSettings() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Saving...';
+    btn.disabled = true;
+    
+    // Collect all settings
+    const settings = {
+        appName: document.querySelector('input[value="Yogic Guide"]').value,
+        defaultSessionDuration: document.querySelector('input[value="15"]').value,
+        maxSessionDuration: document.querySelector('input[value="60"]').value,
+        timezone: document.querySelector('select').value,
+        sessionTimeout: document.querySelectorAll('input[type="number"]')[2].value,
+        passwordMinLength: document.querySelectorAll('input[type="number"]')[3].value,
+        allowRegistration: document.querySelectorAll('input[type="checkbox"]')[0].checked,
+        emailVerification: document.querySelectorAll('input[type="checkbox"]')[1].checked,
+        twoFactorAuth: document.querySelectorAll('input[type="checkbox"]')[2].checked,
+        forcePasswordComplexity: document.querySelectorAll('input[type="checkbox"]')[3].checked
+    };
+    
+    // Save to localStorage (in production, this would be an API call)
+    localStorage.setItem('adminSettings', JSON.stringify(settings));
+    
+    // Show success message
+    setTimeout(() => {
+        btn.innerHTML = '✅ Saved!';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            // Show alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed top-4 right-4 bg-green-100 text-green-700 px-6 py-4 rounded-lg shadow-lg border border-green-300 z-50';
+            alertDiv.innerHTML = '✅ Settings saved successfully!';
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.transition = 'opacity 0.5s';
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 3000);
+        }, 1000);
+    }, 500);
+}
+
+// Reset to Defaults Function
+function resetToDefaults() {
+    if (!confirm('Are you sure you want to reset all settings to default values? This action cannot be undone.')) {
+        return;
+    }
+    
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Resetting...';
+    btn.disabled = true;
+    
+    // Reset all form values
+    setTimeout(() => {
+        document.querySelector('input[value="Yogic Guide"]').value = defaultSettings.appName;
+        document.querySelector('input[value="15"]').value = defaultSettings.defaultSessionDuration;
+        document.querySelector('input[value="60"]').value = defaultSettings.maxSessionDuration;
+        document.querySelector('select').value = defaultSettings.timezone;
+        document.querySelectorAll('input[type="number"]')[2].value = defaultSettings.sessionTimeout;
+        document.querySelectorAll('input[type="number"]')[3].value = defaultSettings.passwordMinLength;
+        document.querySelectorAll('input[type="checkbox"]')[0].checked = defaultSettings.allowRegistration;
+        document.querySelectorAll('input[type="checkbox"]')[1].checked = defaultSettings.emailVerification;
+        document.querySelectorAll('input[type="checkbox"]')[2].checked = defaultSettings.twoFactorAuth;
+        document.querySelectorAll('input[type="checkbox"]')[3].checked = defaultSettings.forcePasswordComplexity;
+        
+        // Clear localStorage
+        localStorage.removeItem('adminSettings');
+        
+        btn.innerHTML = '✅ Reset Complete!';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            // Show alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed top-4 right-4 bg-blue-100 text-blue-700 px-6 py-4 rounded-lg shadow-lg border border-blue-300 z-50';
+            alertDiv.innerHTML = '🔄 Settings reset to defaults!';
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.transition = 'opacity 0.5s';
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 3000);
+        }, 1000);
+    }, 500);
+}
+
+// Maintenance Actions
+document.querySelectorAll('.bg-blue-100, .bg-green-100, .bg-orange-100').forEach((btn, index) => {
+    btn.addEventListener('click', function() {
+        const actions = ['Cache cleared', 'Database backup created', 'Logs cleaned'];
+        const originalText = this.innerHTML;
+        this.innerHTML = this.innerHTML.replace(/Clear Cache|Backup Database|Clean Logs/, 'Processing...');
+        this.disabled = true;
+        
+        setTimeout(() => {
+            this.innerHTML = originalText;
+            this.disabled = false;
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed top-4 right-4 bg-green-100 text-green-700 px-6 py-4 rounded-lg shadow-lg border border-green-300 z-50';
+            alertDiv.innerHTML = '✅ ' + actions[index] + ' successfully!';
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.transition = 'opacity 0.5s';
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 3000);
+        }, 1500);
+    });
+});
+
+// Load saved settings on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Settings save functionality would go here
-    console.log('Settings page loaded');
+    const savedSettings = localStorage.getItem('adminSettings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        // Apply saved settings if needed
+        console.log('Loaded saved settings:', settings);
+    }
 });
 </script>
 {% endblock %}

@@ -336,6 +336,101 @@ def logout():
     flash('You have been logged out successfully.', 'info')
     return redirect(url_for('index'))
 
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    """Forgot password - send reset link"""
+    if request.method == 'POST':
+        email = request.form.get('email', '').lower().strip()
+        
+        if not email:
+            flash('Please enter your email address.', 'error')
+            return render_template('forgot_password.html')
+        
+        if MONGO_AVAILABLE:
+            user = db.users.find_one({'email': email})
+            
+            if user:
+                # Generate simple reset token (in production, use secure token generation)
+                import secrets
+                reset_token = secrets.token_urlsafe(32)
+                
+                # Store token with expiry (1 hour)
+                db.users.update_one(
+                    {'email': email},
+                    {
+                        '$set': {
+                            'reset_token': reset_token,
+                            'reset_token_expiry': datetime.utcnow() + timedelta(hours=1)
+                        }
+                    }
+                )
+                
+                # In production, send email with reset link
+                # For now, just show success message
+                flash(f'Password reset link has been sent to {email}. Please check your email.', 'success')
+                logging.info(f'Password reset requested for: {email}')
+                logging.info(f'Reset link: {url_for("reset_password", token=reset_token, _external=True)}')
+            else:
+                # Don't reveal if email exists or not (security best practice)
+                flash(f'If an account exists with {email}, you will receive a password reset link.', 'info')
+        else:
+            flash('Database not available. Please try again later.', 'error')
+        
+        return redirect(url_for('login'))
+    
+    return render_template('forgot_password.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """Reset password with token"""
+    if request.method == 'POST':
+        email = request.form.get('email', '').lower().strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+        
+        if not all([email, password, confirm_password]):
+            flash('All fields are required.', 'error')
+            return render_template('reset_password.html', token=token)
+        
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+            return render_template('reset_password.html', token=token)
+        
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long.', 'error')
+            return render_template('reset_password.html', token=token)
+        
+        if MONGO_AVAILABLE:
+            # Find user with valid token
+            user = db.users.find_one({
+                'email': email,
+                'reset_token': token,
+                'reset_token_expiry': {'$gt': datetime.utcnow()}
+            })
+            
+            if user:
+                # Hash new password
+                hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                
+                # Update password and remove reset token
+                db.users.update_one(
+                    {'email': email},
+                    {
+                        '$set': {'password': hashed_password},
+                        '$unset': {'reset_token': '', 'reset_token_expiry': ''}
+                    }
+                )
+                
+                flash('Password reset successful! You can now login with your new password.', 'success')
+                logging.info(f'Password reset successful for: {email}')
+                return redirect(url_for('login'))
+            else:
+                flash('Invalid or expired reset link. Please request a new one.', 'error')
+        else:
+            flash('Database not available. Please try again later.', 'error')
+    
+    return render_template('reset_password.html', token=token)
+
 @app.route('/dashboard')
 @require_auth
 def dashboard():

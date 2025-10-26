@@ -11,10 +11,10 @@
             <p class="text-gray-600 mt-2">Comprehensive insights and performance metrics</p>
         </div>
         <div class="flex space-x-2">
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <button onclick="exportReport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                 📊 Export Report
             </button>
-            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+            <button onclick="refreshData()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                 🔄 Refresh Data
             </button>
         </div>
@@ -502,6 +502,71 @@ new Chart(retentionCtx, {
         scales: { y: { beginAtZero: true } }
     }
 });
+
+// Export Report Function
+function exportReport() {
+    const reportData = {
+        timestamp: new Date().toISOString(),
+        metrics: {
+            totalUsers: {{ analytics.metrics.total_users if analytics.metrics else 0 }},
+            totalSessions: {{ analytics.metrics.total_sessions if analytics.metrics else 0 }},
+            activeUsers7d: {{ analytics.metrics.active_users_7d if analytics.metrics else 0 }},
+            avgSessionDuration: {{ analytics.metrics.avg_session_duration if analytics.metrics else 0 }},
+            retentionRate: {{ analytics.metrics.user_retention_rate if analytics.metrics else 0 }}
+        },
+        modulePerformance: [
+            {% for module in analytics.module_performance if analytics.module_performance %}
+            {
+                module: '{{ module._id if module._id else "Unknown" }}',
+                sessions: {{ module.sessions if module.sessions else 0 }},
+                users: {{ module.unique_user_count if module.unique_user_count else 0 }},
+                avgDuration: {{ module.avg_duration if module.avg_duration else 0 }}
+            },
+            {% endfor %}
+        ]
+    };
+    
+    // Create CSV content
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Yogic Guide Analytics Report\n";
+    csvContent += "Generated: " + new Date().toLocaleString() + "\n\n";
+    csvContent += "Key Metrics\n";
+    csvContent += "Total Users," + reportData.metrics.totalUsers + "\n";
+    csvContent += "Total Sessions," + reportData.metrics.totalSessions + "\n";
+    csvContent += "Active Users (7d)," + reportData.metrics.activeUsers7d + "\n";
+    csvContent += "Avg Session Duration (min)," + reportData.metrics.avgSessionDuration + "\n";
+    csvContent += "Retention Rate (%)," + reportData.metrics.retentionRate + "\n\n";
+    csvContent += "Module Performance\n";
+    csvContent += "Module,Sessions,Users,Avg Duration (sec)\n";
+    reportData.modulePerformance.forEach(module => {
+        csvContent += module.module + "," + module.sessions + "," + module.users + "," + module.avgDuration + "\n";
+    });
+    
+    // Download CSV
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "yogic_guide_analytics_" + new Date().toISOString().split('T')[0] + ".csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show success message
+    alert('📊 Analytics report exported successfully!');
+}
+
+// Refresh Data Function
+function refreshData() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Refreshing...';
+    btn.disabled = true;
+    
+    // Reload the page
+    setTimeout(() => {
+        location.reload();
+    }, 500);
+}
 
 // Auto-refresh every 5 minutes
 setTimeout(() => location.reload(), 300000);

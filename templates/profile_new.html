@@ -102,5 +102,47 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer-wellness mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-3 sm:mb-4">
+                        <span class="text-2xl sm:text-3xl">🧘</span>
+                        <span class="yogic-heading text-lg sm:text-xl font-bold">Yogic Guide</span>
+                    </div>
+                    <p class="yogic-body text-xs sm:text-sm opacity-80">AI-powered yoga assistant for everyone</p>
+                </div>
+                <div>
+                    <h4 class="yogic-heading font-bold mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
+                    <ul class="yogic-body space-y-2 text-xs sm:text-sm opacity-80">
+                        <li><a href="{{ url_for('index') }}#features" class="hover:opacity-100 transition">Features</a></li>
+                        <li><a href="{{ url_for('index') }}#how-it-works" class="hover:opacity-100 transition">How It Works</a></li>
+                        <li><a href="{{ url_for('index') }}#benefits" class="hover:opacity-100 transition">Benefits</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="yogic-heading font-bold mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
+                    <ul class="yogic-body space-y-2 text-xs sm:text-sm opacity-80">
+                        <li><a href="{{ url_for('about') }}" class="hover:opacity-100 transition">About Us</a></li>
+                        <li><a href="{{ url_for('contact') }}" class="hover:opacity-100 transition">Contact</a></li>
+                        <li><a href="#" class="hover:opacity-100 transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="yogic-heading font-bold mb-3 sm:mb-4 text-sm sm:text-base">Connect</h4>
+                    <ul class="yogic-body space-y-2 text-xs sm:text-sm opacity-80">
+                        <li><a href="#" class="hover:opacity-100 transition">Twitter</a></li>
+                        <li><a href="#" class="hover:opacity-100 transition">Instagram</a></li>
+                        <li><a href="#" class="hover:opacity-100 transition">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/20 pt-6 sm:pt-8 text-center">
+                <p class="yogic-body text-xs sm:text-sm opacity-80">&copy; 2024 Yogic Guide. Made with ❤️ for wellness.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

@@ -35,50 +35,54 @@
 <body style="background-color: #F5F1E8;" class="min-h-screen">
     <!-- Admin Navigation -->
     <nav class="nav-wellness shadow-lg">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
-            <!-- Logo/Title - Centered -->
-            <div class="text-center mb-4">
-                <h1 class="yogic-heading text-2xl sm:text-3xl md:text-4xl font-bold tracking-widest">
-                    <span class="text-3xl sm:text-4xl">🧘</span>
-                    <span class="block sm:inline mt-2 sm:mt-0 sm:ml-3">YOGIC GUIDE</span>
-                </h1>
-                <p class="yogic-body text-xs sm:text-sm text-gray-400 mt-2 tracking-wide">Admin Panel</p>
-            </div>
-            
-            <!-- Navigation Links - Centered -->
-            <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-4 md:gap-6">
-                <a href="{{ url_for('admin_dashboard') }}" 
-                   class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm rounded hover:bg-white/20 transition tracking-wide border border-transparent hover:border-white">
-                    Dashboard
-                </a>
-                <a href="{{ url_for('admin_users') }}" 
-                   class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm rounded hover:bg-white hover:text-black transition tracking-wide border border-transparent hover:border-white">
-                    Users
-                </a>
-                <a href="{{ url_for('admin_sessions') }}" 
-                   class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm rounded hover:bg-white hover:text-black transition tracking-wide border border-transparent hover:border-white">
-                    Sessions
-                </a>
-                <a href="{{ url_for('admin_analytics') }}" 
-                   class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm rounded hover:bg-white hover:text-black transition tracking-wide border border-transparent hover:border-white">
-                    Analytics
-                </a>
-                <a href="{{ url_for('admin_settings') }}" 
-                   class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm rounded hover:bg-white hover:text-black transition tracking-wide border border-transparent hover:border-white">
-                    Settings
-                </a>
-            </div>
-            
-            <!-- Action Buttons - Centered -->
-            <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-4 mt-4">
-                <a href="{{ url_for('dashboard') }}" 
-                   class="yogic-body px-4 sm:px-6 py-2 text-xs sm:text-sm bg-white/90 rounded hover:bg-white transition tracking-wide border border-white shadow-sm" style="color: #6B7D63;">
-                    User View
-                </a>
-                <a href="{{ url_for('logout') }}" 
-                   class="yogic-body px-4 sm:px-6 py-2 text-xs sm:text-sm bg-transparent text-white rounded hover:bg-white transition tracking-wide border border-white">
-                    Logout
-                </a>
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4">
+                <!-- Logo/Title - Left -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl sm:text-3xl">🧘</span>
+                    <div>
+                        <h1 class="yogic-heading text-lg sm:text-xl font-bold tracking-wide text-white">
+                            YOGIC GUIDE
+                        </h1>
+                        <p class="yogic-body text-xs text-white/75">Admin Panel</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Links - Center -->
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2">
+                    <a href="{{ url_for('admin_dashboard') }}" 
+                       class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">
+                        Dashboard
+                    </a>
+                    <a href="{{ url_for('admin_users') }}" 
+                       class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">
+                        Users
+                    </a>
+                    <a href="{{ url_for('admin_sessions') }}" 
+                       class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">
+                        Sessions
+                    </a>
+                    <a href="{{ url_for('admin_analytics') }}" 
+                       class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">
+                        Analytics
+                    </a>
+                    <a href="{{ url_for('admin_settings') }}" 
+                       class="yogic-body px-3 py-2 text-xs sm:text-sm text-white rounded hover:bg-white/20 transition">
+                        Settings
+                    </a>
+                </div>
+                
+                <!-- Action Buttons - Right -->
+                <div class="flex items-center gap-2">
+                    <a href="{{ url_for('dashboard') }}" 
+                       class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm bg-white/90 rounded hover:bg-white transition shadow-sm" style="color: #6B7D63;">
+                        User View
+                    </a>
+                    <a href="{{ url_for('logout') }}" 
+                       class="yogic-body px-3 sm:px-4 py-2 text-xs sm:text-sm bg-transparent text-white rounded hover:bg-white hover:text-[#6B7D63] transition border border-white">
+                        Logout
+                    </a>
+                </div>
             </div>
         </div>
     </nav>

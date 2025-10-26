@@ -146,7 +146,12 @@
                     </div>
                     
                     <div>
-                        <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Password</label>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="yogic-body block text-sm font-bold" style="color: #6B7D63;">Password</label>
+                            <a href="{{ url_for('forgot_password') }}" class="yogic-body text-xs font-semibold hover:underline" style="color: #8B9D83;">
+                                Forgot Password?
+                            </a>
+                        </div>
                         <input type="password" name="password" required 
                             class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80" style="border-color: #E8DCC4;"
                             placeholder="••••••••">
