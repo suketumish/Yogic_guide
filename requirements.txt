@@ -2,7 +2,7 @@ Flask==3.0.0
 pymongo==4.6.1
 bcrypt==4.1.2
 python-dotenv==1.0.0
-mediapipe==0.10.9
+mediapipe
 opencv-python-headless==4.9.0.80
 Flask-SocketIO==5.3.6
 Flask-JWT-Extended==4.6.0
