@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surya Namaskar - Yogic Guide</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .yogic-heading { font-family: 'Playfair Display', serif; letter-spacing: 0.1em; }
+        .yogic-body { font-family: 'Poppins', sans-serif; }
+        .pose-card {
+            transition: all 0.3s ease;
+            border: 2px solid #E8DCC4;
+            position: relative;
+            overflow: hidden;
+        }
+        .pose-card:hover {
+            border-color: #FF9800;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 152, 0, 0.2);
+        }
+        .pose-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+        .sun-gradient {
+            background: linear-gradient(135deg, #FFA726 0%, #FF6F00 100%);
+        }
+    </style>
+</head>
+<body style="background-color: #F5F1E8;" class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="nav-wellness sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl sm:text-3xl">🧘</span>
+                    <span class="yogic-heading text-xl sm:text-2xl font-bold text-white">YOGIC GUIDE</span>
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="yogic-body bg-white/90 px-4 py-2 rounded hover:opacity-90 transition" style="color: #6B7D63;">
+                    ← BACK
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <!-- Header Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="text-5xl">☀️</div>
+                        <div>
+                            <h1 class="yogic-heading text-4xl font-bold text-gray-800">SURYA NAMASKAR</h1>
+                            <p class="yogic-body text-gray-600 mt-1">12-pose sun salutation sequence for energy</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <div class="bg-orange-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">⏱</div>
+                            <div class="text-2xl font-bold text-orange-600">10-12</div>
+                            <div class="text-sm text-gray-600">Minutes</div>
+                        </div>
+                        <div class="bg-red-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">📊</div>
+                            <div class="text-lg font-bold text-red-600">Intermediate</div>
+                            <div class="text-sm text-gray-600">Level</div>
+                        </div>
+                        <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">🔥</div>
+                            <div class="text-2xl font-bold text-yellow-600">~80</div>
+                            <div class="text-sm text-gray-600">Calories</div>
+                        </div>
+                        <div class="bg-amber-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">🎯</div>
+                            <div class="text-lg font-bold text-amber-600">Full Body</div>
+                            <div class="text-sm text-gray-600">Workout</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Surya Namaskar -->
+        <div class="sun-gradient rounded-2xl shadow-lg p-8 text-white mb-8">
+            <h2 class="yogic-heading text-2xl font-bold mb-4">☀️ About Surya Namaskar</h2>
+            <p class="text-lg mb-4">
+                Surya Namaskar, or Sun Salutation, is a sequence of 12 powerful yoga poses that pay homage to the sun. 
+                This ancient practice combines physical exercise, breathing techniques, and meditation to energize the entire body.
+            </p>
+            <p class="text-sm opacity-90">
+                Traditionally performed at sunrise, Surya Namaskar awakens the body, improves flexibility, 
+                strengthens muscles, and promotes mental clarity. One complete round consists of 12 poses performed twice 
+                (once leading with the right leg, once with the left).
+            </p>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6">✨ Benefits</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">💪</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Full Body Workout</h3>
+                        <p class="text-sm text-gray-600">Strengthens all major muscle groups in one sequence</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">❤️</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Cardiovascular Health</h3>
+                        <p class="text-sm text-gray-600">Improves heart health and blood circulation</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">🧘</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Mental Clarity</h3>
+                        <p class="text-sm text-gray-600">Enhances focus and reduces stress</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">🔥</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Boosts Metabolism</h3>
+                        <p class="text-sm text-gray-600">Aids in weight management and digestion</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">🌟</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Increases Energy</h3>
+                        <p class="text-sm text-gray-600">Revitalizes body and mind for the day ahead</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">🧬</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Improves Flexibility</h3>
+                        <p class="text-sm text-gray-600">Stretches and tones muscles throughout body</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12 Poses Sequence -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6">🌞 The 12 Sacred Poses</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Pose 1: Pranamasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">1</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Pranamasana (Prayer Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Stand at edge of mat, feet together. Bring palms together at chest in prayer position.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Mitraya Namaha (Salutations to the friend of all)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🧘 Centering</span>
+                                <span>💚 Heart Chakra</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 2: Hasta Uttanasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">2</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Hasta Uttanasana (Raised Arms Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Inhale, raise arms overhead, arch back slightly, look up at hands.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Ravaye Namaha (Salutations to the shining one)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Inhale</span>
+                                <span>💪 Stretches abdomen</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 3: Hasta Padasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">3</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Hasta Padasana (Hand to Foot Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Exhale, bend forward from waist, touch floor beside feet. Keep legs straight.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Suryaya Namaha (Salutations to he who induces activity)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Exhale</span>
+                                <span>🦵 Hamstrings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 4: Ashwa Sanchalanasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">4</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Ashwa Sanchalanasana (Equestrian Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Inhale, step right leg back, drop knee. Left knee bent at 90°. Look up.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Bhanave Namaha (Salutations to he who illuminates)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Inhale</span>
+                                <span>🦵 Hip flexors</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 5: Dandasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">5</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Dandasana (Stick Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Hold breath, step left leg back. Body in straight line, plank position.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Khagaya Namaha (Salutations to he who moves in the sky)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>⏸️ Hold</span>
+                                <span>💪 Core strength</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 6: Ashtanga Namaskara -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">6</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Ashtanga Namaskara (Eight Limbs Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Exhale, lower knees, chest, chin to floor. Hips up. Eight points touch ground.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Pushne Namaha (Salutations to the giver of strength)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Exhale</span>
+                                <span>💪 Upper body</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 7: Bhujangasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">7</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Bhujangasana (Cobra Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Inhale, slide forward, raise chest. Arms straight, shoulders back. Look up.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Hiranya Garbhaya Namaha (Salutations to the golden cosmic self)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Inhale</span>
+                                <span>🔙 Spine flexibility</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 8: Parvatasana -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">8</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Parvatasana (Mountain Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Exhale, lift hips up. Form inverted V. Heels toward floor, head between arms.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Marichaye Namaha (Salutations to the lord of dawn)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Exhale</span>
+                                <span>🦵 Calves & hamstrings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 9: Ashwa Sanchalanasana (Return) -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">9</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Ashwa Sanchalanasana (Equestrian Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Inhale, step right foot forward between hands. Left knee down. Look up.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Adityaya Namaha (Salutations to the son of Aditi)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Inhale</span>
+                                <span>🦵 Hip flexors</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 10: Hasta Padasana (Return) -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">10</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Hasta Padasana (Hand to Foot Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Exhale, bring left foot forward. Straighten legs, fold forward.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Savitre Namaha (Salutations to the stimulating power of the sun)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Exhale</span>
+                                <span>🦵 Hamstrings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 11: Hasta Uttanasana (Return) -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">11</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Hasta Uttanasana (Raised Arms Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Inhale, rise up, arms overhead. Arch back slightly, look up.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Arkaya Namaha (Salutations to he who is fit to be praised)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Inhale</span>
+                                <span>💪 Stretches abdomen</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pose 12: Pranamasana (Return) -->
+                <div class="pose-card bg-white rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="pose-number">12</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-gray-800 mb-2">Pranamasana (Prayer Pose)</h3>
+                            <p class="text-sm text-gray-600 mb-3">Exhale, return to standing. Bring palms together at chest. Complete one round.</p>
+                            <div class="bg-orange-50 rounded p-3 mb-2">
+                                <p class="text-xs text-gray-700"><strong>Mantra:</strong> Om Bhaskaraya Namaha (Salutations to he who leads to enlightenment)</p>
+                            </div>
+                            <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                <span>🌬️ Exhale</span>
+                                <span>🙏 Gratitude</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded">
+                <p class="text-sm text-gray-700">
+                    <strong>💡 Note:</strong> This completes one half-round. For a complete round, repeat the sequence 
+                    leading with the left leg in poses 4 and 9. Beginners should start with 2-4 rounds and gradually 
+                    increase to 12 rounds for maximum benefits.
+                </p>
+            </div>
+        </div>
+
+        <!-- Practice Tips -->
+        <div class="bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl shadow-lg p-8 text-white mb-8">
+            <h2 class="yogic-heading text-2xl font-bold mb-6">💡 Practice Guidelines</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Practice on empty stomach, ideally at sunrise</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Synchronize breath with each movement</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Start with 2-4 rounds, build up gradually</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Maintain smooth, flowing transitions</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">⚠️</span>
+                    <p class="text-sm">Avoid if you have back injuries or high blood pressure</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">⚠️</span>
+                    <p class="text-sm">Pregnant women should consult doctor first</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Button -->
+        <div class="text-center">
+            <a href="{{ url_for('module_session', module_type='surya-namaskar') }}" 
+               class="inline-block sun-gradient text-white px-12 py-4 rounded-xl text-lg font-bold hover:shadow-2xl transition transform hover:scale-105">
+                START SESSION →
+            </a>
+        </div>
+    </div>
+</body>
+</html>

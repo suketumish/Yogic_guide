@@ -43,25 +43,145 @@ body {
     line-height: 1.6;
 }
 
-/* Professional Buttons */
+/* Professional Buttons - Enhanced */
 .btn-professional {
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
     color: var(--color-secondary);
-    padding: 0.75rem 2rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    padding: 1rem 2rem;
+    border-radius: 0.625rem;
+    font-weight: 700;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 2px solid var(--color-primary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     font-size: 0.875rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15),
+                0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-professional::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-professional:hover::before {
+    left: 100%;
 }
 
 .btn-professional:hover {
-    background-color: var(--color-secondary);
-    color: var(--color-primary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    color: var(--color-secondary);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25),
+                0 4px 6px -2px rgba(0, 0, 0, 0.15);
+    border-color: var(--color-primary);
+}
+
+.btn-professional:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* Boxed Button Style - Enhanced */
+.btn-professional-boxed {
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    color: var(--color-secondary);
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid #000000;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.875rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2),
+                0 2px 4px -1px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Animated gradient background */
+.btn-professional-boxed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+
+/* Shimmer effect */
+.btn-professional-boxed::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    z-index: 2;
+}
+
+.btn-professional-boxed:hover::before {
+    opacity: 1;
+}
+
+.btn-professional-boxed:hover::after {
+    left: 100%;
+    top: 100%;
+}
+
+.btn-professional-boxed:hover {
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.3),
+                0 6px 10px -3px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+                0 0 0 3px rgba(0, 0, 0, 0.1);
+    border-color: #000000;
+}
+
+.btn-professional-boxed:active {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 6px 12px -3px rgba(0, 0, 0, 0.25),
+                0 3px 6px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* Pulse animation on hover */
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.3),
+                    0 6px 10px -3px rgba(0, 0, 0, 0.2),
+                    0 0 0 0 rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.3),
+                    0 6px 10px -3px rgba(0, 0, 0, 0.2),
+                    0 0 0 6px rgba(0, 0, 0, 0.05);
+    }
+}
+
+.btn-professional-boxed:hover {
+    animation: buttonPulse 2s ease-in-out infinite;
 }
 
 .btn-professional-outline {
@@ -213,57 +333,116 @@ body {
     font-weight: 600;
 }
 
-/* Module Cards */
+/* Module Cards - Enhanced Authentic Design */
 .module-card-professional {
-    background-color: var(--color-secondary);
-    border: 2px solid var(--color-gray-200);
-    border-radius: 0.75rem;
-    padding: 2rem;
-    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+    border: 3px solid var(--color-gray-200);
+    border-radius: 1.25rem;
+    padding: 2.5rem 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
+/* Top accent bar */
 .module-card-professional::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-gray-600) 100%);
+    height: 6px;
+    background: linear-gradient(90deg, #000000 0%, #404040 50%, #000000 100%);
     transform: scaleX(0);
-    transition: transform 0.3s ease;
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Subtle background pattern on hover */
+.module-card-professional::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.02) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
 }
 
 .module-card-professional:hover::before {
     transform: scaleX(1);
 }
 
-.module-card-professional:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-8px);
+.module-card-professional:hover::after {
+    opacity: 1;
 }
 
-/* Icon Containers */
+.module-card-professional:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 
+                0 10px 10px -5px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+    transform: translateY(-12px) scale(1.02);
+    background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
+}
+
+/* Icon Containers - Enhanced */
 .icon-container-professional {
-    width: 4rem;
-    height: 4rem;
-    background-color: var(--color-gray-100);
-    border: 2px solid var(--color-gray-200);
-    border-radius: 0.75rem;
+    width: 5rem;
+    height: 5rem;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%);
+    border: 3px solid var(--color-gray-200);
+    border-radius: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    transition: all 0.3s ease;
+    font-size: 2.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08),
+                0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    position: relative;
+}
+
+.icon-container-professional::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 1.25rem;
+    padding: 3px;
+    background: linear-gradient(135deg, #000000, #404040, #000000);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
 .module-card-professional:hover .icon-container-professional {
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, #000000 0%, #262626 100%);
     border-color: var(--color-primary);
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2),
+                0 4px 6px -2px rgba(0, 0, 0, 0.1);
+}
+
+.module-card-professional:hover .icon-container-professional::before {
+    opacity: 1;
+}
+
+/* Icon emoji animation on hover */
+.module-card-professional:hover .icon-container-professional {
+    animation: iconPulse 0.6s ease-in-out;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1.15) rotate(5deg); }
+    50% { transform: scale(1.25) rotate(-5deg); }
 }
 
 /* Badges */

@@ -551,6 +551,24 @@ def profile():
         }
         return render_template('profile.html', user=user, recent_sessions=[])
 
+@app.route('/module/stretching/info')
+@require_auth
+def module_stretching_info():
+    """Full Body Stretching module information page"""
+    return render_template('module_stretching.html')
+
+@app.route('/module/breathing/info')
+@require_auth
+def module_breathing_info():
+    """Breathing Exercises module information page"""
+    return render_template('module_breathing.html')
+
+@app.route('/module/surya-namaskar/info')
+@require_auth
+def module_surya_namaskar_info():
+    """Surya Namaskar module information page"""
+    return render_template('module_surya_namaskar.html')
+
 @app.route('/module/<module_type>')
 @require_auth
 def module_session(module_type):

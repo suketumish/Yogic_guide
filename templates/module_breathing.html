@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercises - Yogic Guide</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .yogic-heading { font-family: 'Playfair Display', serif; letter-spacing: 0.1em; }
+        .yogic-body { font-family: 'Poppins', sans-serif; }
+        .technique-card {
+            transition: all 0.3s ease;
+            border: 2px solid #E8DCC4;
+        }
+        .technique-card:hover {
+            border-color: #8B9D83;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(61, 64, 53, 0.15);
+        }
+    </style>
+</head>
+<body style="background-color: #F5F1E8;" class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="nav-wellness sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl sm:text-3xl">🧘</span>
+                    <span class="yogic-heading text-xl sm:text-2xl font-bold text-white">YOGIC GUIDE</span>
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="yogic-body bg-white/90 px-4 py-2 rounded hover:opacity-90 transition" style="color: #6B7D63;">
+                    ← BACK
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <!-- Header Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="text-5xl">🌬️</div>
+                        <div>
+                            <h1 class="yogic-heading text-4xl font-bold text-gray-800">BREATHING EXERCISES</h1>
+                            <p class="yogic-body text-gray-600 mt-1">Pranayama techniques for mind and body balance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">⏱</div>
+                            <div class="text-2xl font-bold text-blue-600">10-15</div>
+                            <div class="text-sm text-gray-600">Minutes</div>
+                        </div>
+                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">📊</div>
+                            <div class="text-lg font-bold text-green-600">All Levels</div>
+                            <div class="text-sm text-gray-600">Difficulty</div>
+                        </div>
+                        <div class="bg-purple-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">🧘</div>
+                            <div class="text-lg font-bold text-purple-600">Relaxation</div>
+                            <div class="text-sm text-gray-600">Focus</div>
+                        </div>
+                        <div class="bg-indigo-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl mb-1">💆</div>
+                            <div class="text-lg font-bold text-indigo-600">Stress Relief</div>
+                            <div class="text-sm text-gray-600">Benefit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6">✨ Benefits of Pranayama</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">🧠</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Mental Clarity</h3>
+                        <p class="text-sm text-gray-600">Improves focus, concentration, and cognitive function</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">❤️</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Heart Health</h3>
+                        <p class="text-sm text-gray-600">Regulates blood pressure and improves circulation</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="text-3xl">😌</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-1">Stress Reduction</h3>
+                        <p class="text-sm text-gray-600">Activates parasympathetic nervous system</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathing Techniques -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6">🌬️ Pranayama Techniques</h2>
+            
+            <div class="space-y-6">
+                <!-- Technique 1: Anulom Vilom -->
+                <div class="technique-card bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-4xl">1️⃣</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Anulom Vilom (Alternate Nostril Breathing)</h3>
+                            <p class="text-gray-700 mb-4">A balancing breath that harmonizes left and right brain hemispheres</p>
+                            
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">How to Practice:</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                                    <li>Sit comfortably with spine straight</li>
+                                    <li>Close right nostril with right thumb</li>
+                                    <li>Inhale slowly through left nostril (4 counts)</li>
+                                    <li>Close left nostril with ring finger, release right</li>
+                                    <li>Exhale through right nostril (4 counts)</li>
+                                    <li>Inhale through right nostril (4 counts)</li>
+                                    <li>Switch and exhale through left nostril (4 counts)</li>
+                                    <li>This completes one round - repeat 10 times</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-3">
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">⏱ 3-5 minutes</span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">🎯 Balance & Calm</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-semibold">📊 Beginner Friendly</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technique 2: Kapalbhati -->
+                <div class="technique-card bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-4xl">2️⃣</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Kapalbhati (Skull Shining Breath)</h3>
+                            <p class="text-gray-700 mb-4">Energizing breath that cleanses respiratory system and boosts metabolism</p>
+                            
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">How to Practice:</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                                    <li>Sit in comfortable position with straight spine</li>
+                                    <li>Take a deep breath in</li>
+                                    <li>Exhale forcefully through nose by contracting abdomen</li>
+                                    <li>Allow passive inhalation (belly naturally expands)</li>
+                                    <li>Repeat rapid exhalations 20-30 times per round</li>
+                                    <li>Rest for 30 seconds between rounds</li>
+                                    <li>Complete 3 rounds</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-3">
+                                <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-semibold">⏱ 2-3 minutes</span>
+                                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-semibold">🔥 Energizing</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">⚠️ Avoid if pregnant</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technique 3: Bhramari -->
+                <div class="technique-card bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-4xl">3️⃣</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Bhramari (Bee Breath)</h3>
+                            <p class="text-gray-700 mb-4">Calming breath that reduces anxiety and promotes deep relaxation</p>
+                            
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">How to Practice:</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                                    <li>Sit comfortably with eyes closed</li>
+                                    <li>Place index fingers on ears to close them</li>
+                                    <li>Take a deep breath in through nose</li>
+                                    <li>Exhale slowly while making humming sound like a bee</li>
+                                    <li>Feel the vibration in your head</li>
+                                    <li>Repeat 5-10 times</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-3">
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-semibold">⏱ 2-3 minutes</span>
+                                <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs font-semibold">😌 Calming</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-semibold">🧘 Meditation Aid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technique 4: Ujjayi -->
+                <div class="technique-card bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-4xl">4️⃣</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Ujjayi (Ocean Breath)</h3>
+                            <p class="text-gray-700 mb-4">Victorious breath that builds internal heat and enhances focus</p>
+                            
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">How to Practice:</h4>
+                                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                                    <li>Sit or stand with spine straight</li>
+                                    <li>Slightly constrict the back of your throat</li>
+                                    <li>Inhale through nose making soft ocean sound (5 counts)</li>
+                                    <li>Exhale through nose with same sound (5 counts)</li>
+                                    <li>Keep breath smooth and controlled</li>
+                                    <li>Practice for 5-10 minutes</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-3">
+                                <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-xs font-semibold">⏱ 5-10 minutes</span>
+                                <span class="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-xs font-semibold">🔥 Warming</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">🎯 Focus Builder</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg p-8 text-white mb-8">
+            <h2 class="yogic-heading text-2xl font-bold mb-6">💡 Important Guidelines</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Practice on empty stomach, preferably in the morning</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Sit in a comfortable position with straight spine</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Never force the breath - keep it natural and smooth</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">✓</span>
+                    <p class="text-sm">Stop if you feel dizzy or uncomfortable</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">⚠️</span>
+                    <p class="text-sm">Consult doctor if you have respiratory conditions</p>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <span class="text-2xl">⚠️</span>
+                    <p class="text-sm">Pregnant women should avoid forceful breathing</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Button -->
+        <div class="text-center">
+            <a href="{{ url_for('module_session', module_type='breathing') }}" 
+               class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-12 py-4 rounded-xl text-lg font-bold hover:shadow-2xl transition transform hover:scale-105">
+                START SESSION →
+            </a>
+        </div>
+    </div>
+</body>
+</html>
