@@ -1069,7 +1069,11 @@ def internal_error(error):
 if __name__ == '__main__':
     print("🧘 Yogic Guide - Starting Clean Version")
     print("=" * 40)
-    print(f"🌐 Server: http://localhost:5000")
+    
+    # Get port from environment variable (required for Render)
+    port = int(os.getenv('PORT', 5000))
+    
+    print(f"🌐 Server: http://0.0.0.0:{port}")
     print(f"📊 Database: {'Connected' if MONGO_AVAILABLE else 'Disconnected'}")
     
     # Create admin user if needed
@@ -1079,7 +1083,9 @@ if __name__ == '__main__':
     print("⏹️  Press Ctrl+C to stop")
     
     try:
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        # Use environment variable for debug mode
+        debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+        app.run(debug=debug_mode, host='0.0.0.0', port=port)
     except KeyboardInterrupt:
         print("\n👋 Application stopped by user")
     except Exception as e:
