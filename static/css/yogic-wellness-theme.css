@@ -40,11 +40,112 @@ body {
     color: var(--text-primary);
 }
 
-/* Navigation - Soft Sage */
+/* Navigation - Enhanced Purple Gradient with Glass Effect */
 .nav-wellness {
-    background-color: var(--color-sage);
-    color: var(--bg-primary);
-    border-bottom: 2px solid var(--color-sage-dark);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.nav-wellness:hover {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Navbar Links Hover Effect */
+.nav-wellness a {
+    transition: all 0.3s ease;
+}
+
+.nav-wellness a:hover {
+    transform: translateY(-1px);
+}
+
+/* Logo Hover Effect */
+.nav-wellness img {
+    transition: all 0.3s ease;
+}
+
+.nav-wellness a:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Enhanced Header Styles - Bigger & Bolder */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 3.5rem !important;
+    font-weight: 900 !important;
+}
+
+h2 {
+    font-size: 2.75rem !important;
+    font-weight: 800 !important;
+}
+
+h3 {
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+}
+
+h4 {
+    font-size: 1.875rem !important;
+    font-weight: 700 !important;
+}
+
+h5 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+}
+
+h6 {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+}
+
+/* Responsive Header Sizes */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    h2 {
+        font-size: 2rem !important;
+    }
+    
+    h3 {
+        font-size: 1.75rem !important;
+    }
+    
+    h4 {
+        font-size: 1.5rem !important;
+    }
+    
+    h5 {
+        font-size: 1.25rem !important;
+    }
+    
+    h6 {
+        font-size: 1.125rem !important;
+    }
+}
+
+/* Yogic Heading Class Enhancement */
+.yogic-heading {
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* Modern Body Text Enhancement */
+.modern-body {
+    font-weight: 500 !important;
 }
 
 .nav-wellness-light {
@@ -248,10 +349,10 @@ body {
     letter-spacing: 0.05em;
 }
 
-/* Hero Section - Soft Gradient */
+/* Hero Section - Purple Gradient */
 .hero-wellness {
-    background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-olive) 100%);
-    color: var(--bg-primary);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    color: #ffffff;
 }
 
 /* Navigation Links - Wellness */
@@ -336,10 +437,10 @@ body {
 
 /* Footer - Wellness */
 .footer-wellness {
-    background-color: var(--color-sage);
-    color: var(--bg-primary);
+    background: linear-gradient(to right, #1f2937 0%, #374151 50%, #1f2937 100%);
+    color: #ffffff;
     padding: 2rem 0;
-    border-top: 2px solid var(--color-sage-dark);
+    border-top: none;
 }
 
 /* Dividers */

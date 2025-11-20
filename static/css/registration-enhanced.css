@@ -1,0 +1,317 @@
+/* Registration Page UI Enhancement - Custom Select Box Styling */
+
+/* Custom Select Box Base Styling */
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #ffffff;
+    border: 2px solid #E8DCC4;
+    border-radius: 0.5rem;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #6B7D63;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%236B7D63%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem 1.25rem;
+}
+
+/* Hover State */
+.custom-select:hover {
+    border-color: #8B9D83;
+    box-shadow: 0 2px 8px rgba(107, 125, 99, 0.1);
+}
+
+/* Focus State */
+.custom-select:focus {
+    outline: none;
+    border-color: #6B7D63;
+    box-shadow: 0 0 0 3px rgba(107, 125, 99, 0.1);
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%236B7D63%27 stroke-width=%272.5%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e');
+}
+
+/* Active/Open State */
+.custom-select:active {
+    border-color: #6B7D63;
+}
+
+/* Disabled State */
+.custom-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #f9fafb;
+}
+
+/* Option Styling */
+.custom-select option {
+    background-color: #ffffff;
+    color: #374151;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+.custom-select option:hover {
+    background-color: #eef2ff;
+    color: #4f46e5;
+}
+
+.custom-select option:checked {
+    background-color: #6B7D63;
+    color: #ffffff;
+}
+
+/* Cross-browser compatibility fixes */
+
+/* Firefox */
+@-moz-document url-prefix() {
+    .custom-select {
+        padding-right: 2rem;
+    }
+}
+
+/* IE 10+ */
+.custom-select::-ms-expand {
+    display: none;
+}
+
+/* Safari */
+@supports (-webkit-appearance: none) {
+    .custom-select {
+        appearance: none;
+        -webkit-appearance: none;
+    }
+}
+
+/* Enhanced Input Styling to Match */
+.custom-input {
+    border: 2px solid #E8DCC4;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #374151;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+}
+
+.custom-input:hover {
+    border-color: #8B9D83;
+}
+
+.custom-input:focus {
+    outline: none;
+    border-color: #6B7D63;
+    box-shadow: 0 0 0 3px rgba(107, 125, 99, 0.1);
+}
+
+.custom-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Error State for Inputs and Selects */
+.custom-input.error,
+.custom-select.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.custom-input.error:focus,
+.custom-select.error:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Success State */
+.custom-input.success,
+.custom-select.success {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.custom-input.success:focus,
+.custom-select.success:focus {
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .custom-select,
+    .custom-input {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.875rem 1rem;
+    }
+    
+    .custom-select {
+        padding-right: 2.5rem;
+    }
+}
+
+
+/* Validation Feedback Styling */
+.error-message {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #dc2626;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.error-message:before {
+    content: '⚠ ';
+    margin-right: 0.25rem;
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Success indicator */
+.custom-input.success:after,
+.custom-select.success:after {
+    content: '✓';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #10b981;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Input wrapper for positioning success icon */
+.input-wrapper {
+    position: relative;
+}
+
+/* Loading state for async validation */
+.custom-input.validating,
+.custom-select.validating {
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%236B7D63%27 stroke-width=%272%27%3e%3ccircle cx=%2712%27 cy=%2712%27 r=%2710%27 stroke-opacity=%270.25%27/%3e%3cpath d=%27M12 2 A10 10 0 0 1 22 12%27 stroke-opacity=%271%27/%3e%3c/svg%3e');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.25rem 1.25rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Tooltip for validation hints */
+.validation-hint {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: #374151;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    margin-bottom: 0.5rem;
+    z-index: 10;
+}
+
+.validation-hint:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 1rem;
+    border: 0.375rem solid transparent;
+    border-top-color: #374151;
+}
+
+.custom-input:focus + .validation-hint,
+.custom-select:focus + .validation-hint {
+    opacity: 1;
+}
+
+/* Required field indicator */
+label:has(+ input[required]):after,
+label:has(+ select[required]):after {
+    content: ' *';
+    color: #dc2626;
+}
+
+/* Form section animations */
+.form-section {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation for form sections */
+.form-section:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.form-section:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.form-section:nth-child(5) {
+    animation-delay: 0.3s;
+}
+
+/* Focus within section highlight */
+.form-section:focus-within {
+    border-color: #8B9D83;
+    box-shadow: 0 4px 16px rgba(107, 125, 99, 0.12);
+}
+
+/* Accessibility improvements */
+.custom-input:focus,
+.custom-select:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .custom-input,
+    .custom-select {
+        border-width: 3px;
+    }
+    
+    .custom-input.error,
+    .custom-select.error {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .form-section,
+    .custom-input,
+    .custom-select,
+    .shake {
+        animation: none;
+        transition: none;
+    }
+}

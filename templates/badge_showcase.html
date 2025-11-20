@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% from "components/badges.html" import 
+    render_agent_badge, 
+    render_skill_badge, 
+    render_process_badge,
+    render_badge,
+    render_skill_sticker,
+    render_user_badges,
+    render_session_status,
+    render_accuracy_badge,
+    render_module_badge,
+    render_fa_badge,
+    badge_container_start,
+    badge_container_end,
+    sticker_container_start,
+    sticker_container_end
+%}
+
+{% block title %}Badge System Showcase - Yogic Guide{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto p-6">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Badge System Showcase</h1>
+        <p class="text-gray-600">Visual demonstration of all badge components</p>
+    </div>
+
+    <!-- Agent Badges -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Agent Badges (Role-based)</h2>
+        <div class="space-y-4">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Default Sizes:</h3>
+                <div class="flex flex-wrap gap-3">
+                    {{ render_agent_badge('Admin', 'admin', 'sm') }}
+                    {{ render_agent_badge('Admin', 'admin', 'md') }}
+                    {{ render_agent_badge('Admin', 'admin', 'lg') }}
+                </div>
+            </div>
+            <div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Role Variants:</h3>
+                <div class="flex flex-wrap gap-3">
+                    {{ render_agent_badge('Admin', 'admin') }}
+                    {{ render_agent_badge('User', 'user') }}
+                    {{ render_agent_badge('Premium', 'premium') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Badges -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Skill Badges (Achievement-based)</h2>
+        <div class="space-y-4">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Skill Levels:</h3>
+                <div class="flex flex-wrap gap-3">
+                    {{ render_skill_badge('Beginner', 'beginner') }}
+                    {{ render_skill_badge('Intermediate', 'intermediate') }}
+                    {{ render_skill_badge('Advanced', 'advanced') }}
+                    {{ render_skill_badge('Expert', 'expert') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Badges -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Process Badges (Status indicators)</h2>
+        <div class="space-y-4">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Status Types:</h3>
+                <div class="flex flex-wrap gap-3">
+                    {{ render_process_badge('Active', 'active') }}
+                    {{ render_process_badge('Completed', 'completed') }}
+                    {{ render_process_badge('In Progress', 'in-progress') }}
+                    {{ render_process_badge('Paused', 'paused') }}
+                    {{ render_process_badge('Failed', 'failed') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Stickers -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Skill Stickers (Decorative)</h2>
+        <div class="space-y-4">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Sticker Types:</h3>
+                {{ sticker_container_start() }}
+                    {{ render_skill_sticker('🪷', 'lotus', 'md', 'Lotus') }}
+                    {{ render_skill_sticker('🕉️', 'om', 'md', 'Om') }}
+                    {{ render_skill_sticker('☸️', 'chakra', 'md', 'Chakra') }}
+                    {{ render_skill_sticker('☮️', 'peace', 'md', 'Peace') }}
+                    {{ render_skill_sticker('🧘', 'zen', 'md', 'Zen') }}
+                    {{ render_skill_sticker('🙏', 'namaste', 'md', 'Namaste') }}
+                {{ sticker_container_end() }}
+            </div>
+            <div>
+                <h3 class="text-sm font-semibold text-gray-600 mb-2">Sticker Sizes:</h3>
+                {{ sticker_container_start() }}
+                    {{ render_skill_sticker('🪷', 'lotus', 'sm', 'Small') }}
+                    {{ render_skill_sticker('🪷', 'lotus', 'md', 'Medium') }}
+                    {{ render_skill_sticker('🪷', 'lotus', 'lg', 'Large') }}
+                {{ sticker_container_end() }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Badges -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Module Badges</h2>
+        <div class="flex flex-wrap gap-3">
+            {{ render_module_badge('surya-namaskar') }}
+            {{ render_module_badge('breathing') }}
+            {{ render_module_badge('stretching') }}
+            {{ render_module_badge('meditation') }}
+        </div>
+    </div>
+
+    <!-- Accuracy Badges -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Accuracy Badges</h2>
+        <div class="flex flex-wrap gap-3">
+            {{ render_accuracy_badge(95.5) }}
+            {{ render_accuracy_badge(82.3) }}
+            {{ render_accuracy_badge(68.7) }}
+            {{ render_accuracy_badge(45.2) }}
+        </div>
+    </div>
+
+    <!-- Font Awesome Badges -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Font Awesome Icon Badges</h2>
+        <div class="flex flex-wrap gap-3">
+            {{ render_fa_badge('Verified', 'skill', 'expert', 'fas fa-check-circle') }}
+            {{ render_fa_badge('New', 'process', 'in-progress', 'fas fa-sparkles') }}
+            {{ render_fa_badge('Featured', 'agent', 'premium', 'fas fa-star') }}
+            {{ render_fa_badge('Trending', 'process', 'active', 'fas fa-fire') }}
+        </div>
+    </div>
+
+    <!-- Combined Example -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Combined User Display Example</h2>
+        <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+                JD
+            </div>
+            <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">John Doe</h3>
+                <p class="text-sm text-gray-600">john.doe@example.com</p>
+                <div class="mt-2 flex flex-wrap gap-2">
+                    {{ render_agent_badge('Admin', 'admin', 'sm') }}
+                    {{ render_skill_badge('Advanced', 'advanced', 'sm') }}
+                    {{ render_process_badge('Active', 'active', 'sm') }}
+                    {{ render_skill_sticker('🪷', 'lotus', 'sm', 'Lotus Master') }}
+                    {{ render_skill_sticker('🕉️', 'om', 'sm', 'Om Practitioner') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animations Demo -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Animated Badges</h2>
+        <div class="flex flex-wrap gap-3">
+            <span class="badge badge-agent badge-agent-premium badge-md badge-pulse">
+                <span class="badge-icon">⭐</span>
+                <span class="badge-text">Pulsing Badge</span>
+            </span>
+            <span class="badge badge-skill badge-skill-expert badge-md badge-shine">
+                <span class="badge-icon">🏆</span>
+                <span class="badge-text">Shining Badge</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Accessibility Note -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h2 class="text-xl font-bold text-blue-800 mb-2">♿ Accessibility Features</h2>
+        <ul class="list-disc list-inside text-blue-700 space-y-1">
+            <li>All badges have proper ARIA labels</li>
+            <li>Color contrast ratios meet WCAG AA standards</li>
+            <li>Keyboard navigation support with focus states</li>
+            <li>Reduced motion support for users with motion sensitivity</li>
+            <li>Screen reader compatible with semantic HTML</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -32,12 +32,15 @@ class DatabaseManager:
         """Create database indexes for optimal performance"""
         # User indexes
         self.users.create_index("email", unique=True)
+        self.users.create_index("uniqueId", unique=True, sparse=True)  # NEW: Unique user ID
         self.users.create_index("phone", unique=True, sparse=True)
         self.users.create_index([("social.friends", 1)])
+        self.users.create_index([("badges.type", 1)])  # NEW: Badge type index
         
         # Session indexes
         self.sessions.create_index([("userId", 1), ("startTime", -1)])
         self.sessions.create_index([("module", 1)])
+        self.sessions.create_index([("module", 1), ("userId", 1)])  # NEW: Module + user compound index
         
         # Leaderboard indexes
         self.leaderboards.create_index([("type", 1), ("rank", 1)])
@@ -56,6 +59,8 @@ class UserModel:
     
     def create_user(self, user_data: Dict) -> ObjectId:
         """Create a new user with enhanced profile"""
+        import uuid
+        
         # Hash password
         if 'password' in user_data:
             user_data['password'] = bcrypt.hashpw(
@@ -63,8 +68,12 @@ class UserModel:
                 bcrypt.gensalt()
             )
         
+        # Generate unique user ID
+        unique_user_id = str(uuid.uuid4())[:8].upper()
+        
         # Set defaults
         user_doc = {
+            'uniqueId': unique_user_id,  # Unique 8-character ID
             'email': user_data['email'],
             'password': user_data['password'],
             'phone': user_data.get('phone'),
@@ -89,11 +98,30 @@ class UserModel:
                 'healthConditions': user_data.get('healthConditions', []),
                 'injuries': []
             },
+            'badges': [  # NEW: Default badges based on role and experience
+                {
+                    'type': 'agent',
+                    'label': 'Admin' if user_data.get('role') == 'admin' else 'User',
+                    'color': '#667eea' if user_data.get('role') == 'admin' else '#48bb78',
+                    'earnedAt': datetime.now()
+                },
+                {
+                    'type': 'skill',
+                    'label': user_data.get('experienceLevel', 'Beginner'),
+                    'color': '#4299e1' if user_data.get('experienceLevel', 'Beginner') == 'Beginner' else '#ed8936' if user_data.get('experienceLevel') == 'Intermediate' else '#9f7aea',
+                    'level': 1 if user_data.get('experienceLevel', 'Beginner') == 'Beginner' else 2 if user_data.get('experienceLevel') == 'Intermediate' else 3,
+                    'earnedAt': datetime.now()
+                }
+            ],
+            'stickers': [],  # NEW: Empty array for earned stickers
             'preferences': {
                 'experienceLevel': user_data.get('experienceLevel', 'Beginner'),
                 'language': user_data.get('language', 'English'),
                 'voice': user_data.get('voice', 'default'),
                 'theme': user_data.get('theme', 'light'),
+                'voiceOverEnabled': user_data.get('voiceOverEnabled', True),  # NEW: Voice-over preference
+                'voiceOverSpeed': user_data.get('voiceOverSpeed', 1.0),  # NEW: Voice speed (0.5-2.0)
+                'voiceOverVolume': user_data.get('voiceOverVolume', 1.0),  # NEW: Voice volume (0-1)
                 'notifications': {
                     'push': True,
                     'email': True,
@@ -301,11 +329,28 @@ class SessionModel:
         self.db = db_manager
         self.collection = db_manager.sessions
     
-    def create_session(self, user_id: ObjectId, module_type: str, module_name: str) -> ObjectId:
-        """Create a new practice session"""
+    def create_session(self, user_id: ObjectId, module_type: str, module_name: str = None) -> ObjectId:
+        """Create a new practice session with module tracking
+        
+        Args:
+            user_id: User's ObjectId
+            module_type: Module type (surya_namaskar, breathing, stretching, etc.)
+            module_name: Optional display name for the module
+        """
+        # If module_name not provided, generate from module_type
+        if not module_name:
+            module_name_map = {
+                'surya_namaskar': 'Surya Namaskar',
+                'breathing': 'Breathing Exercises',
+                'stretching': 'Stretching Routine',
+                'meditation': 'Meditation',
+                'custom': 'Custom Routine'
+            }
+            module_name = module_name_map.get(module_type, module_type.replace('_', ' ').title())
+        
         session_doc = {
             'userId': user_id,
-            'module': module_type,
+            'module': module_type,  # REQUIRED: Module type for tracking
             'moduleName': module_name,
             'startTime': datetime.now(),
             'endTime': None,

@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Email - Yogic Guide</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body class="bg-gray-50 min-h-screen">
+{% extends "base.html" %}
+
+{% block title %}Verify Email - Yogic Guide{% endblock %}
+
+{% block content %}
     <div class="flex items-center justify-center min-h-screen p-6">
-        <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg w-full max-w-md">
+        <div class="gradient-card p-8 md:p-12 rounded-2xl w-full max-w-md welcome-animation">
             <div class="text-center mb-8">
-                <div class="text-6xl mb-4">📧</div>
-                <h1 class="text-3xl font-bold text-indigo-600 mb-2">Verify Your Email</h1>
-                <p class="text-gray-600">We've sent a verification code to:</p>
-                <p class="font-semibold text-gray-800">{{ email }}</p>
+                <div class="text-6xl mb-4 floating-icon">📧</div>
+                <h1 class="yogic-heading text-3xl font-bold text-gradient mb-2">Verify Your Email</h1>
+                <p class="modern-body text-slate-600">We've sent a verification code to:</p>
+                <p class="modern-body font-semibold text-slate-800">{{ email }}</p>
             </div>
             
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -29,21 +24,21 @@
             
             <form method="POST" class="space-y-6">
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Verification Code</label>
+                    <label class="block text-slate-700 text-sm font-bold mb-2 modern-body">Verification Code</label>
                     <input type="text" name="otp" required maxlength="6" 
-                        class="form-input text-center text-2xl tracking-widest"
+                        class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-center text-2xl tracking-widest"
                         placeholder="000000" autocomplete="off">
-                    <p class="text-xs text-gray-500 mt-1">Enter the 6-digit code from your email</p>
+                    <p class="modern-body text-xs text-slate-500 mt-1">Enter the 6-digit code from your email</p>
                 </div>
                 
-                <button type="submit" class="btn-primary w-full">
+                <button type="submit" class="btn-gradient w-full py-3 text-white font-semibold rounded-lg">
                     Verify Email
                 </button>
             </form>
             
             <div class="mt-6 text-center">
-                <p class="text-gray-600 text-sm">Didn't receive the code?</p>
-                <button onclick="resendCode()" class="text-indigo-600 hover:text-indigo-700 font-semibold text-sm">
+                <p class="modern-body text-slate-600 text-sm">Didn't receive the code?</p>
+                <button onclick="resendCode()" class="modern-body text-indigo-600 hover:text-indigo-700 font-semibold text-sm">
                     Resend Code
                 </button>
             </div>
@@ -71,5 +66,4 @@
         });
     }
     </script>
-</body>
-</html>
+{% endblock %}

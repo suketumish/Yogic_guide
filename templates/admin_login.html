@@ -14,33 +14,114 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
     
-    <!-- Google Fonts for Yogic Theme -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
         .yogic-heading {
             font-family: 'Playfair Display', serif;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.02em;
         }
-        .yogic-body {
-            font-family: 'Poppins', sans-serif;
+        
+        .modern-body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .gradient-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .btn-gradient {
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-animation {
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
-<body style="background-color: #FDFBF7;" class="min-h-screen">
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 modern-body">
     <div class="min-h-screen grid md:grid-cols-2">
         <!-- Left Side - Hero Section with Image (Hidden on mobile) -->
-        <div class="hidden md:flex flex-col relative overflow-hidden"
-            style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
+        <div class="hidden md:flex flex-col relative overflow-hidden hero-gradient">
             
             <!-- Background Image with Overlay -->
             <div class="absolute inset-0">
                 <img src="https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=80" 
                      alt="Admin Dashboard" 
-                     class="w-full h-full object-cover opacity-30">
-                <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(139, 157, 131, 0.85) 0%, rgba(155, 161, 123, 0.85) 100%);"></div>
+                     class="w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/80 via-purple-600/80 to-pink-500/80"></div>
             </div>
             
             <!-- Content -->

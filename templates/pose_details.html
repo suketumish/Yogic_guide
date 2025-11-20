@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pose.name }} - Pose Details | Yogic Guide{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pose-details-container {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .section-card {
+        transition: all 0.3s ease;
+    }
+    
+    .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.12);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pose-details-container max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Back Button -->
+    <div class="mb-6">
+        <a href="{{ url_for('dashboard') }}" 
+           class="btn-gradient text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center space-x-2 hover:shadow-xl transition">
+            <span>←</span>
+            <span>Back to Dashboard</span>
+        </a>
+    </div>
+    <!-- Pose Header -->
+    <div class="gradient-card rounded-2xl p-8 mb-8 section-card">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="flex-shrink-0">
+                <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-6xl shadow-lg floating-icon">
+                    {{ pose.icon or '🧘' }}
+                </div>
+            </div>
+            
+            <div class="flex-1 text-center md:text-left">
+                <h1 class="yogic-heading text-4xl font-bold text-gray-800 mb-2">{{ pose.name }}</h1>
+                <p class="text-2xl text-purple-600 mb-4 italic">{{ pose.sanskritName or pose.sanskrit_name or '' }}</p>
+                <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                    <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+                        {{ pose.difficulty or 'Beginner' }}
+                    </span>
+                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                        {{ pose.category or 'Yoga' }}
+                    </span>
+                    <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                        ⏱️ {{ pose.duration or '30' }} seconds
+                    </span>
+                </div>
+            </div>
+            
+            <div class="flex flex-col space-y-3">
+                <button onclick="startPractice()" class="btn-gradient text-white px-6 py-3 rounded-xl font-semibold hover:shadow-xl transition">
+                    Start Practice
+                </button>
+                <button onclick="playVoiceOver()" class="bg-white border-2 border-purple-200 text-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-purple-50 transition">
+                    🔊 Voice Guide
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pose Image -->
+    {% if pose.imageUrl or pose.image %}
+    <div class="gradient-card rounded-2xl p-8 mb-8 section-card">
+        <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">📸</span>
+            Pose Demonstration
+        </h2>
+        <div class="flex justify-center">
+            <img src="{{ pose.imageUrl or pose.image }}" 
+                 alt="{{ pose.name }} demonstration" 
+                 class="max-w-full h-auto rounded-2xl shadow-lg"
+                 onerror="this.style.display='none'">
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Step-by-Step Instructions -->
+    {% if pose.instructions %}
+    <div class="gradient-card rounded-2xl p-8 mb-8 section-card">
+        <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">📋</span>
+            Step-by-Step Instructions
+        </h2>
+        <ol class="space-y-4">
+            {% for instruction in pose.instructions %}
+            <li class="flex items-start space-x-4">
+                <span class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                    {{ loop.index }}
+                </span>
+                <p class="text-gray-700 leading-relaxed pt-1">{{ instruction }}</p>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+    {% endif %}
+
+    <!-- Benefits -->
+    {% if pose.benefits %}
+    <div class="gradient-card rounded-2xl p-8 mb-8 section-card">
+        <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">✨</span>
+            Health Benefits
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for benefit in pose.benefits %}
+            <div class="flex items-start space-x-3 bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl hover:shadow-md transition">
+                <span class="text-2xl text-green-600">✓</span>
+                <p class="text-gray-700">{{ benefit }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Importance -->
+    {% if pose.importance %}
+    <div class="gradient-card rounded-2xl p-8 mb-8 section-card bg-gradient-to-r from-blue-50 to-indigo-50">
+        <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">💡</span>
+            Why This Pose Matters
+        </h2>
+        <p class="text-gray-700 leading-relaxed text-lg">
+            {{ pose.importance }}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Tips and Precautions -->
+    {% if pose.dos or pose.donts or pose.precautions or pose.tips %}
+    <div class="gradient-card rounded-2xl p-8 mb-8 section-card">
+        <h2 class="yogic-heading text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">💡</span>
+            Tips & Precautions
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Do's -->
+            {% if pose.dos %}
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-l-4 border-green-500">
+                <h3 class="font-bold text-lg text-green-800 mb-4 flex items-center">
+                    <span class="text-2xl mr-2">✓</span>
+                    Do's
+                </h3>
+                <ul class="space-y-2">
+                    {% for tip in pose.dos %}
+                    <li class="flex items-start space-x-2">
+                        <span class="text-green-600 mt-1">•</span>
+                        <p class="text-gray-700 text-sm">{{ tip }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- Don'ts -->
+            {% if pose.donts %}
+            <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-6 border-l-4 border-red-500">
+                <h3 class="font-bold text-lg text-red-800 mb-4 flex items-center">
+                    <span class="text-2xl mr-2">⚠️</span>
+                    Don'ts
+                </h3>
+                <ul class="space-y-2">
+                    {% for tip in pose.donts %}
+                    <li class="flex items-start space-x-2">
+                        <span class="text-red-600 mt-1">•</span>
+                        <p class="text-gray-700 text-sm">{{ tip }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- Precautions (fallback) -->
+            {% if pose.precautions and not pose.donts %}
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border-l-4 border-yellow-500">
+                <h3 class="font-bold text-lg text-yellow-800 mb-4 flex items-center">
+                    <span class="text-2xl mr-2">⚠️</span>
+                    Precautions
+                </h3>
+                <ul class="space-y-2">
+                    {% for precaution in pose.precautions %}
+                    <li class="flex items-start space-x-2">
+                        <span class="text-yellow-600 mt-1">•</span>
+                        <p class="text-gray-700 text-sm">{{ precaution }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- Tips (fallback) -->
+            {% if pose.tips and not pose.dos %}
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-500">
+                <h3 class="font-bold text-lg text-blue-800 mb-4 flex items-center">
+                    <span class="text-2xl mr-2">💡</span>
+                    Pro Tips
+                </h3>
+                <ul class="space-y-2">
+                    {% for tip in pose.tips %}
+                    <li class="flex items-start space-x-2">
+                        <span class="text-blue-600 mt-1">•</span>
+                        <p class="text-gray-700 text-sm">{{ tip }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Voice-Over Script -->
+<script src="{{ url_for('static', filename='js/voice-over.js') }}"></script>
+<script>
+    function startPractice() {
+        if (typeof voiceOver !== 'undefined') {
+            voiceOver.speak("Starting {{ pose.name }} practice. Please get into position.");
+        }
+        // Redirect to practice session
+        window.location.href = "{{ url_for('module_session', module_type=pose.module or 'yoga') }}?pose={{ pose.name }}";
+    }
+    
+    function playVoiceOver() {
+        if (typeof voiceOver === 'undefined') {
+            alert('Voice-over system not available. Please check your browser settings.');
+            return;
+        }
+        
+        const instructions = {{ pose.instructions | tojson | safe }};
+        let index = 0;
+        
+        function speakNext() {
+            if (index < instructions.length) {
+                voiceOver.speak(`Step ${index + 1}. ${instructions[index]}`, {
+                    onEnd: () => {
+                        index++;
+                        setTimeout(speakNext, 1000);
+                    }
+                });
+            } else {
+                voiceOver.speak("Instructions complete. You're ready to practice!");
+            }
+        }
+        
+        voiceOver.speak("{{ pose.name }} instructions. Listen carefully.", {
+            onEnd: () => setTimeout(speakNext, 1000)
+        });
+    }
+</script>
+{% endblock %}

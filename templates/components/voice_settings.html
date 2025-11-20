@@ -1,0 +1,178 @@
+<!-- Voice-Over Settings Component -->
+<div class="voice-settings-panel" id="voiceSettingsPanel">
+    <div class="settings-header">
+        <h3 class="settings-title">
+            <i class="fas fa-volume-up"></i>
+            Voice Guidance Settings
+        </h3>
+        <button class="close-btn" onclick="closeVoiceSettings()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <div class="settings-body">
+        <!-- Enable/Disable Toggle -->
+        <div class="setting-item">
+            <div class="setting-label">
+                <label for="voiceEnabled">Enable Voice Guidance</label>
+                <p class="setting-description">Get audio instructions during your practice</p>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="voiceEnabled" checked onchange="toggleVoiceOver()">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        
+        <!-- Speed Slider -->
+        <div class="setting-item">
+            <div class="setting-label">
+                <label for="voiceSpeed">Speech Speed</label>
+                <p class="setting-description">Adjust how fast the voice speaks</p>
+            </div>
+            <div class="slider-container">
+                <span class="slider-value">0.5x</span>
+                <input type="range" id="voiceSpeed" min="0.5" max="2.0" step="0.1" value="1.0" 
+                       oninput="updateVoiceSpeed(this.value)">
+                <span class="slider-value">2.0x</span>
+            </div>
+            <div class="current-value">
+                Current: <span id="currentSpeed">1.0x</span>
+            </div>
+        </div>
+        
+        <!-- Volume Slider -->
+        <div class="setting-item">
+            <div class="setting-label">
+                <label for="voiceVolume">Volume</label>
+                <p class="setting-description">Adjust voice guidance volume</p>
+            </div>
+            <div class="slider-container">
+                <i class="fas fa-volume-down"></i>
+                <input type="range" id="voiceVolume" min="0" max="1.0" step="0.1" value="1.0" 
+                       oninput="updateVoiceVolume(this.value)">
+                <i class="fas fa-volume-up"></i>
+            </div>
+            <div class="current-value">
+                Current: <span id="currentVolume">100%</span>
+            </div>
+        </div>
+        
+        <!-- Test Button -->
+        <div class="setting-item">
+            <button class="test-voice-btn" onclick="testVoiceSettings()">
+                <i class="fas fa-play-circle"></i>
+                Test Voice Settings
+            </button>
+        </div>
+        
+        <!-- Save Button -->
+        <div class="setting-actions">
+            <button class="save-settings-btn" onclick="saveVoiceSettings()">
+                <i class="fas fa-save"></i>
+                Save Settings
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Button (Floating) -->
+<button class="voice-settings-trigger" onclick="openVoiceSettings()" title="Voice Settings">
+    <i class="fas fa-cog"></i>
+</button>
+
+<script>
+// Voice Settings Management
+function openVoiceSettings() {
+    const panel = document.getElementById('voiceSettingsPanel');
+    panel.classList.add('active');
+    loadVoiceSettings();
+}
+
+function closeVoiceSettings() {
+    const panel = document.getElementById('voiceSettingsPanel');
+    panel.classList.remove('active');
+}
+
+function loadVoiceSettings() {
+    if (typeof voiceOver !== 'undefined') {
+        document.getElementById('voiceEnabled').checked = voiceOver.enabled;
+        document.getElementById('voiceSpeed').value = voiceOver.rate;
+        document.getElementById('voiceVolume').value = voiceOver.volume;
+        document.getElementById('currentSpeed').textContent = voiceOver.rate.toFixed(1) + 'x';
+        document.getElementById('currentVolume').textContent = Math.round(voiceOver.volume * 100) + '%';
+    }
+}
+
+function toggleVoiceOver() {
+    const enabled = document.getElementById('voiceEnabled').checked;
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.enabled = enabled;
+        voiceOver.savePreferences();
+        
+        if (enabled) {
+            voiceOver.speak('Voice guidance enabled');
+        }
+    }
+}
+
+function updateVoiceSpeed(value) {
+    const speed = parseFloat(value);
+    document.getElementById('currentSpeed').textContent = speed.toFixed(1) + 'x';
+    
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.setRate(speed);
+    }
+}
+
+function updateVoiceVolume(value) {
+    const volume = parseFloat(value);
+    document.getElementById('currentVolume').textContent = Math.round(volume * 100) + '%';
+    
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.setVolume(volume);
+    }
+}
+
+function testVoiceSettings() {
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.speak('This is a test of your voice guidance settings. You are doing great!');
+    }
+}
+
+async function saveVoiceSettings() {
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.savePreferences();
+        
+        // Also save to backend if user is logged in
+        try {
+            const response = await fetch('/api/user/preferences', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    voiceOverEnabled: voiceOver.enabled,
+                    voiceOverSpeed: voiceOver.rate,
+                    voiceOverVolume: voiceOver.volume
+                })
+            });
+            
+            if (response.ok) {
+                voiceOver.speak('Settings saved successfully');
+                setTimeout(() => closeVoiceSettings(), 1500);
+            }
+        } catch (error) {
+            console.error('Error saving preferences:', error);
+            voiceOver.speak('Settings saved locally');
+            setTimeout(() => closeVoiceSettings(), 1500);
+        }
+    }
+}
+
+// Load settings on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof voiceOver !== 'undefined') {
+        loadVoiceSettings();
+    }
+});
+</script>

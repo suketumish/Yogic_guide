@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yogic Guide - AI-Powered Yoga Assistant</title>
+    <title>ZenAlign - AI-Powered Yoga Assistant</title>
     <meta name="description"
         content="Transform your yoga practice with AI-powered real-time pose correction using MediaPipe technology">
 
@@ -14,87 +14,184 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#667eea">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact-section.css') }}">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts for Yogic Theme -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* Smooth scroll behavior */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 200px;
-            /* Account for fixed header */
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);
-        }
-
-        .hero-wellness {
-            background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);
-        }
-
-        .feature-card {
-            transition: all 0.3s ease;
-            background-color: #FDFBF7;
-            border: 2px solid #E8DCC4;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: #8B9D83;
-            box-shadow: 0 8px 24px rgba(139, 157, 131, 0.15);
+            scroll-padding-top: 100px;
         }
 
         .yogic-heading {
             font-family: 'Playfair Display', serif;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.02em;
         }
-
-        .yogic-body {
-            font-family: 'Poppins', sans-serif;
+        
+        .modern-body {
+            font-family: 'Inter', sans-serif;
         }
-
-        /* Navigation backdrop blur */
-        .nav-wellness {
-            background-color: rgba(139, 157, 131, 0.95);
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         }
-
-        .btn-wellness-terracotta {
-            background-color: #C17B5C;
-            color: white;
-            font-weight: 600;
-            border-radius: 0.5rem;
+        
+        .gradient-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+        }
+        
+        .gradient-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-left-color: #667eea;
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .btn-gradient {
+            background: var(--primary-gradient);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-
-        .btn-wellness-terracotta:hover {
-            background-color: #A86A4E;
+        
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gradient:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(193, 123, 92, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
-
-        .btn-wellness-outline {
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        .btn-wellness-outline:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .welcome-animation {
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-animation {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Admin Dashboard Style Cards */
+        .admin-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-left-color: #764ba2;
+        }
+        
+        .metric-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .metric-card.indigo { border-left-color: #6366f1; }
+        .metric-card.blue { border-left-color: #3b82f6; }
+        .metric-card.green { border-left-color: #10b981; }
+        .metric-card.purple { border-left-color: #8b5cf6; }
+        .metric-card.orange { border-left-color: #f59e0b; }
+        .metric-card.pink { border-left-color: #ec4899; }
+        
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -105,23 +202,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div class="flex items-center justify-between">
                 <!-- Logo - Left -->
-                <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
-                    <span class="text-2xl sm:text-3xl">🧘</span>
-                    <div>
-                        <span class="yogic-heading text-lg sm:text-xl md:text-2xl font-bold text-white block leading-tight">
-                            YOGIC GUIDE
-                        </span>
-                        <span class="yogic-body text-xs opacity-75 text-white hidden sm:block">AI-Powered Yoga Assistant</span>
-                    </div>
+                <a href="{{ url_for('index') }}" class="flex items-center space-x-4">
+                    <img src="{{ url_for('static', filename='images/Image1_preview.png') }}" alt="ZenAlign Logo" class="h-16 w-16 sm:h-24 sm:w-24 drop-shadow-2xl filter brightness-110">
+                    <img src="{{ url_for('static', filename='images/Image2_preview.png') }}" alt="ZenAlign" class="h-12 sm:h-16 drop-shadow-2xl filter brightness-110 contrast-125">
                 </a>
 
                 <!-- Desktop Navigation Links - Center -->
-                <div class="hidden lg:flex items-center gap-2 md:gap-4">
-                    <a href="#features" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">Features</a>
-                    <a href="#how-it-works" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">How It Works</a>
-                    <a href="#benefits" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">Benefits</a>
-                    <a href="{{ url_for('about') }}" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">About</a>
-                    <a href="{{ url_for('contact') }}" class="yogic-body px-3 py-2 text-sm text-white rounded hover:bg-white/20 transition">Contact</a>
+                <div class="hidden lg:flex items-center gap-1 md:gap-2">
+                    <a href="#features" class="yogic-body px-4 py-2 text-sm text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-medium hover:shadow-lg">Features</a>
+                    <a href="#how-it-works" class="yogic-body px-4 py-2 text-sm text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-medium hover:shadow-lg">How It Works</a>
+                    <a href="#benefits" class="yogic-body px-4 py-2 text-sm text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-medium hover:shadow-lg">Benefits</a>
+                    <a href="{{ url_for('about') }}" class="yogic-body px-4 py-2 text-sm text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-medium hover:shadow-lg">About</a>
+                    <a href="{{ url_for('contact') }}" class="yogic-body px-4 py-2 text-sm text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-medium hover:shadow-lg">Contact</a>
                 </div>
 
                 <!-- Desktop Action Buttons - Right -->
@@ -129,31 +221,27 @@
                 {% if session.user_id %}
                 {% if session.is_admin %}
                 <a href="{{ url_for('admin_dashboard') }}"
-                    class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-sm"
-                    style="color: #6B7D63;">
+                    class="modern-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded-lg transition shadow-lg text-sm text-purple-600 font-semibold">
                     <span>👑</span>
-                    <span class="font-semibold">Admin</span>
+                    <span>Admin</span>
                 </a>
                 {% endif %}
                 <a href="{{ url_for('dashboard') }}"
-                    class="yogic-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded transition shadow-sm text-sm"
-                    style="color: #6B7D63;">
+                    class="modern-body flex items-center space-x-1 bg-white/90 px-4 py-2 rounded-lg transition shadow-lg text-sm text-indigo-600 font-semibold">
                     <span>📊</span>
-                    <span class="font-semibold">Dashboard</span>
+                    <span>Dashboard</span>
                 </a>
                 <a href="{{ url_for('logout') }}"
-                    class="yogic-body bg-transparent text-white px-4 py-2 rounded hover:bg-white transition border border-white text-sm">
+                    class="modern-body bg-white/10 text-white px-5 py-2 rounded-lg hover:bg-white/25 transition-all duration-300 border border-white/30 text-sm font-semibold hover:shadow-lg backdrop-blur-sm">
                     Logout
                 </a>
                 {% else %}
                 <a href="{{ url_for('login') }}"
-                    class="yogic-body bg-white/90 px-6 py-2 rounded hover:bg-white transition shadow-sm text-sm"
-                    style="color: #6B7D63;">
+                    class="modern-body bg-white/95 px-6 py-2.5 rounded-lg hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl text-sm text-slate-700 font-semibold backdrop-blur-sm">
                     Login
                 </a>
                 <a href="{{ url_for('register') }}"
-                    class="yogic-body bg-white text-sm px-6 py-2 rounded hover:bg-white/90 transition shadow-sm font-semibold"
-                    style="color: #6B7D63;">
+                    class="modern-body bg-white text-sm px-6 py-2.5 rounded-lg hover:bg-white/95 transition-all duration-300 shadow-lg hover:shadow-xl font-bold text-indigo-600 hover:scale-105">
                     Get Started
                 </a>
                 {% endif %}
@@ -226,68 +314,116 @@
     </script>
 
     <!-- Hero Section -->
-    <section class="hero-wellness pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-20 px-4 sm:px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 items-center">
-                <div class="text-white fade-in">
-                    <h1
-                        class="yogic-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                        Transform Your Yoga Practice with AI
-                    </h1>
-                    <p class="yogic-body text-base sm:text-lg md:text-xl mb-6 sm:mb-8 opacity-90">
-                        Real-time pose correction, personalized guidance, and progress tracking powered by advanced
-                        MediaPipe technology
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                        <a href="{{ url_for('register') }}"
-                            class="btn-wellness-terracotta px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg text-center">
-                            START FREE TRIAL
-                        </a>
-                        <a href="#how-it-works"
-                            class="btn-wellness-outline px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg text-center border-2 border-white text-white hover:bg-white hover:text-[#6B7D63]">
-                            LEARN MORE
-                        </a>
+    <div class="hero-gradient relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/10"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-32 sm:pt-40 pb-16 sm:pb-24">
+            <div class="text-center welcome-animation">
+                <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-6">
+                    <span class="text-2xl">✨</span>
+                    <span class="text-white font-medium modern-body">AI-Powered Yoga Assistant</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-4 yogic-heading">
+                    Transform Your Yoga Practice
+                </h1>
+                <p class="text-xl sm:text-2xl text-white/90 mb-8 modern-body max-w-3xl mx-auto">
+                    Real-time pose correction, personalized guidance, and progress tracking powered by advanced MediaPipe technology
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <a href="{{ url_for('register') }}" class="btn-gradient text-white px-8 py-4 rounded-2xl font-semibold text-lg modern-body">
+                        Start Free Trial ✨
+                    </a>
+                    <a href="#how-it-works" class="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-2xl font-semibold text-lg modern-body hover:bg-white/30 transition-all duration-300">
+                        Learn More 📚
+                    </a>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-12">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                        <p class="text-3xl font-bold text-white mb-2 yogic-heading">10K+</p>
+                        <p class="text-sm text-white/80 modern-body">Happy Users</p>
                     </div>
-                    <div
-                        class="mt-6 sm:mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-sm sm:text-base opacity-90">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xl sm:text-2xl">✓</span>
-                            <span>No Equipment Needed</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xl sm:text-2xl">✓</span>
-                            <span>All Skill Levels</span>
-                        </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                        <p class="text-3xl font-bold text-white mb-2 yogic-heading">95%</p>
+                        <p class="text-sm text-white/80 modern-body">Accuracy</p>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                        <p class="text-3xl font-bold text-white mb-2 yogic-heading">20+</p>
+                        <p class="text-sm text-white/80 modern-body">Yoga Poses</p>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                        <p class="text-3xl font-bold text-white mb-2 yogic-heading">24/7</p>
+                        <p class="text-sm text-white/80 modern-body">Access</p>
                     </div>
                 </div>
-                <div class="relative float mt-8 md:mt-0">
-                    <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-4 sm:p-8 shadow-2xl">
-                        <div class="aspect-video rounded-2xl overflow-hidden relative" style="background-color: #A89F91;">
-                            <video 
-                                autoplay 
-                                loop 
-                                muted 
-                                playsinline
-                                class="w-full h-full object-cover rounded-2xl">
-                                <source src="{{ url_for('static', filename='videos/293078 (online-video-cutter.com).mp4') }}" type="video/mp4">
-                                <!-- Fallback for browsers that don't support video -->
-                                <span class="text-6xl sm:text-9xl flex items-center justify-center h-full">🧘‍♀️</span>
-                            </video>
+                
+                <div class="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-white/80">
+                    <div class="flex items-center space-x-2">
+                        <span>✓</span>
+                        <span>No Equipment Needed</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>✓</span>
+                        <span>All Skill Levels</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span>✓</span>
+                        <span>Free Forever</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 text-6xl opacity-20 floating-icon">
+            <img src="{{ url_for('static', filename='images/Image1_preview.png') }}" alt="" class="h-20 w-20 opacity-30 filter brightness-110">
+        </div>
+        <div class="absolute top-40 right-20 text-4xl opacity-30 floating-icon" style="animation-delay: 1s;">🌸</div>
+        <div class="absolute bottom-20 left-20 text-5xl opacity-25 floating-icon" style="animation-delay: 2s;">✨</div>
+        <div class="absolute bottom-40 right-10 text-4xl opacity-20 floating-icon" style="animation-delay: 3s;">🍃</div>
+    </div>
+
+    <!-- Video Demo Section -->
+    <section class="py-12 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 yogic-heading">
+                    See ZenAlign in Action
+                </h2>
+                <p class="text-xl text-gray-600 modern-body max-w-2xl mx-auto">
+                    Watch how our AI-powered system provides real-time feedback and guidance
+                </p>
+            </div>
+
+            <div class="gradient-card rounded-3xl p-4 sm:p-8 max-w-5xl mx-auto">
+                <div class="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-purple-100 to-indigo-100 shadow-2xl">
+                    <video 
+                        autoplay 
+                        loop 
+                        muted 
+                        playsinline
+                        class="w-full h-full object-cover">
+                        <source src="{{ url_for('static', filename='videos/preview_vdo.mp4') }}" type="video/mp4">
+                        <!-- Fallback -->
+                        <div class="flex items-center justify-center h-full">
+                            <img src="{{ url_for('static', filename='images/Image1_preview.png') }}" alt="ZenAlign Demo" class="h-40 w-40 opacity-50 filter brightness-110">
                         </div>
-                        <div class="mt-4 sm:mt-6 grid grid-cols-3 gap-2 sm:gap-4">
-                            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3 text-center">
-                                <p class="yogic-heading text-xl sm:text-2xl font-bold text-white">95%</p>
-                                <p class="yogic-body text-xs sm:text-sm opacity-90">Accuracy</p>
-                            </div>
-                            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3 text-center">
-                                <p class="yogic-heading text-xl sm:text-2xl font-bold text-white">20+</p>
-                                <p class="yogic-body text-xs sm:text-sm opacity-90">Poses</p>
-                            </div>
-                            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3 text-center">
-                                <p class="yogic-heading text-xl sm:text-2xl font-bold text-white">24/7</p>
-                                <p class="yogic-body text-xs sm:text-sm opacity-90">Access</p>
-                            </div>
-                        </div>
+                    </video>
+                </div>
+                
+                <!-- Video Stats -->
+                <div class="mt-6 grid grid-cols-3 gap-4">
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 text-center">
+                        <p class="text-2xl font-bold text-green-600 mb-1 yogic-heading">95%</p>
+                        <p class="text-sm text-gray-600 modern-body">Accuracy</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 text-center">
+                        <p class="text-2xl font-bold text-blue-600 mb-1 yogic-heading">Real-Time</p>
+                        <p class="text-sm text-gray-600 modern-body">Feedback</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 text-center">
+                        <p class="text-2xl font-bold text-purple-600 mb-1 yogic-heading">20+</p>
+                        <p class="text-sm text-gray-600 modern-body">Poses</p>
                     </div>
                 </div>
             </div>
@@ -295,136 +431,164 @@
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="py-12 sm:py-20 px-4 sm:px-6" style="background-color: #F5F1E8;">
+    <section id="features" class="py-12 sm:py-20 px-4 sm:px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-8 sm:mb-16">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">Powerful Features</h2>
-                <p class="text-base sm:text-lg md:text-xl text-gray-600">Everything you need for a perfect yoga practice
+            <div class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 yogic-heading">
+                    Powerful Features
+                </h2>
+                <p class="text-xl text-gray-600 modern-body max-w-2xl mx-auto">
+                    Everything you need for a perfect yoga practice with AI-powered guidance
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-                <div class="feature-card bg-white rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg">
-                    <div class="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4">🎯</div>
-                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-2 sm:mb-3">Real-Time Pose
-                        Detection</h3>
-                    <p class="text-sm sm:text-base text-gray-600">Advanced MediaPipe technology analyzes your poses in
-                        real-time with 95% accuracy</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="gradient-card rounded-3xl p-8 text-center card-hover stagger-animation">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white text-4xl mb-6 floating-icon">
+                        🎯
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 yogic-heading">Real-Time Detection</h3>
+                    <p class="text-gray-600 modern-body leading-relaxed">
+                        Advanced MediaPipe technology analyzes your poses in real-time with 95% accuracy
+                    </p>
                 </div>
 
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg">
-                    <div class="text-5xl mb-4">📊</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Instant Feedback</h3>
-                    <p class="text-gray-600">Get immediate corrections and suggestions to perfect your form and
-                        alignment</p>
+                <div class="gradient-card rounded-3xl p-8 text-center card-hover stagger-animation">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 text-white text-4xl mb-6 floating-icon" style="animation-delay: 1s;">
+                        📊
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 yogic-heading">Instant Feedback</h3>
+                    <p class="text-gray-600 modern-body leading-relaxed">
+                        Get immediate corrections and suggestions to perfect your form and alignment
+                    </p>
                 </div>
 
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg">
-                    <div class="text-5xl mb-4">📈</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Progress Tracking</h3>
-                    <p class="text-gray-600">Monitor your improvement with detailed analytics and achievement badges</p>
+                <div class="gradient-card rounded-3xl p-8 text-center card-hover stagger-animation">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 text-white text-4xl mb-6 floating-icon" style="animation-delay: 2s;">
+                        📈
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 yogic-heading">Progress Tracking</h3>
+                    <p class="text-gray-600 modern-body leading-relaxed">
+                        Monitor your improvement with detailed analytics and progress tracking
+                    </p>
                 </div>
 
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg">
-                    <div class="text-5xl mb-4">🌬️</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Breathing Exercises</h3>
-                    <p class="text-gray-600">Guided pranayama techniques for stress relief and mental clarity</p>
+                <div class="gradient-card rounded-3xl p-8 text-center card-hover stagger-animation">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white text-4xl mb-6 floating-icon">
+                        🌬️
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 yogic-heading">Breathing Exercises</h3>
+                    <p class="text-gray-600 modern-body leading-relaxed">
+                        Guided pranayama techniques for stress relief and mental clarity
+                    </p>
                 </div>
 
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg">
-                    <div class="text-5xl mb-4">☀️</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Surya Namaskar</h3>
-                    <p class="text-gray-600">Complete 12-pose sun salutation sequence with step-by-step guidance</p>
+                <div class="gradient-card rounded-3xl p-8 text-center card-hover stagger-animation">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-white text-4xl mb-6 floating-icon" style="animation-delay: 1s;">
+                        ☀️
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 yogic-heading">Surya Namaskar</h3>
+                    <p class="text-gray-600 modern-body leading-relaxed">
+                        Complete 12-pose sun salutation sequence with step-by-step guidance
+                    </p>
                 </div>
 
-                <div class="feature-card bg-white rounded-2xl p-8 shadow-lg">
-                    <div class="text-5xl mb-4">🎨</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Personalized Sessions</h3>
-                    <p class="text-gray-600">Customized routines based on your experience level and goals</p>
+                <div class="gradient-card rounded-3xl p-8 text-center card-hover stagger-animation">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 text-white text-4xl mb-6 floating-icon" style="animation-delay: 2s;">
+                        🎨
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 yogic-heading">Personalized Sessions</h3>
+                    <p class="text-gray-600 modern-body leading-relaxed">
+                        Customized routines based on your experience level and goals
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-12 sm:py-20 px-4 sm:px-6" style="background-color: #FDFBF7;">
+    <section id="how-it-works" class="py-12 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-8 sm:mb-16">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">How It Works</h2>
-                <p class="text-base sm:text-lg md:text-xl text-gray-600">Get started in 3 simple steps</p>
+            <div class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4 yogic-heading">
+                    How It Works
+                </h2>
+                <p class="text-xl text-gray-600 modern-body max-w-2xl mx-auto">
+                    Get started in 3 simple steps and transform your practice today
+                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
-                <div class="text-center">
-                    <div class="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl font-bold text-indigo-600">1</span>
+                <div class="text-center stagger-animation">
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 floating-icon shadow-lg">
+                        <span class="text-3xl font-bold text-white">1</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Sign Up</h3>
-                    <p class="text-gray-600">Create your free account in seconds. No credit card required.</p>
+                    <h3 class="yogic-heading text-2xl font-bold text-slate-800 mb-3">Sign Up</h3>
+                    <p class="modern-body text-slate-600">Create your free account in seconds. No credit card required.</p>
                 </div>
 
-                <div class="text-center">
-                    <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl font-bold text-blue-600">2</span>
+                <div class="text-center stagger-animation">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 floating-icon shadow-lg">
+                        <span class="text-3xl font-bold text-white">2</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Choose Module</h3>
-                    <p class="text-gray-600">Select from stretching, breathing, or Surya Namaskar sessions.</p>
+                    <h3 class="yogic-heading text-2xl font-bold text-slate-800 mb-3">Choose Module</h3>
+                    <p class="modern-body text-slate-600">Select from stretching, breathing, or Surya Namaskar sessions.</p>
                 </div>
 
-                <div class="text-center">
-                    <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl font-bold text-green-600">3</span>
+                <div class="text-center stagger-animation">
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 floating-icon shadow-lg">
+                        <span class="text-3xl font-bold text-white">3</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Start Practicing</h3>
-                    <p class="text-gray-600">Follow along with real-time feedback and corrections.</p>
+                    <h3 class="yogic-heading text-2xl font-bold text-slate-800 mb-3">Start Practicing</h3>
+                    <p class="modern-body text-slate-600">Follow along with real-time feedback and corrections.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Benefits Section -->
-    <section id="benefits" class="py-20 px-6 bg-gray-50">
+    <section id="benefits" class="py-20 px-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
-                    <h2 class="text-4xl font-bold text-gray-800 mb-6">Why Choose Yogic Guide?</h2>
+                    <h2 class="yogic-heading text-4xl font-bold text-gradient mb-6">Why Choose ZenAlign?</h2>
                     <div class="space-y-6">
-                        <div class="flex items-start space-x-4">
+                        <div class="flex items-start space-x-4 stagger-animation">
                             <div
-                                class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                class="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
                                 ✓</div>
                             <div>
-                                <h4 class="font-bold text-gray-800 mb-1">AI-Powered Accuracy</h4>
-                                <p class="text-gray-600">MediaPipe technology ensures precise pose detection and
+                                <h4 class="yogic-heading font-bold text-slate-800 mb-1">AI-Powered Accuracy</h4>
+                                <p class="modern-body text-slate-600">MediaPipe technology ensures precise pose detection and
                                     correction</p>
                             </div>
                         </div>
-                        <div class="flex items-start space-x-4">
+                        <div class="flex items-start space-x-4 stagger-animation">
                             <div
-                                class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                class="bg-gradient-to-br from-blue-500 to-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
                                 ✓</div>
                             <div>
-                                <h4 class="font-bold text-gray-800 mb-1">Practice Anywhere</h4>
-                                <p class="text-gray-600">No special equipment needed - just your camera and internet
+                                <h4 class="yogic-heading font-bold text-slate-800 mb-1">Practice Anywhere</h4>
+                                <p class="modern-body text-slate-600">No special equipment needed - just your camera and internet
                                     connection</p>
                             </div>
                         </div>
-                        <div class="flex items-start space-x-4">
+                        <div class="flex items-start space-x-4 stagger-animation">
                             <div
-                                class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                class="bg-gradient-to-br from-green-500 to-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
                                 ✓</div>
                             <div>
-                                <h4 class="font-bold text-gray-800 mb-1">Beginner Friendly</h4>
-                                <p class="text-gray-600">Suitable for all levels with adaptive difficulty and clear
+                                <h4 class="yogic-heading font-bold text-slate-800 mb-1">Beginner Friendly</h4>
+                                <p class="modern-body text-slate-600">Suitable for all levels with adaptive difficulty and clear
                                     instructions</p>
                             </div>
                         </div>
-                        <div class="flex items-start space-x-4">
+                        <div class="flex items-start space-x-4 stagger-animation">
                             <div
-                                class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                class="bg-gradient-to-br from-purple-500 to-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 shadow-lg">
                                 ✓</div>
                             <div>
-                                <h4 class="font-bold text-gray-800 mb-1">Track Your Progress</h4>
+                                <h4 class="yogic-heading font-bold text-slate-800 mb-1">Track Your Progress</h4>
                                 <p class="text-gray-600">Detailed analytics help you see improvement over time</p>
                             </div>
                         </div>
@@ -472,50 +636,50 @@
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-gray-50 rounded-2xl p-8">
+                <div class="gradient-card rounded-2xl p-8 hover:shadow-xl transition-all duration-300">
                     <div class="flex items-center mb-4">
                         <div class="text-yellow-400 text-2xl">★★★★★</div>
                     </div>
-                    <p class="text-gray-700 mb-4">"The real-time feedback is incredible! I've improved my form
-                        significantly in just 2 weeks."</p>
+                    <p class="text-gray-700 mb-6 modern-body leading-relaxed">"ZenAlign has completely transformed my yoga practice! The real-time feedback helps me perfect my poses and the AI guidance is incredibly accurate. Highly recommended!"</p>
                     <div class="flex items-center">
-                        <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center text-2xl">👩
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center text-2xl text-white font-bold shadow-lg">
+                            Y
                         </div>
-                        <div class="ml-3">
-                            <p class="font-bold text-gray-800">Sarah M.</p>
-                            <p class="text-sm text-gray-600">Beginner Yogi</p>
+                        <div class="ml-4">
+                            <p class="font-bold text-gray-800 yogic-heading text-lg">Yogesh</p>
+                            <p class="text-sm text-gray-600 modern-body">Yoga Enthusiast</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 rounded-2xl p-8">
+                <div class="gradient-card rounded-2xl p-8 hover:shadow-xl transition-all duration-300">
                     <div class="flex items-center mb-4">
                         <div class="text-yellow-400 text-2xl">★★★★★</div>
                     </div>
-                    <p class="text-gray-700 mb-4">"As an instructor, I recommend this to all my students. The accuracy
-                        is impressive!"</p>
+                    <p class="text-gray-700 mb-6 modern-body leading-relaxed">"As a fitness professional, I'm impressed by the precision of ZenAlign. The pose detection is spot-on and it's perfect for my clients who practice at home. Game changer!"</p>
                     <div class="flex items-center">
-                        <div class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-2xl">👨
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center text-2xl text-white font-bold shadow-lg">
+                            A
                         </div>
-                        <div class="ml-3">
-                            <p class="font-bold text-gray-800">David K.</p>
-                            <p class="text-sm text-gray-600">Yoga Instructor</p>
+                        <div class="ml-4">
+                            <p class="font-bold text-gray-800 yogic-heading text-lg">Amit</p>
+                            <p class="text-sm text-gray-600 modern-body">Fitness Coach</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 rounded-2xl p-8">
+                <div class="gradient-card rounded-2xl p-8 hover:shadow-xl transition-all duration-300">
                     <div class="flex items-center mb-4">
                         <div class="text-yellow-400 text-2xl">★★★★★</div>
                     </div>
-                    <p class="text-gray-700 mb-4">"Perfect for busy schedules. I can practice anytime, anywhere with
-                        professional guidance."</p>
+                    <p class="text-gray-700 mb-6 modern-body leading-relaxed">"Perfect for my busy lifestyle! I can practice yoga anytime with professional guidance. The progress tracking keeps me motivated. Love this app!"</p>
                     <div class="flex items-center">
-                        <div class="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center text-2xl">👩
+                        <div class="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center text-2xl text-white font-bold shadow-lg">
+                            N
                         </div>
-                        <div class="ml-3">
-                            <p class="font-bold text-gray-800">Emily R.</p>
-                            <p class="text-sm text-gray-600">Working Professional</p>
+                        <div class="ml-4">
+                            <p class="font-bold text-gray-800 yogic-heading text-lg">Niharika</p>
+                            <p class="text-sm text-gray-600 modern-body">Working Professional</p>
                         </div>
                     </div>
                 </div>
@@ -524,15 +688,20 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 px-6 hero-section">
-        <div class="max-w-4xl mx-auto text-center text-white">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to Begin Your Journey?</h2>
-            <p class="text-xl mb-8 text-purple-100">Join thousands of users transforming their yoga practice with AI</p>
+    <section class="py-20 px-6 hero-gradient">
+        <div class="max-w-4xl mx-auto text-center text-white welcome-animation">
+            <h2 class="yogic-heading text-4xl md:text-5xl font-bold mb-6">Ready to Begin Your Journey?</h2>
+            <p class="modern-body text-xl mb-8 text-white/90">Join thousands of users transforming their yoga practice with AI</p>
             <a href="{{ url_for('register') }}"
-                class="inline-block bg-white text-indigo-600 px-12 py-4 rounded-lg font-bold text-xl hover:shadow-lg transition">
+                class="btn-gradient inline-block text-white px-12 py-4 rounded-lg font-bold text-xl shadow-lg">
                 Get Started Free
             </a>
         </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-12 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        {% include 'components/contact_section.html' %}
     </section>
 
     <!-- Footer -->
@@ -540,9 +709,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
                 <div>
-                    <div class="flex items-center space-x-2 mb-3 sm:mb-4">
-                        <span class="text-2xl sm:text-3xl">🧘</span>
-                        <span class="yogic-heading text-lg sm:text-xl font-bold">Yogic Guide</span>
+                    <div class="flex items-center space-x-4 mb-3 sm:mb-4">
+                        <img src="{{ url_for('static', filename='images/Image1_preview.png') }}" alt="ZenAlign" class="h-14 w-14 drop-shadow-2xl filter brightness-110">
+                        <img src="{{ url_for('static', filename='images/Image2_preview.png') }}" alt="ZenAlign" class="h-10 drop-shadow-2xl filter brightness-110 contrast-125">
                     </div>
                     <p class="yogic-body text-xs sm:text-sm opacity-80">AI-powered yoga assistant for everyone</p>
                 </div>
@@ -572,7 +741,7 @@
                 </div>
             </div>
             <div class="border-t border-white/20 pt-6 sm:pt-8 text-center">
-                <p class="yogic-body text-xs sm:text-sm opacity-80">&copy; 2024 Yogic Guide. Made with ❤️ for wellness.</p>
+                <p class="yogic-body text-xs sm:text-sm opacity-80">&copy; 2024 ZenAlign. Made with ❤️ for wellness.</p>
             </div>
         </div>
     </footer>

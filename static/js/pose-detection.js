@@ -14,6 +14,10 @@ let posesCompleted = 0;
 let totalAccuracy = 0;
 let sessionStartTime = Date.now();
 
+// Strict Pose Correction System
+let poseCorrectionSystem = null;
+let poseComparisonCanvas = null;
+
 // Pose angle thresholds - adaptive based on pose complexity
 const ANGLE_TOLERANCE = {
     strict: 10,    // For simple poses
@@ -36,6 +40,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     currentModule = window.location.pathname.split('/').pop();
     loadPoseSequences();
+    
+    // Initialize Strict Pose Correction System
+    if (typeof StrictPoseCorrectionSystem !== 'undefined' && typeof voiceOver !== 'undefined') {
+        poseCorrectionSystem = new StrictPoseCorrectionSystem(
+            { pause: pauseSessionInternal, resume: resumeSessionInternal },
+            voiceOver
+        );
+    }
+    
+    // Initialize Pose Comparison Canvas
+    if (typeof PoseComparisonCanvas !== 'undefined') {
+        poseComparisonCanvas = new PoseComparisonCanvas('poseCanvas');
+    }
     
     // Initialize MediaPipe Pose
     await initMediaPipe();
@@ -63,21 +80,68 @@ async function initMediaPipe() {
         
         pose.onResults(onPoseResults);
         
-        // Get camera access
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { width: 640, height: 480 } 
-        });
+        // Get camera access with better constraints
+        console.log('Requesting camera access...');
+        
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('Camera API not supported in this browser');
+        }
+        
+        const constraints = {
+            video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 },
+                facingMode: 'user'
+            },
+            audio: false
+        };
+        
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        console.log('Camera access granted');
+        
         video.srcObject = stream;
+        video.setAttribute('playsinline', true); // Important for iOS
+        video.setAttribute('autoplay', true);
+        video.setAttribute('muted', true);
+        
+        await video.play(); // Explicitly start video
         
         video.onloadedmetadata = () => {
+            console.log('Video metadata loaded');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             detectPoseContinuously();
             startNamasteDetection();
         };
+        
+        // Fallback if metadata doesn't load
+        setTimeout(() => {
+            if (video.readyState >= 2) {
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                detectPoseContinuously();
+                startNamasteDetection();
+            }
+        }, 1000);
+        
     } catch (err) {
-        console.error('MediaPipe initialization failed:', err);
-        alert('Camera access required. Please enable camera permissions.');
+        console.error('Camera initialization failed:', err);
+        let errorMessage = 'Camera access required. ';
+        
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            errorMessage += 'Please allow camera permissions in your browser settings.';
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+            errorMessage += 'No camera found. Please connect a camera.';
+        } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+            errorMessage += 'Camera is already in use by another application.';
+        } else if (err.name === 'OverconstrainedError') {
+            errorMessage += 'Camera does not support required settings.';
+        } else {
+            errorMessage += err.message || 'Unknown error occurred.';
+        }
+        
+        alert(errorMessage);
+        console.error('Full error details:', err);
     }
 }
 
@@ -346,6 +410,11 @@ function validateCurrentPose(landmarks) {
             document.getElementById('feedback').textContent = `✓ Perfect form! (${accuracy}%)`;
             document.getElementById('feedback').className = 'mt-4 text-center text-lg font-semibold text-green-600';
             canvas.style.border = '3px solid #10b981';
+            
+            // Voice-over: Pose validated successfully (only once when threshold reached)
+            if (poseStabilityFrames === STABILITY_THRESHOLD && typeof voiceOver !== 'undefined') {
+                voiceOver.onPoseSuccess(currentPose.name || 'pose');
+            }
         } else {
             document.getElementById('feedback').textContent = `⏳ Hold steady... ${poseStabilityFrames}/${STABILITY_THRESHOLD}`;
             document.getElementById('feedback').className = 'mt-4 text-center text-lg font-semibold text-blue-600';
@@ -361,10 +430,26 @@ function validateCurrentPose(landmarks) {
         document.getElementById('feedback').className = 'mt-4 text-center text-lg font-semibold text-red-600';
         canvas.style.border = '3px solid #ef4444';
         canvas.classList.add('blink-red');
+        
+        // Voice-over: Pose correction needed (throttled to avoid spam)
+        if (typeof voiceOver !== 'undefined' && !window.lastCorrectionTime) {
+            window.lastCorrectionTime = Date.now();
+            voiceOver.onPoseCorrection(topFeedback.join(', '), { detailed: false });
+        } else if (window.lastCorrectionTime && Date.now() - window.lastCorrectionTime > 10000) {
+            // Provide timed guidance after 10 seconds of incorrect pose
+            window.lastCorrectionTime = Date.now();
+            voiceOver.onTimedGuidance(topFeedback.join(', '));
+        }
+        
         setTimeout(() => {
             canvas.classList.remove('blink-red');
             canvas.style.border = 'none';
         }, 500);
+    }
+    
+    // Reset correction timer when pose is correct
+    if (isCorrect && window.lastCorrectionTime) {
+        window.lastCorrectionTime = null;
     }
 }
 

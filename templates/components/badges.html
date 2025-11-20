@@ -1,0 +1,259 @@
+{# Badge Component Templates #}
+{# Requirements: 2.1, 2.2 #}
+
+{# ============================================
+   AGENT BADGE MACRO
+   Usage: {{ render_agent_badge('Admin', 'admin') }}
+   ============================================ #}
+{% macro render_agent_badge(label, role='user', size='md', icon=None) %}
+<span class="badge badge-agent badge-agent-{{ role }} badge-{{ size }}" role="status" aria-label="{{ label }} role">
+    {% if icon %}
+    <i class="badge-icon {{ icon }}"></i>
+    {% else %}
+    <span class="badge-icon">
+        {% if role == 'admin' %}👑
+        {% elif role == 'premium' %}⭐
+        {% else %}👤
+        {% endif %}
+    </span>
+    {% endif %}
+    <span class="badge-text">{{ label }}</span>
+</span>
+{% endmacro %}
+
+{# ============================================
+   SKILL BADGE MACRO
+   Usage: {{ render_skill_badge('Advanced', 'advanced') }}
+   ============================================ #}
+{% macro render_skill_badge(label, level='beginner', size='md', icon=None) %}
+<span class="badge badge-skill badge-skill-{{ level }} badge-{{ size }}" role="status" aria-label="{{ label }} skill level">
+    {% if icon %}
+    <i class="badge-icon {{ icon }}"></i>
+    {% else %}
+    <span class="badge-icon">
+        {% if level == 'beginner' %}🌱
+        {% elif level == 'intermediate' %}🌿
+        {% elif level == 'advanced' %}🌳
+        {% elif level == 'expert' %}🏆
+        {% else %}⭐
+        {% endif %}
+    </span>
+    {% endif %}
+    <span class="badge-text">{{ label }}</span>
+</span>
+{% endmacro %}
+
+{# ============================================
+   PROCESS BADGE MACRO
+   Usage: {{ render_process_badge('Active', 'active') }}
+   ============================================ #}
+{% macro render_process_badge(label, status='active', size='md', icon=None) %}
+<span class="badge badge-process badge-process-{{ status }} badge-{{ size }}" role="status" aria-label="{{ label }} status">
+    {% if icon %}
+    <i class="badge-icon {{ icon }}"></i>
+    {% else %}
+    <span class="badge-icon">
+        {% if status == 'active' %}✅
+        {% elif status == 'completed' %}🎉
+        {% elif status == 'in-progress' %}⏳
+        {% elif status == 'paused' %}⏸️
+        {% elif status == 'failed' %}❌
+        {% else %}📊
+        {% endif %}
+    </span>
+    {% endif %}
+    <span class="badge-text">{{ label }}</span>
+</span>
+{% endmacro %}
+
+{# ============================================
+   GENERIC BADGE MACRO
+   Usage: {{ render_badge('Custom', 'agent', icon='fas fa-star') }}
+   ============================================ #}
+{% macro render_badge(label, type='agent', variant='', size='md', icon=None, custom_class='') %}
+<span class="badge badge-{{ type }} {% if variant %}badge-{{ type }}-{{ variant }}{% endif %} badge-{{ size }} {{ custom_class }}" 
+      role="status" 
+      aria-label="{{ label }}">
+    {% if icon %}
+    <i class="badge-icon {{ icon }}"></i>
+    {% endif %}
+    <span class="badge-text">{{ label }}</span>
+</span>
+{% endmacro %}
+
+{# ============================================
+   BADGE CONTAINER MACRO
+   Usage: {{ badge_container_start() }} ... badges ... {{ badge_container_end() }}
+   ============================================ #}
+{% macro badge_container_start(vertical=False, class='') %}
+<div class="badge-container{% if vertical %}-vertical{% endif %} {{ class }}">
+{% endmacro %}
+
+{% macro badge_container_end() %}
+</div>
+{% endmacro %}
+
+{# ============================================
+   SKILL STICKER MACRO
+   Usage: {{ render_skill_sticker('🪷', 'lotus') }}
+   ============================================ #}
+{% macro render_skill_sticker(emoji, type='lotus', size='md', title='') %}
+<span class="skill-sticker skill-sticker-{{ type }} skill-sticker-{{ size }}" 
+      role="img" 
+      aria-label="{{ title or type }} sticker"
+      title="{{ title or type }}">
+    {{ emoji }}
+</span>
+{% endmacro %}
+
+{# ============================================
+   STICKER CONTAINER MACRO
+   ============================================ #}
+{% macro sticker_container_start(class='') %}
+<div class="sticker-container {{ class }}">
+{% endmacro %}
+
+{% macro sticker_container_end() %}
+</div>
+{% endmacro %}
+
+{# ============================================
+   USER BADGES DISPLAY MACRO
+   Displays all badges for a user
+   Usage: {{ render_user_badges(user) }}
+   ============================================ #}
+{% macro render_user_badges(user, show_stickers=False) %}
+<div class="badge-container">
+    {# Role Badge #}
+    {% if user.role == 'admin' %}
+        {{ render_agent_badge('Admin', 'admin') }}
+    {% elif user.role == 'premium' %}
+        {{ render_agent_badge('Premium', 'premium') }}
+    {% endif %}
+    
+    {# Experience Level Badge #}
+    {% if user.profile and user.profile.experience %}
+        {% set exp = user.profile.experience.lower() %}
+        {% if 'beginner' in exp %}
+            {{ render_skill_badge('Beginner', 'beginner') }}
+        {% elif 'intermediate' in exp %}
+            {{ render_skill_badge('Intermediate', 'intermediate') }}
+        {% elif 'advanced' in exp %}
+            {{ render_skill_badge('Advanced', 'advanced') }}
+        {% elif 'expert' in exp %}
+            {{ render_skill_badge('Expert', 'expert') }}
+        {% endif %}
+    {% endif %}
+    
+    {# Custom Badges from Database #}
+    {% if user.badges %}
+        {% for badge in user.badges %}
+            {{ render_badge(badge.label, badge.type, badge.variant or '', 'md', badge.icon or None) }}
+        {% endfor %}
+    {% endif %}
+    
+    {# Skill Stickers #}
+    {% if show_stickers and user.stickers %}
+        {% for sticker in user.stickers %}
+            {% if sticker == 'lotus' %}
+                {{ render_skill_sticker('🪷', 'lotus', 'sm', 'Lotus') }}
+            {% elif sticker == 'om' %}
+                {{ render_skill_sticker('🕉️', 'om', 'sm', 'Om') }}
+            {% elif sticker == 'chakra' %}
+                {{ render_skill_sticker('☸️', 'chakra', 'sm', 'Chakra') }}
+            {% elif sticker == 'peace' %}
+                {{ render_skill_sticker('☮️', 'peace', 'sm', 'Peace') }}
+            {% elif sticker == 'zen' %}
+                {{ render_skill_sticker('🧘', 'zen', 'sm', 'Zen') }}
+            {% elif sticker == 'namaste' %}
+                {{ render_skill_sticker('🙏', 'namaste', 'sm', 'Namaste') }}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# ============================================
+   SESSION STATUS BADGE MACRO
+   Usage: {{ render_session_status(session) }}
+   ============================================ #}
+{% macro render_session_status(session) %}
+{% if session.status %}
+    {% set status = session.status.lower() %}
+    {% if status == 'completed' %}
+        {{ render_process_badge('Completed', 'completed', 'sm') }}
+    {% elif status == 'active' or status == 'in_progress' %}
+        {{ render_process_badge('In Progress', 'in-progress', 'sm') }}
+    {% elif status == 'paused' %}
+        {{ render_process_badge('Paused', 'paused', 'sm') }}
+    {% elif status == 'failed' or status == 'abandoned' %}
+        {{ render_process_badge('Incomplete', 'failed', 'sm') }}
+    {% else %}
+        {{ render_process_badge(session.status|title, 'active', 'sm') }}
+    {% endif %}
+{% endif %}
+{% endmacro %}
+
+{# ============================================
+   ACCURACY BADGE MACRO
+   Usage: {{ render_accuracy_badge(85.5) }}
+   ============================================ #}
+{% macro render_accuracy_badge(accuracy, size='sm') %}
+{% if accuracy >= 90 %}
+    {{ render_badge(accuracy|round(1)|string + '%', 'skill', 'expert', size, '🎯') }}
+{% elif accuracy >= 75 %}
+    {{ render_badge(accuracy|round(1)|string + '%', 'skill', 'advanced', size, '🎯') }}
+{% elif accuracy >= 60 %}
+    {{ render_badge(accuracy|round(1)|string + '%', 'skill', 'intermediate', size, '🎯') }}
+{% else %}
+    {{ render_badge(accuracy|round(1)|string + '%', 'skill', 'beginner', size, '🎯') }}
+{% endif %}
+{% endmacro %}
+
+{# ============================================
+   MODULE TYPE BADGE MACRO
+   Usage: {{ render_module_badge('surya-namaskar') }}
+   ============================================ #}
+{% macro render_module_badge(module_type, size='sm') %}
+{% if module_type == 'surya-namaskar' or module_type == 'surya_namaskar' %}
+    {{ render_badge('Surya Namaskar', 'process', 'active', size, '☀️') }}
+{% elif module_type == 'breathing' %}
+    {{ render_badge('Breathing', 'process', 'active', size, '🌬️') }}
+{% elif module_type == 'stretching' %}
+    {{ render_badge('Stretching', 'process', 'active', size, '🧘‍♀️') }}
+{% elif module_type == 'meditation' %}
+    {{ render_badge('Meditation', 'process', 'active', size, '🧘') }}
+{% else %}
+    {{ render_badge(module_type|replace('-', ' ')|replace('_', ' ')|title, 'process', 'active', size) }}
+{% endif %}
+{% endmacro %}
+
+{# ============================================
+   FONT AWESOME ICON BADGE VARIANTS
+   For use with Font Awesome icons
+   ============================================ #}
+{% macro render_fa_badge(label, type='agent', variant='', icon_class='fas fa-star', size='md') %}
+<span class="badge badge-{{ type }} {% if variant %}badge-{{ type }}-{{ variant }}{% endif %} badge-{{ size }}" 
+      role="status" 
+      aria-label="{{ label }}">
+    <i class="badge-icon {{ icon_class }}"></i>
+    <span class="badge-text">{{ label }}</span>
+</span>
+{% endmacro %}
+
+{# Common Font Awesome Badge Examples #}
+{% macro render_admin_fa_badge(size='md') %}
+    {{ render_fa_badge('Admin', 'agent', 'admin', 'fas fa-crown', size) }}
+{% endmacro %}
+
+{% macro render_user_fa_badge(size='md') %}
+    {{ render_fa_badge('User', 'agent', 'user', 'fas fa-user', size) }}
+{% endmacro %}
+
+{% macro render_verified_badge(size='sm') %}
+    {{ render_fa_badge('Verified', 'skill', 'expert', 'fas fa-check-circle', size) }}
+{% endmacro %}
+
+{% macro render_new_badge(size='sm') %}
+    {{ render_fa_badge('New', 'process', 'in-progress', 'fas fa-sparkles', size) }}
+{% endmacro %}

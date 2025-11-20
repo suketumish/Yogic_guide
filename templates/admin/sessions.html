@@ -5,30 +5,114 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-gray-800">Session Management</h1>
-        <div class="text-sm text-gray-600">
-            Total Sessions: {{ total_sessions }}
+    <div class="flex justify-between items-center welcome-animation">
+        <div>
+            <h1 class="yogic-heading text-3xl font-bold text-gradient">Session Management</h1>
+            <p class="modern-body text-slate-600 mt-1">Monitor and manage user practice sessions</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="modern-body text-sm text-slate-600">
+                Total Sessions: <span class="font-semibold text-indigo-600">{{ total_sessions }}</span>
+            </div>
+            <button onclick="searchSessionById()" class="bg-purple-500 hover:bg-purple-600 px-4 py-2 text-white rounded-lg font-semibold transition">
+                🔍 Quick Search ID
+            </button>
+            <button onclick="exportSessions()" class="btn-gradient px-4 py-2 text-white rounded-lg font-semibold">
+                📊 Export Sessions
+            </button>
+            <button onclick="refreshSessions()" class="bg-green-500 hover:bg-green-600 px-4 py-2 text-white rounded-lg font-semibold transition">
+                🔄 Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="gradient-card rounded-lg p-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1 modern-body">Search Session ID</label>
+                <input type="text" id="sessionIdSearch" placeholder="Enter Session ID..." 
+                       class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                       oninput="filterSessions()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1 modern-body">Search User</label>
+                <input type="text" id="userSearch" placeholder="Search by name or email..." 
+                       class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                       oninput="filterSessions()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1 modern-body">Module Type</label>
+                <select id="moduleFilter" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        onchange="filterSessions()">
+                    <option value="">All Modules</option>
+                    <option value="breathing">🫁 Breathing</option>
+                    <option value="meditation">🧘 Meditation</option>
+                    <option value="yoga">🤸 Yoga</option>
+                    <option value="stretching">🤸‍♀️ Stretching</option>
+                    <option value="surya-namaskar">☀️ Surya Namaskar</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select id="statusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onchange="filterSessions()">
+                    <option value="">All Status</option>
+                    <option value="completed">Completed</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="paused">Paused</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date Filter</label>
+                <select id="dateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onchange="filterSessions()">
+                    <option value="">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+            <div class="text-sm text-gray-600">
+                Showing <span id="visibleCount">{{ sessions|length if sessions else 0 }}</span> of <span id="totalCount">{{ sessions|length if sessions else 0 }}</span> sessions
+            </div>
+            <button onclick="clearAllFilters()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition">
+                Clear All Filters
+            </button>
         </div>
     </div>
 
     <!-- Sessions Table -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="min-w-full divide-y divide-gray-200" id="sessionsTable">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Module</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Session ID</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Module</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     {% for session in sessions %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
+                    <tr class="hover:bg-gray-50" data-session-id="{{ session._id|string if session._id else 'N/A' }}">
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="text-sm font-mono text-gray-900">
+                                {{ (session._id|string)[:8] if session._id else 'N/A' }}...
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                {{ session.startTime.strftime('%Y%m%d') if session.startTime else 'Unknown' }}
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-8 w-8">
                                     <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
@@ -59,7 +143,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
+                        <td class="px-4 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <span class="text-2xl mr-2">
                                     {% if session.moduleType == 'breathing' %}🫁
@@ -70,23 +154,77 @@
                                     {% else %}✨
                                     {% endif %}
                                 </span>
-                                <span class="text-sm font-medium text-gray-900">
-                                    {{ session.moduleType.replace('-', ' ').title() if session.moduleType else 'Unknown' }}
-                                </span>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ session.moduleType.replace('-', ' ').title() if session.moduleType else 'Unknown' }}
+                                    </div>
+                                    {% if session.difficulty %}
+                                    <div class="text-xs text-gray-500">
+                                        {{ session.difficulty.title() }} Level
+                                    </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ (session.duration // 60) if session.duration else 0 }} minutes
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">
+                                {{ (session.duration // 60) if session.duration else 0 }}m {{ (session.duration % 60) if session.duration else 0 }}s
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                Target: {{ (session.targetDuration // 60) if session.targetDuration else 'N/A' }}m
+                            </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            {% set progress = ((session.duration / session.targetDuration) * 100) if session.duration and session.targetDuration else 0 %}
+                            <div class="flex items-center">
+                                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-blue-600 h-2 rounded-full progress-bar" data-progress="{{ progress|round|int }}"></div>
+                                </div>
+                                <span class="text-xs text-gray-600">{{ progress|round|int }}%</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ session.startTime.strftime('%b %d, %Y') if session.startTime else 'Unknown' }}
                             <br>
                             <span class="text-xs">{{ session.startTime.strftime('%I:%M %p') if session.startTime else '' }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                {{ session.status.title() if session.status else 'Completed' }}
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            {% set status = session.status if session.status else 'completed' %}
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                {% if status == 'completed' %}bg-green-100 text-green-800
+                                {% elif status == 'in-progress' %}bg-yellow-100 text-yellow-800
+                                {% elif status == 'paused' %}bg-blue-100 text-blue-800
+                                {% elif status == 'cancelled' %}bg-red-100 text-red-800
+                                {% else %}bg-gray-100 text-gray-800
+                                {% endif %}">
+                                {{ status.title() }}
                             </span>
+                        </td>
+                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <button data-session-id="{{ session._id|string if session._id else '' }}" 
+                                        onclick="viewSessionDetails(this.dataset.sessionId)" 
+                                        class="text-indigo-600 hover:text-indigo-900" title="View Details">
+                                    👁️
+                                </button>
+                                <button data-user-id="{{ session.userId|string if session.userId else '' }}" 
+                                        onclick="viewUserHistory(this.dataset.userId)" 
+                                        class="text-blue-600 hover:text-blue-900" title="User History">
+                                    📊
+                                </button>
+                                {% if status == 'in-progress' %}
+                                <button data-session-id="{{ session._id|string if session._id else '' }}" 
+                                        onclick="pauseSession(this.dataset.sessionId)" 
+                                        class="text-yellow-600 hover:text-yellow-900" title="Pause Session">
+                                    ⏸️
+                                </button>
+                                {% endif %}
+                                <button data-session-id="{{ session._id|string if session._id else '' }}" 
+                                        onclick="deleteSession(this.dataset.sessionId)" 
+                                        class="text-red-600 hover:text-red-900" title="Delete Session">
+                                    🗑️
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -134,4 +272,675 @@
     </div>
     {% endif %}
 </div>
+
+<!-- Session Details Modal -->
+<div id="sessionDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">Session Details</h3>
+                    <button onclick="closeModal('sessionDetailsModal')" class="text-gray-400 hover:text-gray-600">
+                        <span class="sr-only">Close</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="sessionDetailsContent" class="px-6 py-4">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User History Modal -->
+<div id="userHistoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">User Session History</h3>
+                    <button onclick="closeModal('userHistoryModal')" class="text-gray-400 hover:text-gray-600">
+                        <span class="sr-only">Close</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="userHistoryContent" class="px-6 py-4">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.progress-bar {
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.highlight-row {
+    background-color: #fef3c7 !important;
+    transition: background-color 2s ease;
+}
+
+.session-id-cell {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+.filter-active {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 1px #3B82F6;
+}
+</style>
+
+<script>
+// Initialize progress bars and counts
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const progress = bar.dataset.progress;
+        setTimeout(() => {
+            bar.style.width = progress + '%';
+        }, 100);
+    });
+    
+    // Initialize total count
+    const totalRows = document.querySelectorAll('#sessionsTable tbody tr').length;
+    document.getElementById('totalCount').textContent = totalRows;
+    document.getElementById('visibleCount').textContent = totalRows;
+});
+
+// Session Management Functions
+function viewSessionDetails(sessionId) {
+    if (!sessionId) {
+        alert('Session ID not available');
+        return;
+    }
+    
+    // Show loading state
+    document.getElementById('sessionDetailsContent').innerHTML = `
+        <div class="flex justify-center items-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <span class="ml-2">Loading session details...</span>
+        </div>
+    `;
+    
+    // Show modal
+    document.getElementById('sessionDetailsModal').classList.remove('hidden');
+    
+    // Get session data from the table row
+    const sessionRow = document.querySelector(`tr[data-session-id="${sessionId}"]`);
+    if (!sessionRow) {
+        document.getElementById('sessionDetailsContent').innerHTML = `
+            <div class="text-center py-8">
+                <div class="text-red-500 text-4xl mb-4">❌</div>
+                <h3 class="text-lg font-medium text-gray-900">Session Not Found</h3>
+                <p class="text-gray-500">The session with ID ${sessionId} could not be found.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Extract data from the row
+    const cells = sessionRow.cells;
+    const sessionIdFull = sessionRow.dataset.sessionId;
+    const userName = cells[1].querySelector('.text-sm.font-medium')?.textContent || 'Unknown';
+    const userEmail = cells[1].querySelector('.text-sm.text-gray-500')?.textContent || 'No email';
+    const moduleType = cells[2].querySelector('.text-sm.font-medium')?.textContent || 'Unknown';
+    const moduleIcon = cells[2].querySelector('span')?.textContent || '✨';
+    const duration = cells[3].querySelector('.text-sm')?.textContent || '0m 0s';
+    const targetDuration = cells[3].querySelector('.text-xs')?.textContent || 'N/A';
+    const progress = cells[4].querySelector('.text-xs')?.textContent || '0%';
+    const startTime = cells[5].textContent.trim().replace(/\s+/g, ' ') || 'Unknown';
+    const status = cells[6].querySelector('span')?.textContent || 'Unknown';
+    const statusClass = cells[6].querySelector('span')?.className || '';
+    
+    setTimeout(() => {
+        document.getElementById('sessionDetailsContent').innerHTML = `
+            <div class="space-y-6">
+                <!-- Session Header -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <span class="text-3xl mr-3">${moduleIcon}</span>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">${moduleType}</h4>
+                                <p class="text-sm text-gray-600">Session by ${userName}</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full ${statusClass}">${status}</span>
+                    </div>
+                </div>
+                
+                <!-- Session Details Grid -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Session ID</label>
+                        <p class="mt-1 text-sm text-gray-900 font-mono break-all">${sessionIdFull}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">User Email</label>
+                        <p class="mt-1 text-sm text-gray-900">${userEmail}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Start Time</label>
+                        <p class="mt-1 text-sm text-gray-900">${startTime}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Duration</label>
+                        <p class="mt-1 text-sm text-gray-900">${duration}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Target Duration</label>
+                        <p class="mt-1 text-sm text-gray-900">${targetDuration}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Completion</label>
+                        <p class="mt-1 text-sm text-gray-900">${progress}</p>
+                    </div>
+                </div>
+                
+                <!-- Session Progress -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Session Progress</label>
+                    <div class="bg-gray-200 rounded-full h-4">
+                        <div class="bg-blue-600 h-4 rounded-full transition-all duration-500" style="width: ${progress}"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">${progress} completed</p>
+                </div>
+                
+                <!-- Session Timeline -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Session Timeline</label>
+                    <div class="bg-gray-50 rounded-md p-3">
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Session Started:</span>
+                                <span class="font-medium">${startTime}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Current Status:</span>
+                                <span class="font-medium">${status}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Time Practiced:</span>
+                                <span class="font-medium">${duration}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-3">
+                    <button onclick="copySessionId('${sessionIdFull}')" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
+                        📋 Copy ID
+                    </button>
+                    <button onclick="exportSessionData('${sessionIdFull}')" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        📊 Export Data
+                    </button>
+                    <button onclick="closeModal('sessionDetailsModal')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
+    }, 500);
+}
+
+function viewUserHistory(userId) {
+    if (!userId) {
+        alert('User ID not available');
+        return;
+    }
+    
+    // Show loading state
+    document.getElementById('userHistoryContent').innerHTML = `
+        <div class="flex justify-center items-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <span class="ml-2">Loading user history...</span>
+        </div>
+    `;
+    
+    // Show modal
+    document.getElementById('userHistoryModal').classList.remove('hidden');
+    
+    // Mock user history (replace with actual API call)
+    setTimeout(() => {
+        document.getElementById('userHistoryContent').innerHTML = `
+            <div class="space-y-6">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-medium text-gray-900 mb-2">User Statistics</h4>
+                    <div class="grid grid-cols-4 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl font-bold text-blue-600">24</div>
+                            <div class="text-sm text-gray-600">Total Sessions</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-green-600">18h 45m</div>
+                            <div class="text-sm text-gray-600">Total Time</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-purple-600">7</div>
+                            <div class="text-sm text-gray-600">Day Streak</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-orange-600">92%</div>
+                            <div class="text-sm text-gray-600">Completion Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-medium text-gray-900 mb-3">Recent Sessions</h4>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between p-3 bg-white border rounded-lg">
+                            <div class="flex items-center">
+                                <span class="text-xl mr-3">🫁</span>
+                                <div>
+                                    <div class="font-medium">Breathing Exercise</div>
+                                    <div class="text-sm text-gray-500">Today, 2:30 PM</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-medium">15 min</div>
+                                <div class="text-sm text-green-600">Completed</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white border rounded-lg">
+                            <div class="flex items-center">
+                                <span class="text-xl mr-3">🧘</span>
+                                <div>
+                                    <div class="font-medium">Meditation</div>
+                                    <div class="text-sm text-gray-500">Yesterday, 7:00 AM</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-medium">20 min</div>
+                                <div class="text-sm text-green-600">Completed</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white border rounded-lg">
+                            <div class="flex items-center">
+                                <span class="text-xl mr-3">☀️</span>
+                                <div>
+                                    <div class="font-medium">Surya Namaskar</div>
+                                    <div class="text-sm text-gray-500">2 days ago, 6:30 AM</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-medium">12 min</div>
+                                <div class="text-sm text-yellow-600">Paused</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button onclick="exportUserHistory('${userId}')" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        Export History
+                    </button>
+                    <button onclick="closeModal('userHistoryModal')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
+    }, 1000);
+}
+
+function pauseSession(sessionId) {
+    if (confirm('Are you sure you want to pause this session?')) {
+        // Mock API call to pause session
+        alert('Session paused successfully');
+        // Refresh the page or update the row
+        location.reload();
+    }
+}
+
+function deleteSession(sessionId) {
+    if (confirm('Are you sure you want to delete this session? This action cannot be undone.')) {
+        // Mock API call to delete session
+        alert('Session deleted successfully');
+        // Remove the row from table or refresh
+        location.reload();
+    }
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+// Filter and Search Functions
+function filterSessions() {
+    const sessionIdSearch = document.getElementById('sessionIdSearch').value.toLowerCase();
+    const userSearch = document.getElementById('userSearch').value.toLowerCase();
+    const moduleFilter = document.getElementById('moduleFilter').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+    const dateFilter = document.getElementById('dateFilter').value;
+    
+    // Add visual feedback for active filters
+    updateFilterStyles();
+    
+    const rows = document.querySelectorAll('#sessionsTable tbody tr');
+    let visibleCount = 0;
+    
+    rows.forEach(row => {
+        let showRow = true;
+        
+        // Session ID filter
+        if (sessionIdSearch) {
+            const sessionId = row.dataset.sessionId.toLowerCase();
+            if (!sessionId.includes(sessionIdSearch)) {
+                showRow = false;
+            }
+        }
+        
+        // User search filter
+        if (userSearch && showRow) {
+            const userCell = row.cells[1];
+            const userName = userCell.querySelector('.text-sm.font-medium')?.textContent.toLowerCase() || '';
+            const userEmail = userCell.querySelector('.text-sm.text-gray-500')?.textContent.toLowerCase() || '';
+            if (!userName.includes(userSearch) && !userEmail.includes(userSearch)) {
+                showRow = false;
+            }
+        }
+        
+        // Module filter
+        if (moduleFilter && showRow) {
+            const moduleCell = row.cells[2];
+            const moduleType = moduleCell.querySelector('.text-sm.font-medium')?.textContent.toLowerCase() || '';
+            if (!moduleType.includes(moduleFilter.replace('-', ' '))) {
+                showRow = false;
+            }
+        }
+        
+        // Status filter
+        if (statusFilter && showRow) {
+            const statusCell = row.cells[6];
+            const status = statusCell.querySelector('span')?.textContent.toLowerCase() || '';
+            if (!status.includes(statusFilter)) {
+                showRow = false;
+            }
+        }
+        
+        // Date filter
+        if (dateFilter && showRow) {
+            const dateCell = row.cells[5];
+            const sessionDate = dateCell.textContent.trim();
+            const today = new Date();
+            const sessionDateObj = new Date(sessionDate);
+            
+            switch(dateFilter) {
+                case 'today':
+                    if (sessionDateObj.toDateString() !== today.toDateString()) {
+                        showRow = false;
+                    }
+                    break;
+                case 'week':
+                    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    if (sessionDateObj < weekAgo) {
+                        showRow = false;
+                    }
+                    break;
+                case 'month':
+                    const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    if (sessionDateObj < monthAgo) {
+                        showRow = false;
+                    }
+                    break;
+            }
+        }
+        
+        // Show/hide row
+        if (showRow) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Update count
+    document.getElementById('visibleCount').textContent = visibleCount;
+    
+    // Show no results message if needed
+    showNoResultsMessage(visibleCount === 0);
+}
+
+function clearAllFilters() {
+    document.getElementById('sessionIdSearch').value = '';
+    document.getElementById('userSearch').value = '';
+    document.getElementById('moduleFilter').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('dateFilter').value = '';
+    
+    // Show all rows
+    const rows = document.querySelectorAll('#sessionsTable tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+    
+    // Update count
+    document.getElementById('visibleCount').textContent = rows.length;
+    showNoResultsMessage(false);
+}
+
+function showNoResultsMessage(show) {
+    let noResultsRow = document.getElementById('noResultsRow');
+    
+    if (show) {
+        if (!noResultsRow) {
+            const tbody = document.querySelector('#sessionsTable tbody');
+            noResultsRow = document.createElement('tr');
+            noResultsRow.id = 'noResultsRow';
+            noResultsRow.innerHTML = `
+                <td colspan="8" class="px-4 py-8 text-center">
+                    <div class="text-gray-500">
+                        <div class="text-4xl mb-2">🔍</div>
+                        <div class="text-lg font-medium">No sessions found</div>
+                        <div class="text-sm">Try adjusting your search criteria</div>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(noResultsRow);
+        }
+        noResultsRow.style.display = '';
+    } else {
+        if (noResultsRow) {
+            noResultsRow.style.display = 'none';
+        }
+    }
+}
+
+function updateFilterStyles() {
+    const filters = [
+        'sessionIdSearch',
+        'userSearch', 
+        'moduleFilter',
+        'statusFilter',
+        'dateFilter'
+    ];
+    
+    filters.forEach(filterId => {
+        const element = document.getElementById(filterId);
+        if (element.value) {
+            element.classList.add('filter-active');
+        } else {
+            element.classList.remove('filter-active');
+        }
+    });
+}
+
+// Quick Session ID Search Function
+function searchSessionById() {
+    const sessionId = prompt('Enter Session ID to search:');
+    if (sessionId) {
+        document.getElementById('sessionIdSearch').value = sessionId;
+        filterSessions();
+        
+        // Scroll to the matching row if found
+        const matchingRow = document.querySelector(`tr[data-session-id*="${sessionId}"]`);
+        if (matchingRow && matchingRow.style.display !== 'none') {
+            matchingRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            matchingRow.style.backgroundColor = '#fef3c7';
+            setTimeout(() => {
+                matchingRow.style.backgroundColor = '';
+            }, 2000);
+        }
+    }
+}
+
+// Export Functions
+function exportSessions() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Exporting...';
+    btn.disabled = true;
+    
+    try {
+        // Create CSV content
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Session ID,User Name,User Email,Module Type,Duration (min),Progress (%),Start Time,Status\n";
+        
+        // Get table data
+        const rows = document.querySelectorAll('#sessionsTable tbody tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length > 0) {
+                const sessionId = row.dataset.sessionId || 'N/A';
+                const userName = cells[1].querySelector('.text-sm.font-medium')?.textContent.trim() || 'Unknown';
+                const userEmail = cells[1].querySelector('.text-sm.text-gray-500')?.textContent.trim() || 'No email';
+                const moduleType = cells[2].querySelector('.text-sm.font-medium')?.textContent.trim() || 'Unknown';
+                const duration = cells[3].querySelector('.text-sm')?.textContent.trim() || '0m 0s';
+                const progress = cells[4].querySelector('.text-xs')?.textContent.trim() || '0%';
+                const startTime = cells[5].textContent.trim().replace(/\s+/g, ' ') || 'Unknown';
+                const status = cells[6].querySelector('span')?.textContent.trim() || 'Unknown';
+                
+                csvContent += `"${sessionId}","${userName}","${userEmail}","${moduleType}","${duration}","${progress}","${startTime}","${status}"\n`;
+            }
+        });
+        
+        // Download CSV
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "yogic_guide_sessions_" + new Date().toISOString().split('T')[0] + ".csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        alert('📊 Sessions exported successfully!');
+        
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('❌ Error exporting sessions. Please try again.');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
+function copySessionId(sessionId) {
+    navigator.clipboard.writeText(sessionId).then(() => {
+        // Show temporary success message
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copied!';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 2000);
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = sessionId;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Session ID copied to clipboard: ' + sessionId);
+    });
+}
+
+function exportSessionData(sessionId) {
+    const sessionRow = document.querySelector(`tr[data-session-id="${sessionId}"]`);
+    if (!sessionRow) {
+        alert('Session data not found');
+        return;
+    }
+    
+    // Extract session data
+    const cells = sessionRow.cells;
+    const sessionData = {
+        sessionId: sessionId,
+        userName: cells[1].querySelector('.text-sm.font-medium')?.textContent || 'Unknown',
+        userEmail: cells[1].querySelector('.text-sm.text-gray-500')?.textContent || 'No email',
+        moduleType: cells[2].querySelector('.text-sm.font-medium')?.textContent || 'Unknown',
+        duration: cells[3].querySelector('.text-sm')?.textContent || '0m 0s',
+        targetDuration: cells[3].querySelector('.text-xs')?.textContent || 'N/A',
+        progress: cells[4].querySelector('.text-xs')?.textContent || '0%',
+        startTime: cells[5].textContent.trim().replace(/\s+/g, ' ') || 'Unknown',
+        status: cells[6].querySelector('span')?.textContent || 'Unknown'
+    };
+    
+    // Create CSV content for single session
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Field,Value\n";
+    csvContent += `"Session ID","${sessionData.sessionId}"\n`;
+    csvContent += `"User Name","${sessionData.userName}"\n`;
+    csvContent += `"User Email","${sessionData.userEmail}"\n`;
+    csvContent += `"Module Type","${sessionData.moduleType}"\n`;
+    csvContent += `"Duration","${sessionData.duration}"\n`;
+    csvContent += `"Target Duration","${sessionData.targetDuration}"\n`;
+    csvContent += `"Progress","${sessionData.progress}"\n`;
+    csvContent += `"Start Time","${sessionData.startTime}"\n`;
+    csvContent += `"Status","${sessionData.status}"\n`;
+    
+    // Download CSV
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `session_${sessionId.substring(0, 8)}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert('📊 Session data exported successfully!');
+}
+
+function exportUserHistory(userId) {
+    alert('Exporting user history for: ' + userId);
+    // Implement user history export
+}
+
+function refreshSessions() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Refreshing...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        location.reload();
+    }, 500);
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const modals = ['sessionDetailsModal', 'userHistoryModal'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+            closeModal(modalId);
+        }
+    });
+}
+</script>
 {% endblock %}

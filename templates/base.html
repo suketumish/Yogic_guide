@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Yogic Guide{% endblock %}</title>
-    <meta name="description" content="AI-Powered Yogic Guide - Real-time yoga pose correction with MediaPipe">
+    <title>{% block title %}ZenAlign{% endblock %}</title>
+    <meta name="description" content="AI-Powered ZenAlign - Real-time yoga pose correction with MediaPipe">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -12,30 +12,182 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#667eea">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact-section.css') }}">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom Tailwind config */
-        @layer utilities {
-            .text-shadow {
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .yogic-heading {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+        
+        .modern-body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .gradient-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .btn-gradient {
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .welcome-animation {
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+        
+        .stagger-animation {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen">
-    {% block content %}{% endblock %}
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
+    <div class="flex-grow">
+        {% block content %}{% endblock %}
+    </div>
     
     <script src="{{ url_for('static', filename='js/session.js') }}"></script>
     {% block scripts %}{% endblock %}
     
-    <!-- Footer -->
-    <footer class="text-center py-4 text-gray-600 text-sm">
-        <p>AI-Powered Yogic Guide &copy; 2024 | Made with ❤️ for wellness</p>
+    <!-- Modern Footer -->
+    <footer class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 mt-16 flex-shrink-0">
+        <!-- Contact Section -->
+        <div class="py-12">
+            {% include 'components/contact_section.html' %}
+        </div>
+        
+        <!-- Footer Bottom -->
+        <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+                <div class="text-center">
+                    <div class="flex items-center justify-center space-x-4 mb-4">
+                        <img src="{{ url_for('static', filename='images/Image1_preview.png') }}" alt="ZenAlign" class="h-16 w-16 drop-shadow-2xl filter brightness-110">
+                        <img src="{{ url_for('static', filename='images/Image2_preview.png') }}" alt="ZenAlign" class="h-12 drop-shadow-2xl filter brightness-110 contrast-125">
+                            <div class="text-sm text-gray-300 modern-body">Your wellness companion</div>
+                        </div>
+                    </div>
+                    <p class="modern-body text-gray-300 leading-relaxed">
+                        AI-Powered ZenAlign &copy; 2024 | Made with <span class="text-red-400">❤️</span> for wellness and mindfulness.
+                    </p>
+                </div>
+            </div>
+        </div>
     </footer>
 </body>
 </html>

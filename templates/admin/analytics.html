@@ -5,16 +5,16 @@
 {% block content %}
 <div class="space-y-8">
     <!-- Header -->
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center welcome-animation">
         <div>
-            <h1 class="text-4xl font-bold text-gray-800">Analytics Dashboard</h1>
-            <p class="text-gray-600 mt-2">Comprehensive insights and performance metrics</p>
+            <h1 class="yogic-heading text-4xl font-bold text-gradient">Analytics Dashboard</h1>
+            <p class="modern-body text-slate-600 mt-2">Comprehensive insights and performance metrics</p>
         </div>
         <div class="flex space-x-2">
-            <button onclick="exportReport()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <button onclick="exportReport()" class="btn-gradient px-4 py-2 text-white rounded-lg font-semibold">
                 📊 Export Report
             </button>
-            <button onclick="refreshData()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+            <button onclick="refreshData()" class="bg-green-500 hover:bg-green-600 px-4 py-2 text-white rounded-lg font-semibold transition">
                 🔄 Refresh Data
             </button>
         </div>
@@ -22,31 +22,31 @@
 
     <!-- Key Performance Indicators -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="gradient-card rounded-xl p-6 border-l-4 border-indigo-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-100 text-sm">Total Users</p>
-                    <p class="text-3xl font-bold">{{ analytics.metrics.total_users if analytics.metrics else 0 }}</p>
+                    <p class="modern-body text-slate-600 text-sm">Total Users</p>
+                    <p class="text-3xl font-bold text-indigo-600">{{ analytics.metrics.total_users if analytics.metrics else 0 }}</p>
                 </div>
-                <div class="text-4xl opacity-80">👥</div>
+                <div class="text-4xl floating-icon">👥</div>
             </div>
         </div>
 
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="gradient-card rounded-xl p-6 border-l-4 border-green-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-100 text-sm">Total Sessions</p>
-                    <p class="text-3xl font-bold">{{ analytics.metrics.total_sessions if analytics.metrics else 0 }}</p>
+                    <p class="modern-body text-slate-600 text-sm">Total Sessions</p>
+                    <p class="text-3xl font-bold text-green-600">{{ analytics.metrics.total_sessions if analytics.metrics else 0 }}</p>
                 </div>
-                <div class="text-4xl opacity-80">🧘</div>
+                <div class="text-4xl floating-icon">🧘</div>
             </div>
         </div>
 
-        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="gradient-card rounded-xl p-6 border-l-4 border-purple-500">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-100 text-sm">Active Users (7d)</p>
-                    <p class="text-3xl font-bold">{{ analytics.metrics.active_users_7d if analytics.metrics else 0 }}</p>
+                    <p class="modern-body text-slate-600 text-sm">Active Users (7d)</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ analytics.metrics.active_users_7d if analytics.metrics else 0 }}</p>
                 </div>
                 <div class="text-4xl opacity-80">🔥</div>
             </div>
@@ -110,14 +110,39 @@
 
     <!-- Charts Row 2: Module Performance & User Engagement -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Module Performance Chart -->
+        <!-- Module Performance Chart (Bar Chart) -->
         <div class="bg-white rounded-xl shadow-lg p-6">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">Module Performance</h2>
+                <h2 class="text-xl font-semibold text-gray-800">Module Distribution</h2>
                 <div class="text-2xl">🎯</div>
             </div>
             <div class="h-80">
                 <canvas id="modulePerformanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pose Accuracy Distribution (Pie Chart) -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Accuracy Distribution</h2>
+                <div class="text-2xl">🎯</div>
+            </div>
+            <div class="h-80">
+                <canvas id="accuracyDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 3: Platform Health & User Engagement -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Platform Health Gauge -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Platform Health Score</h2>
+                <div class="text-2xl">💚</div>
+            </div>
+            <div class="h-80 flex items-center justify-center">
+                <canvas id="platformHealthGauge"></canvas>
             </div>
         </div>
 
@@ -133,7 +158,7 @@
         </div>
     </div>
 
-    <!-- Charts Row 3: Usage Patterns -->
+    <!-- Charts Row 4: Usage Patterns -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Hourly Usage Pattern -->
         <div class="bg-white rounded-xl shadow-lg p-6">
@@ -253,6 +278,160 @@
     </div>
 </div>
 
+<!-- Metrics Data Script -->
+<script id="metrics-data" type="application/json">
+{
+    "totalUsers": {{ analytics.metrics.total_users if analytics.metrics else 0 }},
+    "totalSessions": {{ analytics.metrics.total_sessions if analytics.metrics else 0 }},
+    "activeUsers7d": {{ analytics.metrics.active_users_7d if analytics.metrics else 0 }},
+    "avgSessionDuration": {{ analytics.metrics.avg_session_duration if analytics.metrics else 0 }},
+    "retentionRate": {{ analytics.metrics.user_retention_rate if analytics.metrics else 0 }}
+}
+</script>
+
+<!-- Data Script -->
+<script id="analytics-data" type="application/json">
+{
+    "userGrowth": {
+        "labels": [
+            {% if analytics.user_growth %}
+                {% for growth in analytics.user_growth %}
+                    "{{ growth._id if growth._id else 'Unknown' }}"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "data": [
+            {% if analytics.user_growth %}
+                {% for growth in analytics.user_growth %}
+                    {{ growth.new_users if growth.new_users else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ]
+    },
+    "sessionAnalytics": {
+        "labels": [
+            {% if analytics.session_analytics %}
+                {% for session in analytics.session_analytics %}
+                    "{{ session._id if session._id else 'Unknown' }}"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "sessions": [
+            {% if analytics.session_analytics %}
+                {% for session in analytics.session_analytics %}
+                    {{ session.sessions if session.sessions else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "durations": [
+            {% if analytics.session_analytics %}
+                {% for session in analytics.session_analytics %}
+                    {{ (session.avg_duration / 60) if session.avg_duration else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ]
+    },
+    "modulePerformance": {
+        "labels": [
+            {% if analytics.module_performance %}
+                {% for module in analytics.module_performance %}
+                    "{{ module._id.replace('-', ' ').title() if module._id else 'Unknown' }}"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "data": [
+            {% if analytics.module_performance %}
+                {% for module in analytics.module_performance %}
+                    {{ module.sessions if module.sessions else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "users": [
+            {% if analytics.module_performance %}
+                {% for module in analytics.module_performance %}
+                    {{ module.unique_user_count if module.unique_user_count else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "durations": [
+            {% if analytics.module_performance %}
+                {% for module in analytics.module_performance %}
+                    {{ module.avg_duration if module.avg_duration else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ]
+    },
+    "userEngagement": {
+        "labels": [
+            {% if analytics.user_engagement %}
+                {% for engagement in analytics.user_engagement %}
+                    "{{ engagement._id if engagement._id != None else 'New Users' }} sessions"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "data": [
+            {% if analytics.user_engagement %}
+                {% for engagement in analytics.user_engagement %}
+                    {{ engagement.users if engagement.users else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ]
+    },
+    "hourlyUsage": {
+        {% if analytics.hourly_usage %}
+            {% for usage in analytics.hourly_usage %}
+                "{{ usage._id }}": {{ usage.sessions if usage.sessions else 0 }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+        {% endif %}
+    },
+    "weeklyTrends": {
+        {% if analytics.weekly_trends %}
+            {% for trend in analytics.weekly_trends %}
+                "{{ trend._id }}": {{ trend.sessions if trend.sessions else 0 }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+        {% endif %}
+    },
+    "retention": {
+        "labels": [
+            {% if analytics.retention_analysis %}
+                {% for retention in analytics.retention_analysis %}
+                    "{{ retention._id if retention._id != None else 'Same Day' }} days"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ],
+        "data": [
+            {% if analytics.retention_analysis %}
+                {% for retention in analytics.retention_analysis %}
+                    {{ retention.users if retention.users else 0 }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% endif %}
+        ]
+    },
+    "accuracyDistribution": {
+        "labels": ["Excellent (90-100%)", "Good (75-89%)", "Fair (60-74%)", "Needs Improvement (<60%)"],
+        "data": [
+            {% if analytics.accuracy_distribution %}
+                {{ analytics.accuracy_distribution.excellent if analytics.accuracy_distribution.excellent else 0 }},
+                {{ analytics.accuracy_distribution.good if analytics.accuracy_distribution.good else 0 }},
+                {{ analytics.accuracy_distribution.fair if analytics.accuracy_distribution.fair else 0 }},
+                {{ analytics.accuracy_distribution.poor if analytics.accuracy_distribution.poor else 0 }}
+            {% else %}
+                0, 0, 0, 0
+            {% endif %}
+        ]
+    },
+    "platformHealth": {
+        "score": {% if analytics.platform_health %}{{ analytics.platform_health.score if analytics.platform_health.score else 75 }}{% else %}75{% endif %},
+        "components": {
+            "userActivity": {% if analytics.platform_health %}{{ analytics.platform_health.user_activity if analytics.platform_health.user_activity else 80 }}{% else %}80{% endif %},
+            "sessionQuality": {% if analytics.platform_health %}{{ analytics.platform_health.session_quality if analytics.platform_health.session_quality else 75 }}{% else %}75{% endif %},
+            "retention": {% if analytics.platform_health %}{{ analytics.platform_health.retention if analytics.platform_health.retention else 70 }}{% else %}70{% endif %},
+            "engagement": {% if analytics.platform_health %}{{ analytics.platform_health.engagement if analytics.platform_health.engagement else 85 }}{% else %}85{% endif %}
+        }
+    }
+}
+</script>
+
 <script>
 // Chart.js Configuration
 Chart.defaults.font.family = 'Inter, system-ui, sans-serif';
@@ -268,23 +447,46 @@ const colors = {
     gradient: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe']
 };
 
-// 1. User Growth Chart (Area Chart)
+// Initialize chart instances storage (for real-time updates)
+if (!window.chartInstances) {
+    window.chartInstances = {};
+}
+
+// Load analytics data from JSON script
+let analyticsData, metricsData;
+try {
+    analyticsData = JSON.parse(document.getElementById('analytics-data').textContent);
+    metricsData = JSON.parse(document.getElementById('metrics-data').textContent);
+} catch (error) {
+    console.error('Error parsing analytics data:', error);
+    // Fallback data structure
+    analyticsData = {
+        userGrowth: { labels: [], data: [] },
+        sessionAnalytics: { labels: [], sessions: [], durations: [] },
+        modulePerformance: { labels: [], data: [], users: [], durations: [] },
+        userEngagement: { labels: [], data: [] },
+        hourlyUsage: {},
+        weeklyTrends: {},
+        retention: { labels: [], data: [] }
+    };
+    metricsData = {
+        totalUsers: 0,
+        totalSessions: 0,
+        activeUsers7d: 0,
+        avgSessionDuration: 0,
+        retentionRate: 0
+    };
+}
+
+// 1. User Growth Chart
 const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
-new Chart(userGrowthCtx, {
+window.chartInstances.userGrowth = new Chart(userGrowthCtx, {
     type: 'line',
     data: {
-        labels: [
-            {% for growth in analytics.user_growth if analytics.user_growth %}
-                '{{ growth._id if growth._id else "Unknown" }}',
-            {% endfor %}
-        ],
+        labels: analyticsData.userGrowth.labels,
         datasets: [{
             label: 'New Users',
-            data: [
-                {% for growth in analytics.user_growth if analytics.user_growth %}
-                    {{ growth.new_users if growth.new_users else 0 }},
-                {% endfor %}
-            ],
+            data: analyticsData.userGrowth.data,
             borderColor: colors.primary[0],
             backgroundColor: colors.primary[0] + '20',
             fill: true,
@@ -297,9 +499,7 @@ new Chart(userGrowthCtx, {
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false }
-        },
+        plugins: { legend: { display: false } },
         scales: {
             y: { beginAtZero: true, grid: { color: '#F3F4F6' } },
             x: { grid: { display: false } }
@@ -307,33 +507,21 @@ new Chart(userGrowthCtx, {
     }
 });
 
-// 2. Session Analytics Chart (Multi-line)
+// 2. Session Analytics Chart
 const sessionAnalyticsCtx = document.getElementById('sessionAnalyticsChart').getContext('2d');
-new Chart(sessionAnalyticsCtx, {
+window.chartInstances.sessionAnalytics = new Chart(sessionAnalyticsCtx, {
     type: 'line',
     data: {
-        labels: [
-            {% for session in analytics.session_analytics if analytics.session_analytics %}
-                '{{ session._id if session._id else "Unknown" }}',
-            {% endfor %}
-        ],
+        labels: analyticsData.sessionAnalytics.labels,
         datasets: [{
             label: 'Sessions',
-            data: [
-                {% for session in analytics.session_analytics if analytics.session_analytics %}
-                    {{ session.sessions if session.sessions else 0 }},
-                {% endfor %}
-            ],
+            data: analyticsData.sessionAnalytics.sessions,
             borderColor: colors.success[0],
             backgroundColor: colors.success[0] + '20',
             yAxisID: 'y'
         }, {
             label: 'Avg Duration (min)',
-            data: [
-                {% for session in analytics.session_analytics if analytics.session_analytics %}
-                    {{ (session.avg_duration / 60) if session.avg_duration else 0 }},
-                {% endfor %}
-            ],
+            data: analyticsData.sessionAnalytics.durations,
             borderColor: colors.warning[0],
             backgroundColor: colors.warning[0] + '20',
             yAxisID: 'y1'
@@ -349,226 +537,438 @@ new Chart(sessionAnalyticsCtx, {
     }
 });
 
-// 3. Module Performance Chart (Horizontal Bar)
+// 3. Module Distribution Bar Chart
 const modulePerformanceCtx = document.getElementById('modulePerformanceChart').getContext('2d');
-new Chart(modulePerformanceCtx, {
+window.chartInstances.modulePerformance = new Chart(modulePerformanceCtx, {
     type: 'bar',
     data: {
-        labels: [
-            {% for module in analytics.module_performance if analytics.module_performance %}
-                '{{ module._id.replace("-", " ").title() if module._id else "Unknown" }}',
-            {% endfor %}
-        ],
+        labels: analyticsData.modulePerformance.labels,
         datasets: [{
             label: 'Sessions',
-            data: [
-                {% for module in analytics.module_performance if analytics.module_performance %}
-                    {{ module.sessions if module.sessions else 0 }},
-                {% endfor %}
-            ],
-            backgroundColor: colors.gradient.slice(0, {{ analytics.module_performance|length if analytics.module_performance else 0 }}),
-            borderRadius: 8
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-        plugins: { legend: { display: false } }
-    }
-});
-
-// 4. User Engagement Chart (Doughnut)
-const userEngagementCtx = document.getElementById('userEngagementChart').getContext('2d');
-new Chart(userEngagementCtx, {
-    type: 'doughnut',
-    data: {
-        labels: [
-            {% for engagement in analytics.user_engagement if analytics.user_engagement %}
-                '{{ engagement._id if engagement._id != None else "New Users" }} sessions',
-            {% endfor %}
-        ],
-        datasets: [{
-            data: [
-                {% for engagement in analytics.user_engagement if analytics.user_engagement %}
-                    {{ engagement.users if engagement.users else 0 }},
-                {% endfor %}
-            ],
-            backgroundColor: colors.gradient,
+            data: analyticsData.modulePerformance.data,
+            backgroundColor: colors.gradient.slice(0, analyticsData.modulePerformance.data.length),
+            borderRadius: 8,
             borderWidth: 0
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-            legend: { position: 'bottom' }
+        indexAxis: 'y',
+        plugins: { 
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.x + ' sessions';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: { 
+                beginAtZero: true,
+                grid: { color: '#F3F4F6' }
+            },
+            y: { 
+                grid: { display: false }
+            }
         }
     }
 });
 
-// 5. Hourly Usage Chart (Radar)
-const hourlyUsageCtx = document.getElementById('hourlyUsageChart').getContext('2d');
-new Chart(hourlyUsageCtx, {
-    type: 'radar',
+// 4. Accuracy Distribution Pie Chart
+const accuracyDistributionCtx = document.getElementById('accuracyDistributionChart').getContext('2d');
+window.chartInstances.accuracyDistribution = new Chart(accuracyDistributionCtx, {
+    type: 'pie',
     data: {
-        labels: [
-            {% for hour in range(24) %}
-                '{{ "%02d:00"|format(hour) }}',
-            {% endfor %}
-        ],
+        labels: analyticsData.accuracyDistribution.labels,
         datasets: [{
-            label: 'Sessions',
-            data: [
-                {% for hour in range(24) %}
-                    {% set found = false %}
-                    {% for usage in analytics.hourly_usage if analytics.hourly_usage %}
-                        {% if usage._id == hour %}
-                            {{ usage.sessions }},
-                            {% set found = true %}
-                        {% endif %}
-                    {% endfor %}
-                    {% if not found %}0,{% endif %}
-                {% endfor %}
+            data: analyticsData.accuracyDistribution.data,
+            backgroundColor: [
+                '#10B981', // Green for Excellent
+                '#3B82F6', // Blue for Good
+                '#F59E0B', // Orange for Fair
+                '#EF4444'  // Red for Needs Improvement
             ],
-            borderColor: colors.purple[0],
-            backgroundColor: colors.purple[0] + '20',
-            pointBackgroundColor: colors.purple[0]
+            borderWidth: 2,
+            borderColor: '#fff'
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { r: { beginAtZero: true } }
+        plugins: { 
+            legend: { 
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        return label + ': ' + value + ' sessions (' + percentage + '%)';
+                    }
+                }
+            }
+        }
     }
 });
 
-// 6. Weekly Trends Chart (Polar Area)
+// 5. Platform Health Gauge Chart
+const platformHealthCtx = document.getElementById('platformHealthGauge').getContext('2d');
+const healthScore = analyticsData.platformHealth.score;
+const healthColor = healthScore >= 80 ? '#10B981' : healthScore >= 60 ? '#F59E0B' : '#EF4444';
+
+window.chartInstances.platformHealth = new Chart(platformHealthCtx, {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [healthScore, 100 - healthScore],
+            backgroundColor: [healthColor, '#E5E7EB'],
+            borderWidth: 0,
+            circumference: 180,
+            rotation: 270
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '75%',
+        plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+        }
+    },
+    plugins: [{
+        id: 'gaugeText',
+        afterDraw: (chart) => {
+            const ctx = chart.ctx;
+            const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+            const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+            
+            // Get current health score from chart data
+            const currentScore = chart.data.datasets[0].data[0];
+            const currentColor = currentScore >= 80 ? '#10B981' : currentScore >= 60 ? '#F59E0B' : '#EF4444';
+            
+            // Draw score
+            ctx.save();
+            ctx.font = 'bold 48px Inter';
+            ctx.fillStyle = currentColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(currentScore + '%', centerX, centerY - 10);
+            
+            // Draw label
+            ctx.font = '14px Inter';
+            ctx.fillStyle = '#6B7280';
+            ctx.fillText('Health Score', centerX, centerY + 25);
+            
+            // Draw status
+            const status = currentScore >= 80 ? 'Excellent' : currentScore >= 60 ? 'Good' : 'Needs Attention';
+            ctx.font = 'bold 16px Inter';
+            ctx.fillStyle = currentColor;
+            ctx.fillText(status, centerX, centerY + 50);
+            ctx.restore();
+        }
+    }]
+});
+
+// 6. User Engagement Chart
+const userEngagementCtx = document.getElementById('userEngagementChart').getContext('2d');
+window.chartInstances.userEngagement = new Chart(userEngagementCtx, {
+    type: 'doughnut',
+    data: {
+        labels: analyticsData.userEngagement.labels,
+        datasets: [{
+            data: analyticsData.userEngagement.data,
+            backgroundColor: colors.gradient,
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+            legend: { 
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    font: {
+                        size: 12
+                    }
+                }
+            }
+        }
+    }
+    
+});
+
+// 7. Hourly Usage Chart
+const hourlyUsageCtx = document.getElementById('hourlyUsageChart').getContext('2d');
+const hourlyLabels = [];
+const hourlyData = [];
+
+for (let hour = 0; hour < 24; hour++) {
+    hourlyLabels.push(String(hour).padStart(2, '0') + ':00');
+    hourlyData.push(analyticsData.hourlyUsage[hour] || 0);
+}
+
+window.chartInstances.hourlyUsage = new Chart(hourlyUsageCtx, {
+    type: 'radar',
+    data: {
+        labels: hourlyLabels,
+        datasets: [{
+            label: 'Sessions',
+            data: hourlyData,
+            borderColor: colors.purple[0],
+            backgroundColor: colors.purple[0] + '20',
+            pointBackgroundColor: colors.purple[0],
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { 
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return 'Sessions: ' + context.parsed.r;
+                    }
+                }
+            }
+        },
+        scales: { 
+            r: { 
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            } 
+        }
+    }
+});
+
+// 8. Weekly Trends Chart
 const weeklyTrendsCtx = document.getElementById('weeklyTrendsChart').getContext('2d');
 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-new Chart(weeklyTrendsCtx, {
+const weeklyData = [];
+
+for (let day = 1; day <= 7; day++) {
+    weeklyData.push(analyticsData.weeklyTrends[day] || 0);
+}
+
+window.chartInstances.weeklyTrends = new Chart(weeklyTrendsCtx, {
     type: 'polarArea',
     data: {
         labels: dayNames,
         datasets: [{
-            data: [
-                {% for day in range(1, 8) %}
-                    {% set found = false %}
-                    {% for trend in analytics.weekly_trends if analytics.weekly_trends %}
-                        {% if trend._id == day %}
-                            {{ trend.sessions }},
-                            {% set found = true %}
-                        {% endif %}
-                    {% endfor %}
-                    {% if not found %}0,{% endif %}
-                {% endfor %}
-            ],
-            backgroundColor: colors.gradient
+            data: weeklyData,
+            backgroundColor: colors.gradient.map(color => color + 'CC'),
+            borderWidth: 2,
+            borderColor: '#fff'
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } }
+        plugins: { 
+            legend: { 
+                position: 'bottom',
+                labels: {
+                    padding: 15,
+                    font: {
+                        size: 12
+                    }
+                }
+            }
+        }
     }
 });
 
-// 7. Retention Chart (Bar)
+// 9. Retention Chart
 const retentionCtx = document.getElementById('retentionChart').getContext('2d');
-new Chart(retentionCtx, {
+window.chartInstances.retention = new Chart(retentionCtx, {
     type: 'bar',
     data: {
-        labels: [
-            {% for retention in analytics.retention_analysis if analytics.retention_analysis %}
-                '{{ retention._id if retention._id != None else "Same Day" }} days',
-            {% endfor %}
-        ],
+        labels: analyticsData.retention.labels,
         datasets: [{
             label: 'Users',
-            data: [
-                {% for retention in analytics.retention_analysis if analytics.retention_analysis %}
-                    {{ retention.users if retention.users else 0 }},
-                {% endfor %}
-            ],
+            data: analyticsData.retention.data,
             backgroundColor: colors.primary,
-            borderRadius: 8
+            borderRadius: 8,
+            borderWidth: 0
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+        plugins: { 
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return 'Users: ' + context.parsed.y;
+                    }
+                }
+            }
+        },
+        scales: { 
+            y: { 
+                beginAtZero: true,
+                grid: { color: '#F3F4F6' }
+            },
+            x: {
+                grid: { display: false }
+            }
+        }
     }
 });
 
 // Export Report Function
 function exportReport() {
-    const reportData = {
-        timestamp: new Date().toISOString(),
-        metrics: {
-            totalUsers: {{ analytics.metrics.total_users if analytics.metrics else 0 }},
-            totalSessions: {{ analytics.metrics.total_sessions if analytics.metrics else 0 }},
-            activeUsers7d: {{ analytics.metrics.active_users_7d if analytics.metrics else 0 }},
-            avgSessionDuration: {{ analytics.metrics.avg_session_duration if analytics.metrics else 0 }},
-            retentionRate: {{ analytics.metrics.user_retention_rate if analytics.metrics else 0 }}
-        },
-        modulePerformance: [
-            {% for module in analytics.module_performance if analytics.module_performance %}
-            {
-                module: '{{ module._id if module._id else "Unknown" }}',
-                sessions: {{ module.sessions if module.sessions else 0 }},
-                users: {{ module.unique_user_count if module.unique_user_count else 0 }},
-                avgDuration: {{ module.avg_duration if module.avg_duration else 0 }}
-            },
-            {% endfor %}
-        ]
-    };
+    // Get the button and show loading state
+    const exportBtn = event.target;
+    const originalText = exportBtn.innerHTML;
+    exportBtn.innerHTML = '⏳ Exporting...';
+    exportBtn.disabled = true;
     
-    // Create CSV content
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Yogic Guide Analytics Report\n";
-    csvContent += "Generated: " + new Date().toLocaleString() + "\n\n";
-    csvContent += "Key Metrics\n";
-    csvContent += "Total Users," + reportData.metrics.totalUsers + "\n";
-    csvContent += "Total Sessions," + reportData.metrics.totalSessions + "\n";
-    csvContent += "Active Users (7d)," + reportData.metrics.activeUsers7d + "\n";
-    csvContent += "Avg Session Duration (min)," + reportData.metrics.avgSessionDuration + "\n";
-    csvContent += "Retention Rate (%)," + reportData.metrics.retentionRate + "\n\n";
-    csvContent += "Module Performance\n";
-    csvContent += "Module,Sessions,Users,Avg Duration (sec)\n";
-    reportData.modulePerformance.forEach(module => {
-        csvContent += module.module + "," + module.sessions + "," + module.users + "," + module.avgDuration + "\n";
-    });
-    
-    // Download CSV
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "yogic_guide_analytics_" + new Date().toISOString().split('T')[0] + ".csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Show success message
-    alert('📊 Analytics report exported successfully!');
+    try {
+        // Validate data availability
+        if (!analyticsData || !metricsData) {
+            throw new Error('Analytics data not available');
+        }
+        
+        const reportData = {
+            timestamp: new Date().toISOString(),
+            metrics: metricsData,
+            modulePerformance: analyticsData.modulePerformance
+        };
+        
+        // Create CSV content
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Yogic Guide Analytics Report\n";
+        csvContent += "Generated: " + new Date().toLocaleString() + "\n\n";
+        csvContent += "Key Metrics\n";
+        csvContent += "Total Users," + reportData.metrics.totalUsers + "\n";
+        csvContent += "Total Sessions," + reportData.metrics.totalSessions + "\n";
+        csvContent += "Active Users (7d)," + reportData.metrics.activeUsers7d + "\n";
+        csvContent += "Avg Session Duration (min)," + reportData.metrics.avgSessionDuration + "\n";
+        csvContent += "Retention Rate (%)," + reportData.metrics.retentionRate + "\n\n";
+        
+        // Module Performance section
+        csvContent += "Module Performance\n";
+        csvContent += "Module,Sessions,Users,Avg Duration (sec)\n";
+        
+        // Add module performance data
+        if (reportData.modulePerformance && reportData.modulePerformance.labels) {
+            for (let i = 0; i < reportData.modulePerformance.labels.length; i++) {
+                const moduleName = reportData.modulePerformance.labels[i] || 'Unknown';
+                const sessions = reportData.modulePerformance.data[i] || 0;
+                const users = reportData.modulePerformance.users[i] || 0;
+                const duration = reportData.modulePerformance.durations[i] || 0;
+                csvContent += moduleName + "," + sessions + "," + users + "," + duration + "\n";
+            }
+        }
+        
+        // User Growth section
+        csvContent += "\nUser Growth\n";
+        csvContent += "Date,New Users\n";
+        if (analyticsData.userGrowth && analyticsData.userGrowth.labels) {
+            for (let i = 0; i < analyticsData.userGrowth.labels.length; i++) {
+                const date = analyticsData.userGrowth.labels[i] || 'Unknown';
+                const users = analyticsData.userGrowth.data[i] || 0;
+                csvContent += date + "," + users + "\n";
+            }
+        }
+        
+        // Session Analytics section
+        csvContent += "\nSession Analytics\n";
+        csvContent += "Date,Sessions,Avg Duration (min)\n";
+        if (analyticsData.sessionAnalytics && analyticsData.sessionAnalytics.labels) {
+            for (let i = 0; i < analyticsData.sessionAnalytics.labels.length; i++) {
+                const date = analyticsData.sessionAnalytics.labels[i] || 'Unknown';
+                const sessions = analyticsData.sessionAnalytics.sessions[i] || 0;
+                const duration = analyticsData.sessionAnalytics.durations[i] || 0;
+                csvContent += date + "," + sessions + "," + duration.toFixed(2) + "\n";
+            }
+        }
+        
+        // User Engagement section
+        csvContent += "\nUser Engagement\n";
+        csvContent += "Category,Users\n";
+        if (analyticsData.userEngagement && analyticsData.userEngagement.labels) {
+            for (let i = 0; i < analyticsData.userEngagement.labels.length; i++) {
+                const category = analyticsData.userEngagement.labels[i] || 'Unknown';
+                const users = analyticsData.userEngagement.data[i] || 0;
+                csvContent += category + "," + users + "\n";
+            }
+        }
+        
+        // Download CSV
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "yogic_guide_analytics_" + new Date().toISOString().split('T')[0] + ".csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show success message
+        alert('📊 Analytics report exported successfully!');
+        
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('❌ Error exporting report. Please try again.');
+    } finally {
+        // Reset button state
+        exportBtn.innerHTML = originalText;
+        exportBtn.disabled = false;
+    }
 }
 
 // Refresh Data Function
 function refreshData() {
-    const btn = event.target;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '⏳ Refreshing...';
-    btn.disabled = true;
-    
-    // Reload the page
-    setTimeout(() => {
-        location.reload();
-    }, 500);
+    // Use the manual refresh from real-time updates
+    if (typeof window.manualRefresh === 'function') {
+        window.manualRefresh();
+    } else {
+        // Fallback to page reload
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '⏳ Refreshing...';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            location.reload();
+        }, 500);
+    }
 }
 
-// Auto-refresh every 5 minutes
-setTimeout(() => location.reload(), 300000);
+// Initialize real-time updates after charts are loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit for charts to fully initialize
+    setTimeout(() => {
+        if (typeof window.initializeRealTimeUpdates === 'function') {
+            window.initializeRealTimeUpdates(30); // Update every 30 seconds
+            console.log('✅ Real-time analytics updates initialized');
+        }
+    }, 1000);
+});
 </script>
+
+<!-- Real-time Analytics Update System -->
+<script src="{{ url_for('static', filename='js/analytics-realtime.js') }}"></script>
 {% endblock %}

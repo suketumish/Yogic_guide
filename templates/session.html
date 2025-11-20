@@ -3,82 +3,674 @@
 {% block title %}{{ module_name }} - Yogic Guide{% endblock %}
 
 {% block content %}
-<div class="min-h-screen p-4">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-4">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800">{{ module_name }}</h1>
-                <p class="text-sm text-gray-600 mt-1">Pose <span id="poseProgress">0/0</span></p>
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --wellness-primary: #6366f1;
+        --wellness-secondary: #8b5cf6;
+        --wellness-accent: #10b981;
+    }
+    
+    .session-container {
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    
+    .camera-section {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    
+    .info-section {
+        height: 100vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 #f1f5f9;
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border-left: 2px solid #e2e8f0;
+    }
+    
+    .info-section::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .info-section::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 3px;
+    }
+    
+    .info-section::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+    
+    .info-section::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+    
+    .session-timer {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .session-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .video-container {
+        position: relative;
+        height: calc(100vh - 200px);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    #videoFeed {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    #poseCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .control-overlay {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 16px;
+        z-index: 10;
+    }
+    
+    .control-btn {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        color: #1e293b;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 14px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .control-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .control-btn.pause { 
+        background: rgba(245, 158, 11, 0.95);
+        color: white;
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+    .control-btn.pause:hover { 
+        background: rgba(245, 158, 11, 1);
+        box-shadow: 0 12px 40px rgba(245, 158, 11, 0.3);
+    }
+    
+    .control-btn.stop { 
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+    .control-btn.stop:hover { 
+        background: rgba(239, 68, 68, 1);
+        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.3);
+    }
+    
+    .control-btn.resume { 
+        background: rgba(34, 197, 94, 0.95);
+        color: white;
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+    .control-btn.resume:hover { 
+        background: rgba(34, 197, 94, 1);
+        box-shadow: 0 12px 40px rgba(34, 197, 94, 0.3);
+    }
+
+    
+    .reference-pose-container {
+        height: 320px;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        border: 2px solid rgba(99, 102, 241, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .reference-pose-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+        z-index: 1;
+    }
+    
+    .reference-pose-container .pose-emoji {
+        font-size: 6rem;
+        animation: float 3s ease-in-out infinite;
+        z-index: 2;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    }
+    
+    .reference-pose-image {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 12px;
+        z-index: 3;
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        opacity: 1 !important;
+        display: block !important;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-8px) scale(1.05); }
+    }
+    
+    .info-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .reference-pose-container:hover {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        border-color: rgba(99, 102, 241, 0.3);
+    }
+    
+    .reference-pose-container:hover .reference-pose-image {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .info-card.reference { 
+        border-left: 4px solid var(--wellness-primary);
+        background: linear-gradient(145deg, rgba(99, 102, 241, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+    }
+    .info-card.benefits { 
+        border-left: 4px solid var(--wellness-accent);
+        background: linear-gradient(145deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+    }
+    .info-card.cautions { 
+        border-left: 4px solid #ef4444;
+        background: linear-gradient(145deg, rgba(239, 68, 68, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+    }
+    .info-card.next-pose { 
+        border-left: 4px solid var(--wellness-secondary);
+        background: linear-gradient(145deg, rgba(139, 92, 246, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+    }
+    
+    .progress-container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        padding: 16px;
+        border-radius: 16px;
+        margin-top: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar-container {
+        background: #e2e8f0;
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background: var(--primary-gradient);
+        border-radius: 4px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    }
+    
+    .session-status {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 10;
+    }
+    
+    .angle-display {
+        position: absolute;
+        top: 70px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: 'Courier New', monospace;
+        z-index: 10;
+    }
+    
+    .popup-overlay-fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    
+    .popup-content {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border-radius: 24px;
+        padding: 40px;
+        max-width: 420px;
+        width: 85%;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        transform: scale(0.8) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .popup-overlay-fullscreen.show {
+        display: flex;
+    }
+    
+    .popup-overlay-fullscreen.show .popup-content {
+        transform: scale(1) translateY(0);
+    }
+    
+    .session-paused {
+        filter: grayscale(0.5) blur(1px);
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-btn {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 0 2px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-btn:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: translateY(-1px);
+    }
+    
+    .image-loading-placeholder {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        z-index: 4;
+    }
+    
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .btn-gradient {
+        background: var(--primary-gradient);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+    }
+    
+    .text-gradient {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* Enhanced responsive design */
+    @media (max-width: 1024px) {
+        .session-container {
+            flex-direction: column;
+        }
+        
+        .camera-section, .info-section {
+            width: 100%;
+            height: 50vh;
+        }
+        
+        .video-container {
+            height: calc(50vh - 150px);
+        }
+        
+        .reference-pose-container {
+            height: 280px;
+            padding: 10px;
+        }
+        
+        .reference-pose-image {
+            max-width: calc(100% - 8px);
+            max-height: calc(100% - 8px);
+        }
+        
+        .reference-pose-container .pose-emoji {
+            font-size: 4rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .reference-pose-container {
+            height: 240px;
+            padding: 8px;
+        }
+        
+        .reference-pose-image {
+            border-radius: 10px;
+            max-width: calc(100% - 6px);
+            max-height: calc(100% - 6px);
+        }
+    }
+    
+    /* Smooth transitions for all interactive elements */
+    * {
+        transition: all 0.2s ease;
+    }
+    
+    button:active {
+        transform: scale(0.98);
+    }
+</style>
+<div class="session-container">
+    <div class="h-full flex">
+        
+        <!-- Camera Feed - Left Half -->
+        <div class="w-1/2 camera-section p-6 relative">
+            <!-- Session Header -->
+            <div class="session-header text-center">
+                <h1 class="yogic-heading text-2xl font-bold text-slate-800 mb-2">{{ module_name }}</h1>
+                <div class="flex items-center justify-center gap-4 mb-3">
+                    <h2 id="poseName" class="yogic-heading text-lg font-semibold text-slate-700">Show Namaste Gesture 🙏</h2>
+                    <span class="modern-body text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-semibold">
+                        Pose <span id="poseProgress">0/0</span>
+                    </span>
+                </div>
+                <p id="timer" class="session-timer mb-2">5</p>
+                <p class="modern-body text-sm text-slate-600">Hold your palms together at chest level</p>
             </div>
-            <div class="flex gap-2">
-                <button id="pauseBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">Pause</button>
-                <button id="stopBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Stop</button>
+            
+            <!-- Video Container -->
+            <div class="video-container">
+                <video id="videoFeed" autoplay playsinline muted></video>
+                <canvas id="poseCanvas"></canvas>
+                
+                <!-- Session Status -->
+                <div id="sessionStatus" class="session-status">
+                    ● ACTIVE
+                </div>
+                
+                <!-- Angle Display -->
+                <div id="angleDisplay" class="angle-display">
+                    Angles: Loading...
+                </div>
+                
+                <!-- Pose Navigation (for testing) -->
+                <div class="pose-navigation" style="position: absolute; top: 120px; left: 20px; z-index: 10;">
+                    <button id="prevPoseBtn" class="nav-btn" onclick="changePose(-1)">◀ Prev</button>
+                    <button id="nextPoseBtn" class="nav-btn" onclick="changePose(1)">Next ▶</button>
+                </div>
+                
+                <!-- Control Overlay -->
+                <div class="control-overlay">
+                    <button id="pauseBtn" class="control-btn pause">
+                        <span>⏸️</span>
+                        <span>Pause</span>
+                    </button>
+                    <button id="resumeBtn" class="control-btn resume" style="display: none;">
+                        <span>▶️</span>
+                        <span>Resume</span>
+                    </button>
+                    <button id="stopBtn" class="control-btn stop">
+                        <span>⏹️</span>
+                        <span>Stop</span>
+                    </button>
+                </div>
+                
+
+            </div>
+            
+            <!-- Progress Section -->
+            <div class="progress-container">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="modern-body text-sm font-semibold text-slate-700">Session Progress</span>
+                    <span class="modern-body text-sm font-semibold text-indigo-600" id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between items-center mt-2 text-xs text-slate-500">
+                    <span id="timeElapsed">00:00</span>
+                    <span id="timeRemaining">--:--</span>
+                </div>
             </div>
         </div>
-        
-        <!-- Main Session Area -->
-        <div class="grid lg:grid-cols-3 gap-4">
-            <!-- Camera Feed -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-lg p-4">
-                    <div id="poseInfo" class="mb-4 text-center">
-                        <h2 id="poseName" class="text-2xl font-bold text-indigo-600">Show Namaste Gesture 🙏</h2>
-                        <p id="timer" class="text-5xl font-mono font-bold text-gray-800 mt-2">5</p>
-                        <p class="text-sm text-gray-600 mt-2">Hold your palms together at chest level</p>
+            
+        <!-- Information Panel - Right Half -->
+        <div class="w-1/2 info-section p-6">
+            <!-- Reference Pose - Large and Prominent -->
+            <div class="info-card reference">
+                <h3 class="yogic-heading text-xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-2xl mr-3">🎯</span>
+                    Reference Pose
+                </h3>
+                <div id="referenceImage" class="reference-pose-container">
+                    <div class="image-loading-placeholder" id="imageLoader" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Loading pose...</p>
                     </div>
-                    
-                    <div class="relative bg-gray-900 rounded-lg overflow-hidden" style="height: 480px;">
-                        <video id="videoFeed" autoplay playsinline class="w-full h-full object-cover"></video>
-                        <canvas id="poseCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
-                        <div id="angleDisplay" class="absolute top-4 left-4 bg-black bg-opacity-60 text-white p-2 rounded text-xs"></div>
-                    </div>
-                    
-                    <div id="feedback" class="mt-4 text-center text-lg font-semibold"></div>
-                    
-                    <!-- Progress Bar -->
-                    <div class="mt-4">
-                        <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div id="progressBar" class="bg-indigo-600 h-3 rounded-full transition-all" style="width: 0%"></div>
+                    <img id="poseReferenceImg" src="/static/src/Surya-Namaskar-step-1.jpg" 
+                         alt="Current Pose Reference" 
+                         class="reference-pose-image"
+                         onload="hideImageLoader()"
+                         onerror="showImageError()">
+                    <span class="pose-emoji" style="display: none;">🧘</span>
+                </div>
+                <div class="text-center">
+                    <p class="modern-body text-sm text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2 rounded-full inline-block">
+                        Follow this pose alignment carefully
+                    </p>
+                    <p class="modern-body text-xs text-slate-500 mt-2">Match your body position to the reference</p>
+                </div>
+            </div>
+            
+            <!-- Benefits -->
+            <div class="info-card benefits">
+                <h3 class="yogic-heading text-lg font-bold text-slate-800 mb-3 flex items-center">
+                    <span class="text-xl mr-3">✨</span>
+                    Benefits
+                </h3>
+                <ul id="benefits" class="modern-body text-sm text-slate-700 space-y-2">
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span>Improves flexibility and range of motion</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span>Strengthens core and stabilizing muscles</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span>Enhances balance and coordination</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span>Reduces stress and promotes mental clarity</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Cautions -->
+            <div class="info-card cautions">
+                <h3 class="yogic-heading text-lg font-bold text-slate-800 mb-3 flex items-center">
+                    <span class="text-xl mr-3">⚠️</span>
+                    Important Cautions
+                </h3>
+                <ul id="cautions" class="modern-body text-sm text-red-600 space-y-2">
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span>Avoid if you have acute back pain or injuries</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span>Never force or overstretch - listen to your body</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span>Stop if you feel dizzy or uncomfortable</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span>Breathe steadily - never hold your breath</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Next Pose Preview -->
+            <div class="info-card next-pose">
+                <h3 class="yogic-heading text-lg font-bold text-slate-800 mb-3 flex items-center">
+                    <span class="text-xl mr-3">⏭️</span>
+                    Coming Next
+                </h3>
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl bg-gradient-to-br from-purple-100 to-indigo-100 p-3 rounded-full">🔄</div>
+                    <div class="flex-1">
+                        <p id="nextPose" class="modern-body text-sm text-slate-700 font-semibold mb-1">Loading next pose...</p>
+                        <p class="modern-body text-xs text-slate-500">Prepare for smooth transition</p>
+                        <div class="mt-2 text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full inline-block font-medium">
+                            <span id="nextPoseTime">Ready in 30s</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Side Panel -->
-            <div class="space-y-4">
-                <!-- Reference Image -->
-                <div class="bg-white rounded-2xl shadow-lg p-4">
-                    <h3 class="font-bold text-gray-800 mb-2">Reference Pose</h3>
-                    <div id="referenceImage" class="bg-indigo-100 rounded-lg h-48 flex items-center justify-center">
-                        <span class="text-6xl">🧘</span>
-                    </div>
-                </div>
-                
-                <!-- Benefits -->
-                <div class="bg-white rounded-2xl shadow-lg p-4">
-                    <h3 class="font-bold text-gray-800 mb-2">✨ Benefits</h3>
-                    <ul id="benefits" class="text-sm text-gray-600 space-y-1">
-                        <li>• Improves flexibility</li>
-                        <li>• Strengthens muscles</li>
-                        <li>• Enhances balance</li>
-                    </ul>
-                </div>
-                
-                <!-- Cautions -->
-                <div class="bg-white rounded-2xl shadow-lg p-4">
-                    <h3 class="font-bold text-gray-800 mb-2">⚠️ Cautions</h3>
-                    <ul id="cautions" class="text-sm text-red-600 space-y-1">
-                        <li>• Avoid if you have back pain</li>
-                        <li>• Don't overstretch</li>
-                    </ul>
-                </div>
-                
-                <!-- Next Pose Preview -->
-                <div class="bg-white rounded-2xl shadow-lg p-4">
-                    <h3 class="font-bold text-gray-800 mb-2">Next Pose</h3>
-                    <p id="nextPose" class="text-sm text-gray-600">Loading...</p>
-                </div>
+        </div>
+    </div>
+    
+    <!-- Popup Overlays (Outside camera frame) -->
+    <div id="pausePopup" class="popup-overlay-fullscreen">
+        <div class="popup-content">
+            <div class="text-6xl mb-4">⏸️</div>
+            <h3 class="yogic-heading text-2xl font-bold text-slate-800 mb-2">Session Paused</h3>
+            <p class="modern-body text-slate-600 mb-6">Take a moment to rest. Resume when you're ready.</p>
+            <div class="flex gap-3 justify-center">
+                <button id="resumePopupBtn" class="btn-gradient px-6 py-3 text-white rounded-lg font-semibold">
+                    ▶️ Resume
+                </button>
+                <button id="stopPopupBtn" class="bg-red-500 hover:bg-red-600 px-6 py-3 text-white rounded-lg font-semibold transition">
+                    ⏹️ End Session
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="stopPopup" class="popup-overlay-fullscreen">
+        <div class="popup-content">
+            <div class="text-6xl mb-4">⏹️</div>
+            <h3 class="yogic-heading text-2xl font-bold text-slate-800 mb-2">End Session?</h3>
+            <p class="modern-body text-slate-600 mb-6">Are you sure you want to end this session? Your progress will be saved.</p>
+            <div class="flex gap-3 justify-center">
+                <button id="confirmStopBtn" class="bg-red-500 hover:bg-red-600 px-6 py-3 text-white rounded-lg font-semibold transition">
+                    Yes, End Session
+                </button>
+                <button id="cancelStopBtn" class="bg-slate-300 hover:bg-slate-400 px-6 py-3 text-slate-700 rounded-lg font-semibold transition">
+                    Continue
+                </button>
             </div>
         </div>
     </div>
@@ -87,5 +679,513 @@
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+<script src="{{ url_for('static', filename='js/voice-over.js') }}"></script>
+<script src="{{ url_for('static', filename='js/session.js') }}"></script>
 <script src="{{ url_for('static', filename='js/pose-detection.js') }}"></script>
+
+<script>
+// Session State Management
+let sessionState = {
+    isActive: true,
+    isPaused: false,
+    startTime: Date.now(),
+    pausedTime: 0,
+    currentPose: 0,
+    totalPoses: 12,
+    sessionDuration: 0
+};
+
+// Initialize voice-over on session start
+if (typeof voiceOver !== 'undefined') {
+    voiceOver.onSessionStart('{{ module_name }}');
+}
+
+// Enhanced session UI functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSession();
+    setupEventListeners();
+    startSessionTimer();
+});
+
+function initializeSession() {
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+    const poseProgress = document.getElementById('poseProgress');
+    
+    // Initialize UI elements
+    if (poseProgress) {
+        poseProgress.textContent = `${sessionState.currentPose}/${sessionState.totalPoses}`;
+    }
+    
+    updateSessionStatus('ACTIVE');
+    
+    // Start the Surya Namaskar pose sequence
+    startPoseSequence();
+}
+
+function setupEventListeners() {
+    // Pause button
+    document.getElementById('pauseBtn').addEventListener('click', pauseSession);
+    
+    // Resume button
+    document.getElementById('resumeBtn').addEventListener('click', resumeSession);
+    
+    // Stop button
+    document.getElementById('stopBtn').addEventListener('click', showStopPopup);
+    
+    // Popup buttons
+    document.getElementById('resumePopupBtn').addEventListener('click', resumeFromPopup);
+    document.getElementById('stopPopupBtn').addEventListener('click', showStopPopup);
+    document.getElementById('confirmStopBtn').addEventListener('click', stopSession);
+    document.getElementById('cancelStopBtn').addEventListener('click', hideStopPopup);
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            if (sessionState.isPaused) {
+                resumeSession();
+            } else {
+                pauseSession();
+            }
+        } else if (e.code === 'Escape') {
+            showStopPopup();
+        }
+    });
+}
+
+function pauseSession() {
+    if (!sessionState.isActive || sessionState.isPaused) return;
+    
+    sessionState.isPaused = true;
+    sessionState.pausedTime = Date.now();
+    
+    // Voice-over: Session paused
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.onSessionPause();
+    }
+    
+    // Update UI with smooth transitions
+    updateSessionStatus('PAUSED');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resumeBtn = document.getElementById('resumeBtn');
+    
+    pauseBtn.style.opacity = '0';
+    setTimeout(() => {
+        pauseBtn.style.display = 'none';
+        resumeBtn.style.display = 'flex';
+        resumeBtn.style.opacity = '0';
+        setTimeout(() => {
+            resumeBtn.style.opacity = '1';
+        }, 50);
+    }, 200);
+    
+    // Add paused effect to video
+    const videoContainer = document.querySelector('.video-container');
+    videoContainer.classList.add('session-paused');
+    
+    // Show pause popup
+    showPopup('pausePopup');
+    
+    // Pause pose detection if available
+    if (window.pausePoseDetection) {
+        window.pausePoseDetection();
+    }
+    
+    // Show feedback
+    showFeedback('Session paused - Take your time! 🛑', 'neutral');
+}
+
+function resumeSession() {
+    if (!sessionState.isActive || !sessionState.isPaused) return;
+    
+    sessionState.isPaused = false;
+    sessionState.startTime += (Date.now() - sessionState.pausedTime);
+    
+    // Voice-over: Session resumed
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.onSessionResume();
+    }
+    
+    // Update UI with smooth transitions
+    updateSessionStatus('ACTIVE');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resumeBtn = document.getElementById('resumeBtn');
+    
+    resumeBtn.style.opacity = '0';
+    setTimeout(() => {
+        resumeBtn.style.display = 'none';
+        pauseBtn.style.display = 'flex';
+        pauseBtn.style.opacity = '0';
+        setTimeout(() => {
+            pauseBtn.style.opacity = '1';
+        }, 50);
+    }, 200);
+    
+    // Remove paused effect
+    const videoContainer = document.querySelector('.video-container');
+    videoContainer.classList.remove('session-paused');
+    
+    // Hide popup
+    hidePopup('pausePopup');
+    
+    // Resume pose detection if available
+    if (window.resumePoseDetection) {
+        window.resumePoseDetection();
+    }
+    
+    // Show feedback
+    showFeedback('Session resumed - Let\'s continue! 🚀', 'positive');
+}
+
+function resumeFromPopup() {
+    resumeSession();
+}
+
+function showStopPopup() {
+    showPopup('stopPopup');
+}
+
+function hideStopPopup() {
+    hidePopup('stopPopup');
+}
+
+function stopSession() {
+    sessionState.isActive = false;
+    sessionState.isPaused = false;
+    
+    // Clear pose sequence interval
+    if (sessionState.poseInterval) {
+        clearInterval(sessionState.poseInterval);
+    }
+    
+    // Show stopping feedback
+    showFeedback('Ending session... Great work! 🎉', 'positive');
+    
+    // Calculate final session stats
+    const totalTime = Math.floor((Date.now() - sessionState.startTime) / 1000);
+    const completionRate = Math.round((sessionState.currentPose / sessionState.totalPoses) * 100);
+    
+    // Save session data
+    const sessionData = {
+        module: '{{ module_name }}',
+        duration: totalTime,
+        poses_completed: sessionState.currentPose,
+        completion_rate: completionRate,
+        end_time: new Date().toISOString()
+    };
+    
+    localStorage.setItem('sessionStats', JSON.stringify(sessionData));
+    
+    // Stop pose detection if available
+    if (window.stopPoseDetection) {
+        window.stopPoseDetection();
+    }
+    
+    // Add a small delay for better UX
+    setTimeout(() => {
+        window.location.href = "{{ url_for('session_complete') }}";
+    }, 1000);
+}
+
+function showPopup(popupId) {
+    const popup = document.getElementById(popupId);
+    if (popup) {
+        popup.classList.add('show');
+    }
+}
+
+function hidePopup(popupId) {
+    const popup = document.getElementById(popupId);
+    if (popup) {
+        popup.classList.remove('show');
+    }
+}
+
+function updateSessionStatus(status) {
+    const statusElement = document.getElementById('sessionStatus');
+    if (statusElement) {
+        statusElement.textContent = `● ${status}`;
+        statusElement.className = `session-status ${status.toLowerCase()}`;
+    }
+}
+
+function startSessionTimer() {
+    setInterval(() => {
+        if (!sessionState.isActive || sessionState.isPaused) return;
+        
+        const elapsed = Math.floor((Date.now() - sessionState.startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        
+        const timeElapsedElement = document.getElementById('timeElapsed');
+        if (timeElapsedElement) {
+            timeElapsedElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        sessionState.sessionDuration = elapsed;
+    }, 1000);
+}
+
+// Update progress percentage display
+function updateProgress(percentage) {
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+    
+    if (progressBar && progressPercent) {
+        progressBar.style.width = percentage + '%';
+        progressPercent.textContent = Math.round(percentage) + '%';
+    }
+}
+
+// Enhanced feedback display with overlay styling
+// Feedback overlay removed - using console logs for debugging
+function showFeedback(message, type = 'neutral') {
+    console.log(`[${type.toUpperCase()}] ${message}`);
+    // Feedback overlay functionality disabled for cleaner UI
+}
+
+// Surya Namaskar pose data
+const suryaNamaskarPoses = {
+    1: { name: 'Pranamasana (Prayer Pose)', description: 'Stand with palms together at chest' },
+    2: { name: 'Hasta Uttanasana (Raised Arms)', description: 'Raise arms overhead, arch back slightly' },
+    3: { name: 'Hasta Padasana (Forward Fold)', description: 'Bend forward, touch floor beside feet' },
+    4: { name: 'Ashwa Sanchalanasana (Lunge)', description: 'Step right leg back, knee down' },
+    5: { name: 'Dandasana (Plank Pose)', description: 'Step left leg back, straight line' },
+    6: { name: 'Ashtanga Namaskara (Eight Points)', description: 'Lower knees, chest, chin to floor' },
+    7: { name: 'Bhujangasana (Cobra Pose)', description: 'Slide forward, raise chest up' },
+    8: { name: 'Adho Mukha Svanasana (Downward Dog)', description: 'Lift hips up, form inverted V' },
+    9: { name: 'Ashwa Sanchalanasana (Lunge)', description: 'Step right foot forward' },
+    10: { name: 'Hasta Padasana (Forward Fold)', description: 'Bring left foot forward, fold' },
+    11: { name: 'Hasta Uttanasana (Raised Arms)', description: 'Rise up, arms overhead' },
+    12: { name: 'Pranamasana (Prayer Pose)', description: 'Return to standing, palms together' }
+};
+
+// Update pose information
+function updatePoseInfo(poseName, description, poseNumber) {
+    const poseNameElement = document.getElementById('poseName');
+    const poseProgressElement = document.getElementById('poseProgress');
+    
+    // Use Surya Namaskar data if available
+    if (suryaNamaskarPoses[poseNumber]) {
+        poseName = suryaNamaskarPoses[poseNumber].name;
+        description = suryaNamaskarPoses[poseNumber].description;
+    }
+    
+    if (poseNameElement) {
+        poseNameElement.textContent = poseName;
+    }
+    
+    if (poseProgressElement) {
+        sessionState.currentPose = poseNumber;
+        poseProgressElement.textContent = `${poseNumber}/${sessionState.totalPoses}`;
+    }
+    
+    // Update reference pose image
+    updateReferencePose(poseNumber, poseName, description);
+    
+    // Update progress bar
+    const progress = (poseNumber / sessionState.totalPoses) * 100;
+    updateProgress(progress);
+}
+
+// Update next pose preview
+function updateNextPose(nextPoseName, timeUntilNext = 30) {
+    const nextPoseElement = document.getElementById('nextPose');
+    const nextPoseTimeElement = document.getElementById('nextPoseTime');
+    
+    // Get next pose from Surya Namaskar sequence
+    const currentPose = sessionState.currentPose;
+    const nextPoseNumber = currentPose < 12 ? currentPose + 1 : 1;
+    
+    if (suryaNamaskarPoses[nextPoseNumber]) {
+        nextPoseName = suryaNamaskarPoses[nextPoseNumber].name;
+    }
+    
+    if (nextPoseElement) {
+        nextPoseElement.textContent = nextPoseName || 'Loading next pose...';
+    }
+    
+    if (nextPoseTimeElement) {
+        nextPoseTimeElement.textContent = `Ready in ${timeUntilNext}s`;
+    }
+}
+
+// Auto-advance poses for demonstration (can be controlled by pose detection)
+function startPoseSequence() {
+    let currentPoseIndex = 1;
+    
+    // Initialize first pose
+    updatePoseInfo('', '', currentPoseIndex);
+    updateNextPose('', 30);
+    
+    // Voice-over: First pose
+    if (typeof voiceOver !== 'undefined' && suryaNamaskarPoses[currentPoseIndex]) {
+        voiceOver.onPoseChange(suryaNamaskarPoses[currentPoseIndex]);
+    }
+    
+    // Auto-advance every 10 seconds for demo (replace with actual pose detection)
+    const poseInterval = setInterval(() => {
+        if (!sessionState.isActive || sessionState.isPaused) {
+            return;
+        }
+        
+        currentPoseIndex++;
+        if (currentPoseIndex > 12) {
+            currentPoseIndex = 1; // Loop back to start
+        }
+        
+        updatePoseInfo('', '', currentPoseIndex);
+        updateNextPose('', 30);
+        
+        // Voice-over: Pose transition
+        if (typeof voiceOver !== 'undefined' && suryaNamaskarPoses[currentPoseIndex]) {
+            voiceOver.onPoseChange(suryaNamaskarPoses[currentPoseIndex]);
+        }
+        
+        // Show feedback for pose transition
+        showFeedback(`Moving to pose ${currentPoseIndex}`, 'neutral');
+        
+    }, 10000); // Change pose every 10 seconds
+    
+    // Store interval ID for cleanup
+    sessionState.poseInterval = poseInterval;
+}
+
+// Update reference pose
+function updateReferencePose(poseNumber, poseName, description) {
+    const referenceContainer = document.getElementById('referenceImage');
+    const poseImg = document.getElementById('poseReferenceImg');
+    const poseEmoji = referenceContainer ? referenceContainer.querySelector('.pose-emoji') : null;
+    
+    if (poseImg && poseNumber) {
+        // Show loading state
+        showImageLoader();
+        
+        // Reset image display
+        poseImg.style.display = 'block';
+        poseImg.style.opacity = '1';
+        if (poseEmoji) poseEmoji.style.display = 'none';
+        
+        // Update the image source based on pose number
+        poseImg.src = `/static/src/Surya-Namaskar-step-${poseNumber}.jpg`;
+        poseImg.alt = `${poseName} - Reference Pose`;
+        
+        // Add loading and error handling
+        poseImg.onload = function() {
+            hideImageLoader();
+            this.style.opacity = '1';
+            console.log(`Reference pose image loaded: Step ${poseNumber}`);
+        };
+        
+        poseImg.onerror = function() {
+            console.error(`Failed to load reference pose: Step ${poseNumber}`);
+            showImageError();
+        };
+    }
+}
+
+// Update benefits and cautions dynamically
+function updateBenefits(benefits) {
+    const benefitsElement = document.getElementById('benefits');
+    if (benefitsElement && benefits) {
+        benefitsElement.innerHTML = benefits.map(benefit => 
+            `<li class="flex items-start">
+                <span class="text-green-500 mr-3 mt-1 text-lg">•</span>
+                <span>${benefit}</span>
+            </li>`
+        ).join('');
+    }
+}
+
+function updateCautions(cautions) {
+    const cautionsElement = document.getElementById('cautions');
+    if (cautionsElement && cautions) {
+        cautionsElement.innerHTML = cautions.map(caution => 
+            `<li class="flex items-start">
+                <span class="text-red-500 mr-3 mt-1 text-lg">•</span>
+                <span>${caution}</span>
+            </li>`
+        ).join('');
+    }
+}
+
+// Example usage functions for pose detection integration
+function onPoseDetected(pose, accuracy) {
+    if (accuracy > 0.8) {
+        showFeedback('Excellent form! Keep it up! 🎉', 'positive');
+    } else if (accuracy > 0.6) {
+        showFeedback('Good! Try to align better with the reference', 'neutral');
+    } else {
+        showFeedback('Adjust your pose to match the reference', 'negative');
+    }
+}
+
+function onPoseComplete(poseNumber) {
+    updatePoseInfo(`Pose ${poseNumber} Complete`, 'Moving to next pose...', poseNumber);
+    showFeedback('Pose completed! Great job! ✨', 'positive');
+}
+
+// Close popups when clicking outside (only for stop popup)
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('popup-overlay-fullscreen')) {
+        if (e.target.id === 'stopPopup') {
+            hidePopup(e.target.id);
+        }
+        // Pause popup should only be closed via buttons
+    }
+});
+
+// Image loading helper functions
+function showImageLoader() {
+    const loader = document.getElementById('imageLoader');
+    const img = document.getElementById('poseReferenceImg');
+    if (loader) loader.style.display = 'block';
+    if (img) img.style.opacity = '0.3';
+}
+
+function hideImageLoader() {
+    const loader = document.getElementById('imageLoader');
+    const img = document.getElementById('poseReferenceImg');
+    if (loader) loader.style.display = 'none';
+    if (img) img.style.opacity = '1';
+}
+
+function showImageError() {
+    const loader = document.getElementById('imageLoader');
+    const img = document.getElementById('poseReferenceImg');
+    const emoji = document.querySelector('.pose-emoji');
+    
+    if (loader) loader.style.display = 'none';
+    if (img) img.style.display = 'none';
+    if (emoji) {
+        emoji.style.display = 'block';
+        emoji.textContent = '🧘';
+    }
+    console.error('Failed to load pose reference image');
+}
+
+// Manual pose navigation for testing
+function changePose(direction) {
+    let newPose = sessionState.currentPose + direction;
+    
+    // Wrap around the pose sequence
+    if (newPose > 12) newPose = 1;
+    if (newPose < 1) newPose = 12;
+    
+    // Update the pose
+    updatePoseInfo('', '', newPose);
+    updateNextPose('', 30);
+    
+    showFeedback(`Switched to pose ${newPose}`, 'neutral');
+}
+
+// Prevent accidental page refresh during session
+window.addEventListener('beforeunload', function(e) {
+    if (sessionState.isActive) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave? Your session progress will be lost.';
+    }
+});
+</script>
 {% endblock %}

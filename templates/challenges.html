@@ -3,16 +3,38 @@
 {% block title %}Challenges - Yogic Guide{% endblock %}
 
 {% block content %}
+<style>
+    .stagger-animation {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+    .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+    .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+    .stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 <div class="min-h-screen p-6">
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="mb-8">
+        <div class="mb-8 welcome-animation">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-800">Yoga Challenges</h1>
-                    <p class="text-gray-600 mt-2">Join challenges and compete with the community</p>
+                    <h1 class="yogic-heading text-4xl font-bold text-gradient">Yoga Challenges</h1>
+                    <p class="modern-body text-slate-600 mt-2">Join challenges and compete with the community</p>
                 </div>
-                <a href="{{ url_for('dashboard') }}" class="btn-secondary">
+                <a href="{{ url_for('dashboard') }}" class="btn-gradient text-white px-6 py-3 rounded-lg font-semibold">
                     ← Back to Dashboard
                 </a>
             </div>
@@ -20,31 +42,31 @@
 
         <!-- Challenge Stats -->
         <div class="grid md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <div class="text-3xl mb-2">🏆</div>
+            <div class="gradient-card rounded-2xl p-6 text-center stagger-animation">
+                <div class="text-3xl mb-2 floating-icon">🏆</div>
                 <p class="text-2xl font-bold text-indigo-600">{{ user_challenges|length }}</p>
-                <p class="text-gray-600">Challenges Joined</p>
+                <p class="modern-body text-slate-600">Challenges Joined</p>
             </div>
-            <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <div class="text-3xl mb-2">🔥</div>
+            <div class="gradient-card rounded-2xl p-6 text-center stagger-animation">
+                <div class="text-3xl mb-2 floating-icon">🔥</div>
                 <p class="text-2xl font-bold text-orange-600">0</p>
-                <p class="text-gray-600">Challenges Won</p>
+                <p class="modern-body text-slate-600">Challenges Won</p>
             </div>
-            <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <div class="text-3xl mb-2">⭐</div>
+            <div class="gradient-card rounded-2xl p-6 text-center stagger-animation">
+                <div class="text-3xl mb-2 floating-icon">⭐</div>
                 <p class="text-2xl font-bold text-yellow-600">0</p>
-                <p class="text-gray-600">Challenge Points</p>
+                <p class="modern-body text-slate-600">Challenge Points</p>
             </div>
-            <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-                <div class="text-3xl mb-2">👥</div>
+            <div class="gradient-card rounded-2xl p-6 text-center stagger-animation">
+                <div class="text-3xl mb-2 floating-icon">👥</div>
                 <p class="text-2xl font-bold text-green-600">{{ active_challenges|length }}</p>
-                <p class="text-gray-600">Active Challenges</p>
+                <p class="modern-body text-slate-600">Active Challenges</p>
             </div>
         </div>
 
         <!-- Active Challenges -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Active Challenges</h2>
+            <h2 class="yogic-heading text-2xl font-bold text-slate-800 mb-6">Active Challenges</h2>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for challenge in active_challenges %}

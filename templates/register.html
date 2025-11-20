@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Yogic Guide</title>
+    <title>Register - ZenAlign</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -14,25 +14,112 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-responsive.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/yogic-wellness-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration-enhanced.css') }}">
 
-    <!-- Google Fonts for Yogic Theme -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         .yogic-heading {
             font-family: 'Playfair Display', serif;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.02em;
+        }
+        
+        .modern-body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .gradient-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-animation {
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Admin Dashboard Style Cards */
+        .admin-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-left-color: #764ba2;
         }
 
-        .yogic-body {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Enhanced dropdown styling */
+        /* Enhanced form styling */
         select {
             color: #374151 !important;
             background-color: #ffffff !important;
@@ -58,21 +145,56 @@
         select::-ms-expand {
             display: none;
         }
+        
+        /* Form Section Styling */
+        .form-section {
+            background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #E8DCC4;
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            box-shadow: 0 4px 12px rgba(107, 125, 99, 0.08);
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #6B7D63;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E8DCC4;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-icon {
+            font-size: 1.25rem;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #E8DCC4, transparent);
+            margin: 1.5rem 0;
+        }
     </style>
 </head>
 
-<body style="background-color: #FDFBF7;" class="min-h-screen">
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 modern-body">
     <div class="min-h-screen grid md:grid-cols-2">
         <!-- Left Side - Hero Section with Image (Hidden on mobile) -->
-        <div class="hidden md:flex flex-col relative overflow-hidden"
-            style="background: linear-gradient(135deg, #8B9D83 0%, #9BA17B 100%);">
+        <div class="hidden md:flex flex-col relative overflow-hidden hero-gradient">
 
             <!-- Background Image with Overlay -->
             <div class="absolute inset-0">
                 <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80" alt="Yoga Practice"
-                    class="w-full h-full object-cover opacity-30">
-                <div class="absolute inset-0"
-                    style="background: linear-gradient(135deg, rgba(139, 157, 131, 0.85) 0%, rgba(155, 161, 123, 0.85) 100%);">
+                    class="w-full h-full object-cover opacity-20">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/80 via-purple-600/80 to-pink-500/80">
                 </div>
             </div>
 
@@ -150,12 +272,12 @@
         </div>
 
         <!-- Right Side - Registration Form -->
-        <div class="flex items-center justify-center p-4 sm:p-6 lg:p-12" style="background-color: #FDFBF7;">
+        <div class="flex items-center justify-center p-4 sm:p-6 lg:p-12 bg-white/50 backdrop-blur-sm">
             <div class="w-full max-w-xl">
                 <!-- Mobile Logo (Visible only on mobile) -->
                 <div class="md:hidden text-center mb-8">
                     <div class="text-5xl mb-3">🧘</div>
-                    <h1 class="yogic-heading text-3xl font-bold" style="color: #6B7D63;">YOGIC GUIDE</h1>
+                    <h1 class="yogic-heading text-3xl font-bold" style="color: #6B7D63;">ZENALIGN</h1>
                     <p class="yogic-body text-sm" style="color: #A89F91;">AI-Powered Yoga Assistant</p>
                 </div>
 
@@ -194,80 +316,119 @@
                 {% endif %}
                 {% endwith %}
 
-                <form method="POST" action="{{ url_for('register') }}" class="space-y-5">
-                    <!-- Row 1: Name and Age -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Full Name
-                                *</label>
-                            <input type="text" name="name" required
-                                class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80"
-                                style="border-color: #E8DCC4;" placeholder="John Doe">
-                        </div>
+                <form method="POST" action="{{ url_for('register') }}" id="registrationForm" class="space-y-6">
+                    <!-- Section 1: Personal Information -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">👤</span>
+                            <span>Personal Information</span>
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                        Full Name *
+                                    </label>
+                                    <input type="text" name="name" id="name" required
+                                        class="custom-input yogic-body w-full"
+                                        placeholder="John Doe">
+                                    <span class="error-message text-xs text-red-600 mt-1 hidden"></span>
+                                </div>
 
-                        <div>
-                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Age *</label>
-                            <input type="number" name="age" required min="10" max="100"
-                                class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80"
-                                style="border-color: #E8DCC4;" placeholder="25">
-                        </div>
-                    </div>
+                                <div>
+                                    <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                        Age *
+                                    </label>
+                                    <input type="number" name="age" id="age" required min="10" max="100"
+                                        class="custom-input yogic-body w-full"
+                                        placeholder="25">
+                                    <span class="error-message text-xs text-red-600 mt-1 hidden"></span>
+                                </div>
+                            </div>
 
-                    <!-- Row 2: Email and Mobile -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Email Address
-                                *</label>
-                            <input type="email" name="email" required
-                                class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80"
-                                style="border-color: #E8DCC4;" placeholder="your@email.com">
-                        </div>
-
-                        <div>
-                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Mobile Number
-                                *</label>
-                            <input type="tel" name="mobile" required pattern="[0-9]{10}" maxlength="10"
-                                class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80"
-                                style="border-color: #E8DCC4;" placeholder="9876543210">
-                        </div>
-                    </div>
-
-                    <!-- Row 3: Password and Gender -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Password
-                                *</label>
-                            <input type="password" name="password" required minlength="6"
-                                class="yogic-body w-full px-4 py-3 text-base border-2 rounded-lg focus:outline-none transition hover:border-opacity-80"
-                                style="border-color: #E8DCC4;" placeholder="••••••••">
-                            <p class="yogic-body text-xs mt-1" style="color: #A89F91;">Minimum 6 characters</p>
-                        </div>
-
-                        <div>
-                            <label class="yogic-body block text-sm font-bold mb-2"
-                                style="color: #6B7D63;">Gender</label>
-                            <select name="gender"
-                                class="yogic-body w-full px-4 py-3 text-base bg-white border-2 rounded-lg focus:outline-none transition appearance-none cursor-pointer hover:border-opacity-80"
-                                style="border-color: #E8DCC4; color: #6B7D63; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
-                                <option value="">Prefer not to say</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <div>
+                                <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                    Gender
+                                </label>
+                                <select name="gender" id="gender" class="custom-select yogic-body w-full">
+                                    <option value="">Prefer not to say</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Row 4: Experience Level (Full Width) -->
-                    <div>
-                        <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">Experience Level
-                            *</label>
-                        <select name="experience" required
-                            class="yogic-body w-full px-4 py-3 text-base bg-white border-2 rounded-lg focus:outline-none transition appearance-none cursor-pointer hover:border-opacity-80"
-                            style="border-color: #E8DCC4; color: #6B7D63; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
-                            <option value="Beginner">🌱 Beginner - New to yoga</option>
-                            <option value="Intermediate">🌿 Intermediate - Some experience</option>
-                            <option value="Advanced">🌳 Advanced - Regular practitioner</option>
-                        </select>
+                    <!-- Section Divider -->
+                    <div class="section-divider"></div>
+
+                    <!-- Section 2: Contact Details -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">📧</span>
+                            <span>Contact Details</span>
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                    Email Address *
+                                </label>
+                                <input type="email" name="email" id="email" required
+                                    class="custom-input yogic-body w-full"
+                                    placeholder="your@email.com">
+                                <span class="error-message text-xs text-red-600 mt-1 hidden"></span>
+                            </div>
+
+                            <div>
+                                <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                    Mobile Number *
+                                </label>
+                                <input type="tel" name="mobile" id="mobile" required pattern="[0-9]{10}" maxlength="10"
+                                    class="custom-input yogic-body w-full"
+                                    placeholder="9876543210">
+                                <span class="error-message text-xs text-red-600 mt-1 hidden"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section Divider -->
+                    <div class="section-divider"></div>
+
+                    <!-- Section 3: Account Security & Preferences -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">🔐</span>
+                            <span>Account Security & Preferences</span>
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                    Password *
+                                </label>
+                                <input type="password" name="password" id="password" required minlength="6"
+                                    class="custom-input yogic-body w-full"
+                                    placeholder="••••••••">
+                                <p class="yogic-body text-xs mt-1" style="color: #A89F91;">Minimum 6 characters</p>
+                                <span class="error-message text-xs text-red-600 mt-1 hidden"></span>
+                            </div>
+
+                            <div>
+                                <label class="yogic-body block text-sm font-bold mb-2" style="color: #6B7D63;">
+                                    Experience Level *
+                                </label>
+                                <select name="experience" id="experience" required class="custom-select yogic-body w-full">
+                                    <option value="">Select your level</option>
+                                    <option value="Beginner">🌱 Beginner - New to yoga</option>
+                                    <option value="Intermediate">🌿 Intermediate - Some experience</option>
+                                    <option value="Advanced">🌳 Advanced - Regular practitioner</option>
+                                </select>
+                                <span class="error-message text-xs text-red-600 mt-1 hidden"></span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Submit Button -->
@@ -299,28 +460,192 @@
                     </div>
                 </div>
 
-                <!-- Trust Badges -->
-                <div class="mt-8 pt-8 border-t" style="border-color: #E8DCC4;">
-                    <div class="flex flex-wrap items-center justify-center gap-4 text-sm" style="color: #A89F91;">
-                        <div class="flex items-center space-x-2">
-                            <span>✓</span>
-                            <span class="yogic-body">Free Forever</span>
-                        </div>
-                        <span class="hidden sm:inline">•</span>
-                        <div class="flex items-center space-x-2">
-                            <span>✓</span>
-                            <span class="yogic-body">No Credit Card</span>
-                        </div>
-                        <span class="hidden sm:inline">•</span>
-                        <div class="flex items-center space-x-2">
-                            <span>✓</span>
-                            <span class="yogic-body">Instant Access</span>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
+
+    <!-- Form Validation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            
+            // Validation rules
+            const validationRules = {
+                name: {
+                    validate: (value) => value.trim().length >= 2,
+                    message: 'Name must be at least 2 characters long'
+                },
+                age: {
+                    validate: (value) => value >= 10 && value <= 100,
+                    message: 'Age must be between 10 and 100'
+                },
+                email: {
+                    validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+                    message: 'Please enter a valid email address'
+                },
+                mobile: {
+                    validate: (value) => /^[0-9]{10}$/.test(value),
+                    message: 'Mobile number must be exactly 10 digits'
+                },
+                password: {
+                    validate: (value) => value.length >= 6,
+                    message: 'Password must be at least 6 characters long'
+                },
+                experience: {
+                    validate: (value) => value !== '',
+                    message: 'Please select your experience level'
+                }
+            };
+            
+            // Show error message
+            function showError(input, message) {
+                const errorSpan = input.parentElement.querySelector('.error-message');
+                if (errorSpan) {
+                    errorSpan.textContent = message;
+                    errorSpan.classList.remove('hidden');
+                }
+                input.classList.add('error');
+                input.classList.remove('success');
+            }
+            
+            // Show success state
+            function showSuccess(input) {
+                const errorSpan = input.parentElement.querySelector('.error-message');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                    errorSpan.classList.add('hidden');
+                }
+                input.classList.remove('error');
+                input.classList.add('success');
+            }
+            
+            // Clear validation state
+            function clearValidation(input) {
+                const errorSpan = input.parentElement.querySelector('.error-message');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                    errorSpan.classList.add('hidden');
+                }
+                input.classList.remove('error', 'success');
+            }
+            
+            // Validate single field
+            function validateField(input) {
+                const fieldName = input.name;
+                const value = input.value;
+                
+                if (!validationRules[fieldName]) {
+                    return true;
+                }
+                
+                const rule = validationRules[fieldName];
+                
+                if (input.hasAttribute('required') && value.trim() === '') {
+                    showError(input, 'This field is required');
+                    return false;
+                }
+                
+                if (value.trim() !== '' && !rule.validate(value)) {
+                    showError(input, rule.message);
+                    return false;
+                }
+                
+                if (value.trim() !== '') {
+                    showSuccess(input);
+                }
+                
+                return true;
+            }
+            
+            // Add real-time validation on blur
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                // Clear error on focus
+                input.addEventListener('focus', function() {
+                    if (this.classList.contains('error')) {
+                        clearValidation(this);
+                    }
+                });
+                
+                // Real-time validation for certain fields
+                if (input.name === 'email' || input.name === 'mobile') {
+                    input.addEventListener('input', function() {
+                        if (this.value.trim() !== '') {
+                            // Debounce validation
+                            clearTimeout(this.validationTimeout);
+                            this.validationTimeout = setTimeout(() => {
+                                validateField(this);
+                            }, 500);
+                        }
+                    });
+                }
+            });
+            
+            // Form submission validation
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                inputs.forEach(input => {
+                    if (!validateField(input)) {
+                        isValid = false;
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    
+                    // Scroll to first error
+                    const firstError = form.querySelector('.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                    
+                    // Show error notification
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'fixed top-4 right-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg z-50 animate-slide-in';
+                    errorDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <span class="text-2xl mr-3">⚠️</span>
+                            <div>
+                                <p class="font-bold">Validation Error</p>
+                                <p class="text-sm">Please correct the errors in the form</p>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(errorDiv);
+                    
+                    setTimeout(() => {
+                        errorDiv.remove();
+                    }, 4000);
+                }
+            });
+            
+            // Add animation for error notification
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slide-in {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                .animate-slide-in {
+                    animation: slide-in 0.3s ease-out;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </body>
 
 </html>

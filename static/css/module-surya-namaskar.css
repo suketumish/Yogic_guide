@@ -1,0 +1,189 @@
+/**
+ * Surya Namaskar Module Styles
+ * Dedicated stylesheet for the Surya Namaskar (Sun Salutation) module page
+ * Optimized for performance and browser caching
+ */
+
+/* Smooth scrolling behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Pose card transitions */
+.pose-step,
+.pose-number,
+.pose-image {
+    transition: all 0.3s ease;
+}
+
+.pose-number {
+    flex-shrink: 0;
+}
+
+/* Button interactions */
+.btn-gradient:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+/* Focus states for accessibility */
+.btn-gradient:focus,
+a:focus {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+.btn-gradient:focus-visible,
+a:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+}
+
+.pose-step:focus-within {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+.pose-number:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Remove focus outline on touch devices when not using keyboard */
+@media (hover: none) and (pointer: coarse) {
+    .btn-gradient:focus:not(:focus-visible),
+    a:focus:not(:focus-visible) {
+        outline: none;
+    }
+}
+
+/* Pose image container styling */
+.pose-image-container {
+    height: 400px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.pose-image-container img {
+    min-height: 100px;
+    background-color: #fff;
+}
+
+/* Pose image styling */
+.pose-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Mantra box gradient styling */
+.bg-orange-100 {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%) !important;
+    border-left: 4px solid #f97316 !important;
+}
+
+/* Mobile responsive styles (< 640px) */
+@media (max-width: 640px) {
+    .pose-image-container {
+        height: 300px;
+        padding: 15px;
+    }
+
+    /* Touch target optimization for mobile */
+    .btn-gradient,
+    a.btn-gradient,
+    button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 14px 28px;
+    }
+
+    /* Back button specific sizing */
+    a[href*="dashboard"].btn-gradient {
+        min-height: 48px;
+        padding: 14px 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Start session button specific sizing */
+    a[href*="module_session"].btn-gradient {
+        padding: 16px 32px;
+    }
+
+    /* Pose card mobile adjustments */
+    .pose-step {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+    }
+
+    .pose-number {
+        width: 48px;
+        height: 48px;
+        font-size: 1.125rem;
+    }
+
+    /* Grid spacing adjustments */
+    .grid.gap-4 {
+        gap: 1.5rem;
+    }
+
+    .grid.gap-6 {
+        gap: 2rem;
+    }
+
+    .grid.grid-cols-2 > div {
+        min-height: 100px;
+    }
+
+    /* Header card padding */
+    .gradient-card.rounded-2xl {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Tablet responsive styles (641px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .pose-image-container {
+        height: 350px;
+        padding: 17.5px;
+    }
+
+    .btn-gradient,
+    a.btn-gradient,
+    button {
+        min-height: 44px;
+    }
+}
+
+/* Desktop hover effects (> 1024px) */
+@media (min-width: 1025px) {
+    .pose-step:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .pose-step:hover .pose-number {
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+    }
+
+    .pose-step:hover .pose-image-container {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    }
+
+    .pose-step:hover .pose-image {
+        transform: scale(1.05);
+    }
+}

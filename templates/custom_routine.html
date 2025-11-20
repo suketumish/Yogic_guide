@@ -3,16 +3,37 @@
 {% block title %}Custom Routine Builder - Yogic Guide{% endblock %}
 
 {% block content %}
+<style>
+    .stagger-animation {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+    .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+    .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 <div class="min-h-screen p-6">
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="mb-8">
+        <div class="mb-8 welcome-animation">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-4xl font-bold text-gray-800">Custom Routine Builder</h1>
-                    <p class="text-gray-600 mt-2">Create your personalized yoga sequences</p>
+                    <h1 class="yogic-heading text-4xl font-bold text-gradient">Custom Routine Builder</h1>
+                    <p class="modern-body text-slate-600 mt-2">Create your personalized yoga sequences</p>
                 </div>
-                <a href="{{ url_for('dashboard') }}" class="btn-secondary">
+                <a href="{{ url_for('dashboard') }}" class="btn-gradient text-white px-6 py-3 rounded-lg font-semibold">
                     ← Back to Dashboard
                 </a>
             </div>
@@ -21,12 +42,12 @@
         <div class="grid lg:grid-cols-3 gap-8">
             <!-- Pose Library -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Pose Library</h2>
+                <div class="gradient-card rounded-2xl p-6">
+                    <h2 class="yogic-heading text-2xl font-bold text-slate-800 mb-4">Pose Library</h2>
                     
                     <!-- Filters -->
                     <div class="flex flex-wrap gap-4 mb-6">
-                        <select id="categoryFilter" class="form-input">
+                        <select id="categoryFilter" class="modern-body px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">All Categories</option>
                             <option value="standing">Standing</option>
                             <option value="seated">Seated</option>
@@ -37,14 +58,14 @@
                             <option value="balance">Balance</option>
                         </select>
                         
-                        <select id="difficultyFilter" class="form-input">
+                        <select id="difficultyFilter" class="modern-body px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">All Levels</option>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
                         
-                        <input type="text" id="searchPoses" placeholder="Search poses..." class="form-input">
+                        <input type="text" id="searchPoses" placeholder="Search poses..." class="modern-body px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
                     
                     <!-- Pose Grid -->
