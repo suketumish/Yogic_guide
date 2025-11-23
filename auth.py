@@ -1,5 +1,5 @@
 """
-Enhanced Authentication System for Yogic Guide
+Enhanced Authentication System for Zen_Align
 Includes OAuth, 2FA, email verification, and security features
 """
 
@@ -79,7 +79,7 @@ class AuthManager:
         
         try:
             msg = Message(
-                subject=f'Yogic Guide - {purpose.title()} Code',
+                subject=f'Zen_Align - {purpose.title()} Code',
                 recipients=[email],
                 body=f'Your verification code is: {otp}\n\nThis code will expire in 10 minutes.'
             )
@@ -100,7 +100,7 @@ class AuthManager:
         
         try:
             message = self.twilio_client.messages.create(
-                body=f'Your Yogic Guide verification code is: {otp}',
+                body=f'Your Zen_Align verification code is: {otp}',
                 from_=current_app.config['TWILIO_PHONE_NUMBER'],
                 to=phone
             )

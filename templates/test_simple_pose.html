@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simple Pose Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold text-center mb-4">Simple Pose Detection Test</h1>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Video Feed -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-2">Camera Feed</h2>
+                <div class="relative">
+                    <video id="videoFeed" autoplay playsinline muted class="w-full rounded"></video>
+                    <canvas id="poseCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+                </div>
+                
+                <!-- Camera Error -->
+                <div id="cameraError" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded">
+                    <p class="font-bold">Camera Error</p>
+                    <p id="errorMessage">Please allow camera access</p>
+                    <button id="retryCameraBtn" class="mt-2 bg-red-600 text-white px-4 py-2 rounded">
+                        Retry
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-2">Pose Information</h2>
+                
+                <div class="mb-4">
+                    <h3 id="poseName" class="text-lg font-semibold text-blue-600">Loading...</h3>
+                    <p id="poseInstruction" class="text-sm text-gray-600 mt-1"></p>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="text-4xl font-bold text-center" id="timer">10</div>
+                    <div class="text-center text-sm text-gray-500">seconds remaining</div>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Reference Image</h4>
+                    <img id="poseReferenceImg" src="/static/Module_suryanamaskar/Surya-Namaskar-Pose-1.png" 
+                         alt="Reference" class="w-full rounded border-2 border-gray-300">
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Feedback</h4>
+                    <div id="feedback" class="p-3 bg-gray-100 rounded text-center">
+                        Waiting for pose...
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2">Angle Details</h4>
+                    <pre id="angleDisplay" class="p-3 bg-gray-100 rounded text-xs overflow-auto max-h-40">
+Loading...
+                    </pre>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button id="startBtn" class="flex-1 bg-green-600 text-white px-4 py-2 rounded font-semibold">
+                        Start Session
+                    </button>
+                    <button id="pauseBtn" class="flex-1 bg-yellow-600 text-white px-4 py-2 rounded font-semibold">
+                        Pause
+                    </button>
+                    <button id="stopBtn" class="flex-1 bg-red-600 text-white px-4 py-2 rounded font-semibold">
+                        Stop
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+    <script src="/static/js/simple-pose-detector.js"></script>
+    
+    <script>
+        // Initialize detector when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Page loaded, waiting for detector...');
+            
+            // Wait for SimplePoseDetector to be available
+            let attempts = 0;
+            const maxAttempts = 20;
+            
+            const waitInterval = setInterval(async () => {
+                attempts++;
+                
+                if (typeof SimplePoseDetector !== 'undefined' && window.simplePoseDetector) {
+                    clearInterval(waitInterval);
+                    console.log('✅ SimplePoseDetector found');
+                    
+                    const success = await window.simplePoseDetector.initialize();
+                    
+                    if (success) {
+                        console.log('✅ Detector initialized successfully');
+                        document.getElementById('cameraError').classList.add('hidden');
+                    } else {
+                        console.error('❌ Failed to initialize detector');
+                        document.getElementById('cameraError').classList.remove('hidden');
+                    }
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(waitInterval);
+                    console.error('❌ SimplePoseDetector not available');
+                    document.getElementById('cameraError').classList.remove('hidden');
+                    document.getElementById('errorMessage').textContent = 'Failed to load pose detector';
+                }
+            }, 200);
+            
+            // Button handlers
+            document.getElementById('startBtn').addEventListener('click', () => {
+                if (window.simplePoseDetector) {
+                    window.simplePoseDetector.startSession();
+                }
+            });
+            
+            document.getElementById('pauseBtn').addEventListener('click', () => {
+                if (window.simplePoseDetector) {
+                    if (window.simplePoseDetector.isPaused) {
+                        window.simplePoseDetector.resume();
+                        document.getElementById('pauseBtn').textContent = 'Pause';
+                    } else {
+                        window.simplePoseDetector.pause();
+                        document.getElementById('pauseBtn').textContent = 'Resume';
+                    }
+                }
+            });
+            
+            document.getElementById('stopBtn').addEventListener('click', () => {
+                if (window.simplePoseDetector) {
+                    window.simplePoseDetector.stop();
+                }
+            });
+            
+            document.getElementById('retryCameraBtn').addEventListener('click', async () => {
+                document.getElementById('cameraError').classList.add('hidden');
+                if (window.simplePoseDetector) {
+                    await window.simplePoseDetector.initialize();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

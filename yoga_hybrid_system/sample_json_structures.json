@@ -1,0 +1,303 @@
+{
+  "sample_inference_input": {
+    "description": "Input to the hybrid inference system",
+    "example": {
+      "image_path": "data/test/warrior2/img_001.jpg",
+      "user_level": "beginner"
+    }
+  },
+  
+  "sample_inference_output": {
+    "description": "Complete output from hybrid inference",
+    "example": {
+      "image_path": "data/test/warrior2/img_001.jpg",
+      "analysis": {
+        "image_model": {
+          "prediction": "warrior2",
+          "confidence": 0.921
+        },
+        "keypoint_model": {
+          "prediction": "warrior2",
+          "confidence": 0.865
+        },
+        "hybrid": {
+          "prediction": "warrior2",
+          "confidence": 0.893,
+          "logic": "HIGH_CONFIDENCE_AGREEMENT"
+        }
+      },
+      "body_angles": {
+        "left_shoulder": 87.3,
+        "right_shoulder": 89.1,
+        "left_elbow": 175.2,
+        "right_elbow": 172.8,
+        "left_hip": 88.4,
+        "right_hip": 175.6,
+        "left_knee": 95.2,
+        "right_knee": 178.4,
+        "torso_vertical": 8.3,
+        "spine_alignment": 172.1
+      },
+      "issues_detected": [
+        "front_knee_slightly_forward",
+        "torso_slight_lean"
+      ],
+      "feedback": "Nice effort! Your front knee is tracking a bit forward (95°). Try shifting your hips back slightly so your knee stays directly over your ankle. This protects your knee joint.",
+      "user_level": "beginner"
+    }
+  },
+  
+  "sample_llm_prompt": {
+    "description": "Structured prompt sent to LLM for feedback generation",
+    "example": {
+      "system_role": "You are a certified yoga instructor providing friendly, encouraging feedback.",
+      "user_prompt": "Pose Detected: warrior2\nConfidence: 89.3%\nUser Level: beginner\n\nCurrent Body Angles:\n- Left Knee: 95° (ideal: 90°, diff: 5°)\n- Right Knee: 178° (ideal: 180°, diff: 2°)\n- Left Hip: 88° (ideal: 90°, diff: 2°)\n- Torso Vertical: 8° (ideal: 0°, diff: 8°)\n\nIssues Detected:\n- front knee slightly forward\n- torso slight lean\n\nProvide 2-3 specific, actionable corrections in friendly language. Be encouraging and supportive. Keep response under 60 words. Focus on the most important corrections first."
+    }
+  },
+  
+  "sample_llm_response": {
+    "description": "Natural language feedback from LLM",
+    "examples": [
+      {
+        "pose": "warrior2",
+        "scenario": "knee_forward",
+        "feedback": "Nice effort! Your front knee is tracking a bit forward (95°). Try shifting your hips back slightly so your knee stays directly over your ankle. This protects your knee joint."
+      },
+      {
+        "pose": "downdog",
+        "scenario": "rounded_back",
+        "feedback": "Good start! I notice your spine is slightly rounded (25° curve). Try bending your knees a bit and lifting your tailbone higher. Focus on lengthening your spine rather than straightening your legs."
+      },
+      {
+        "pose": "tree",
+        "scenario": "good_form",
+        "feedback": "Excellent Tree Pose! Your standing leg is strong and straight at 180°. Your balance is impressive. Keep your gaze steady on one point and hold for 5 more breaths!"
+      },
+      {
+        "pose": "plank",
+        "scenario": "hips_sagging",
+        "feedback": "Strong plank! Your hips are dipping about 15° below neutral. Engage your core and imagine a straight line from head to heels. Think about lifting your belly button toward your spine."
+      },
+      {
+        "pose": "triangle",
+        "scenario": "torso_rotation",
+        "feedback": "Beautiful extension! Your torso is rotated about 30° forward. Try opening your chest more toward the ceiling by stacking your shoulders. Imagine your body between two panes of glass."
+      }
+    ]
+  },
+  
+  "sample_batch_output": {
+    "description": "Output from batch processing multiple images",
+    "example": {
+      "total_images": 25,
+      "processing_time_seconds": 28.4,
+      "results": [
+        {
+          "image_path": "batch/img_001.jpg",
+          "pose": "warrior2",
+          "confidence": 0.89,
+          "issues": ["front_knee_forward"]
+        },
+        {
+          "image_path": "batch/img_002.jpg",
+          "pose": "downdog",
+          "confidence": 0.92,
+          "issues": []
+        },
+        {
+          "image_path": "batch/img_003.jpg",
+          "pose": "tree",
+          "confidence": 0.87,
+          "issues": ["torso_leaning"]
+        }
+      ],
+      "summary": {
+        "poses_detected": {
+          "warrior2": 8,
+          "downdog": 6,
+          "tree": 5,
+          "plank": 4,
+          "triangle": 2
+        },
+        "average_confidence": 0.883,
+        "images_with_issues": 12,
+        "images_perfect_form": 13
+      }
+    }
+  },
+  
+  "sample_api_request": {
+    "description": "HTTP request to Flask API",
+    "example": {
+      "method": "POST",
+      "endpoint": "/analyze",
+      "headers": {
+        "Content-Type": "multipart/form-data"
+      },
+      "body": {
+        "image": "<binary_image_data>",
+        "user_level": "beginner"
+      }
+    }
+  },
+  
+  "sample_api_response": {
+    "description": "HTTP response from Flask API",
+    "example": {
+      "status": 200,
+      "data": {
+        "pose": "warrior2",
+        "confidence": 0.893,
+        "feedback": "Nice effort! Your front knee is tracking a bit forward...",
+        "angles": {
+          "left_knee": 95.2,
+          "right_knee": 178.4
+        },
+        "issues": ["front_knee_slightly_forward"],
+        "processing_time_ms": 1037
+      }
+    }
+  },
+  
+  "ideal_angles_reference": {
+    "description": "Reference angles for common yoga poses",
+    "poses": {
+      "warrior2": {
+        "front_knee": 90,
+        "back_knee": 180,
+        "front_hip": 90,
+        "back_hip": 180,
+        "torso_vertical": 0,
+        "arms_horizontal": 180,
+        "description": "Front knee at 90° over ankle, back leg straight, torso upright, arms extended"
+      },
+      "warrior1": {
+        "front_knee": 90,
+        "back_knee": 180,
+        "front_hip": 0,
+        "back_hip": 0,
+        "torso_vertical": 0,
+        "description": "Similar to Warrior 2 but hips square forward"
+      },
+      "downdog": {
+        "left_knee": 170,
+        "right_knee": 170,
+        "left_elbow": 180,
+        "right_elbow": 180,
+        "left_hip": 90,
+        "right_hip": 90,
+        "spine_alignment": 180,
+        "description": "Inverted V-shape, straight arms and legs, neutral spine"
+      },
+      "tree": {
+        "standing_knee": 180,
+        "bent_knee": 90,
+        "standing_hip": 180,
+        "torso_vertical": 0,
+        "description": "Standing leg straight, bent leg at 90°, torso upright"
+      },
+      "plank": {
+        "left_elbow": 180,
+        "right_elbow": 180,
+        "left_hip": 180,
+        "right_hip": 180,
+        "left_knee": 180,
+        "right_knee": 180,
+        "torso_vertical": 0,
+        "description": "Straight line from head to heels, arms extended"
+      },
+      "triangle": {
+        "front_knee": 180,
+        "back_knee": 180,
+        "torso_lateral": 90,
+        "arms_vertical": 180,
+        "description": "Both legs straight, torso parallel to ground, arms in line"
+      },
+      "chair": {
+        "left_knee": 90,
+        "right_knee": 90,
+        "left_hip": 90,
+        "right_hip": 90,
+        "torso_vertical": 15,
+        "description": "Knees bent at 90°, sitting back, slight forward lean"
+      },
+      "cobra": {
+        "left_elbow": 120,
+        "right_elbow": 120,
+        "spine_extension": 30,
+        "description": "Gentle backbend, elbows slightly bent, chest lifted"
+      },
+      "bridge": {
+        "left_knee": 90,
+        "right_knee": 90,
+        "left_hip": 180,
+        "right_hip": 180,
+        "description": "Knees at 90°, hips lifted to create straight line from knees to shoulders"
+      },
+      "child": {
+        "left_knee": 45,
+        "right_knee": 45,
+        "left_hip": 45,
+        "right_hip": 45,
+        "spine_alignment": 180,
+        "description": "Resting pose, hips on heels, forehead on mat, arms extended"
+      }
+    }
+  },
+  
+  "common_issues_reference": {
+    "description": "Common posture issues and their corrections",
+    "issues": {
+      "front_knee_too_bent": {
+        "description": "Knee angle < 85°",
+        "correction": "Raise your hips slightly to achieve a 90° angle",
+        "severity": "medium"
+      },
+      "front_knee_not_bent_enough": {
+        "description": "Knee angle > 100°",
+        "correction": "Bend your front knee deeper until it's directly over your ankle",
+        "severity": "medium"
+      },
+      "knee_forward_of_ankle": {
+        "description": "Knee tracking past toes",
+        "correction": "Shift your hips back to protect your knee joint",
+        "severity": "high"
+      },
+      "back_knee_bent": {
+        "description": "Back leg not straight",
+        "correction": "Straighten your back leg and press through your heel",
+        "severity": "medium"
+      },
+      "rounded_back": {
+        "description": "Spine curvature > 20°",
+        "correction": "Lengthen through your back and lift your chest",
+        "severity": "high"
+      },
+      "torso_leaning": {
+        "description": "Torso angle from vertical > 15°",
+        "correction": "Engage your core and stack your shoulders over your hips",
+        "severity": "medium"
+      },
+      "hips_sagging": {
+        "description": "Hips below neutral alignment",
+        "correction": "Engage your core and lift your belly button toward your spine",
+        "severity": "high"
+      },
+      "elbows_bent": {
+        "description": "Arms not fully extended",
+        "correction": "Straighten your arms and press firmly through your hands",
+        "severity": "low"
+      },
+      "shoulders_raised": {
+        "description": "Shoulders elevated toward ears",
+        "correction": "Relax your shoulders down away from your ears",
+        "severity": "low"
+      },
+      "uneven_hips": {
+        "description": "Hip tilt > 10°",
+        "correction": "Level your pelvis by adjusting your stance or using a prop",
+        "severity": "medium"
+      }
+    }
+  }
+}

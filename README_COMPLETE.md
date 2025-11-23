@@ -1,4 +1,4 @@
-# 🧘 Yogic Guide - AI-Powered Yoga Assistant
+# 🧘 Zen_Align - AI - Powered Personalized Yogic Guide
 
 > A comprehensive web application for yoga practice with AI-powered pose detection, real-time corrections, voice guidance, and detailed analytics.
 

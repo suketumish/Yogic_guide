@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo   AI-Powered Yogic Guide
+echo   AI - Powered Personalized Yogic Guide
 echo ========================================
 echo.
 

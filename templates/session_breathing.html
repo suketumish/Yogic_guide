@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercises Session - Zen_Align</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .breathing-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: breathe 8s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+        
+        .breath-in {
+            animation: breathe 4s ease-in-out infinite;
+        }
+        
+        .breath-out {
+            animation: breathe-out 4s ease-in-out infinite;
+        }
+        
+        @keyframes breathe-out {
+            0%, 100% { transform: scale(1.3); opacity: 1; }
+            50% { transform: scale(1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-purple-900">🌬️ Breathing Exercises</h1>
+            <div class="flex gap-4">
+                <button onclick="pauseSession()" class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600">
+                    ⏸️ Pause
+                </button>
+                <button onclick="stopSession()" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+                    ⏹️ Stop
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Breathing Visualization -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="flex flex-col items-center justify-center min-h-[500px]">
+                        <!-- Breathing Circle -->
+                        <div class="breathing-circle mb-8"></div>
+                        
+                        <!-- Instructions -->
+                        <div id="breathInstruction" class="text-4xl font-bold text-purple-900 mb-4">
+                            Breathe In
+                        </div>
+                        
+                        <!-- Timer -->
+                        <div id="breathTimer" class="text-6xl font-bold text-gray-700 mb-4">
+                            4
+                        </div>
+                        
+                        <!-- Cycle Counter -->
+                        <div class="text-xl text-gray-600">
+                            Cycle: <span id="cycleCount">1</span> / <span id="totalCycles">10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="space-y-6">
+                <!-- Current Exercise -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4 text-purple-900">Current Exercise</h2>
+                    <div id="exerciseName" class="text-2xl font-bold text-gray-800 mb-4">
+                        Deep Breathing
+                    </div>
+                    <div id="exerciseDescription" class="text-gray-600 mb-4">
+                        Slow, deep breaths to calm the mind and body
+                    </div>
+                    
+                    <!-- Progress -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Progress</span>
+                            <span id="progressText">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="progressBar" class="bg-purple-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Benefits -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-purple-900">Benefits</h3>
+                    <ul id="benefits" class="space-y-2 text-gray-700">
+                        <li>• Reduces stress and anxiety</li>
+                        <li>• Improves lung capacity</li>
+                        <li>• Calms the nervous system</li>
+                        <li>• Increases oxygen flow</li>
+                    </ul>
+                </div>
+                
+                <!-- Tips -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-purple-900">Tips</h3>
+                    <ul id="tips" class="space-y-2 text-gray-600">
+                        <li>⚠️ Breathe through your nose</li>
+                        <li>⚠️ Keep your back straight</li>
+                        <li>⚠️ Relax your shoulders</li>
+                        <li>⚠️ Focus on the breath</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Voice-over -->
+    <script src="{{ url_for('static', filename='js/voice-over.js') }}"></script>
+    
+    <script>
+        // Breathing session state
+        let currentExercise = 0;
+        let currentCycle = 0;
+        let breathPhase = 'in'; // 'in', 'hold', 'out'
+        let breathTimer = 4;
+        let isPaused = false;
+        let sessionActive = true;
+        let timerInterval = null;
+        
+        // Breathing exercises
+        const exercises = [
+            {
+                name: 'Deep Breathing (Dirgha Pranayama)',
+                description: 'Slow, deep breaths to calm the mind',
+                cycles: 10,
+                pattern: { in: 4, hold: 2, out: 6 },
+                benefits: [
+                    'Reduces stress and anxiety',
+                    'Improves lung capacity',
+                    'Calms nervous system',
+                    'Increases oxygen flow'
+                ],
+                tips: [
+                    'Breathe through your nose',
+                    'Keep back straight',
+                    'Relax shoulders',
+                    'Focus on the breath'
+                ]
+            },
+            {
+                name: 'Alternate Nostril (Nadi Shodhana)',
+                description: 'Balance left and right energy channels',
+                cycles: 8,
+                pattern: { in: 4, hold: 4, out: 4 },
+                benefits: [
+                    'Balances left and right brain',
+                    'Reduces anxiety',
+                    'Improves focus',
+                    'Clears energy channels'
+                ],
+                tips: [
+                    'Use right thumb and ring finger',
+                    'Close one nostril at a time',
+                    'Breathe slowly and deeply',
+                    'Keep rhythm steady'
+                ]
+            },
+            {
+                name: 'Cooling Breath (Sheetali Pranayama)',
+                description: 'Cooling breath to reduce body heat',
+                cycles: 6,
+                pattern: { in: 4, hold: 2, out: 4 },
+                benefits: [
+                    'Cools the body',
+                    'Reduces anger',
+                    'Calms mind',
+                    'Lowers blood pressure'
+                ],
+                tips: [
+                    'Roll tongue into tube',
+                    'Breathe in through mouth',
+                    'Breathe out through nose',
+                    'Feel the cooling sensation'
+                ]
+            }
+        ];
+        
+        // Initialize session
+        function initSession() {
+            loadExercise();
+            startBreathingCycle();
+            
+            if (typeof voiceOver !== 'undefined') {
+                voiceOver.speak('Welcome to breathing exercises. Let us begin with deep breathing.', { rate: 0.9 });
+            }
+        }
+        
+        // Load current exercise
+        function loadExercise() {
+            if (currentExercise >= exercises.length) {
+                completeSession();
+                return;
+            }
+            
+            const exercise = exercises[currentExercise];
+            currentCycle = 0;
+            
+            document.getElementById('exerciseName').textContent = exercise.name;
+            document.getElementById('exerciseDescription').textContent = exercise.description;
+            document.getElementById('totalCycles').textContent = exercise.cycles;
+            document.getElementById('cycleCount').textContent = '1';
+            
+            // Update benefits
+            document.getElementById('benefits').innerHTML = exercise.benefits
+                .map(b => `<li>• ${b}</li>`).join('');
+            
+            // Update tips
+            document.getElementById('tips').innerHTML = exercise.tips
+                .map(t => `<li>⚠️ ${t}</li>`).join('');
+            
+            if (typeof voiceOver !== 'undefined') {
+                voiceOver.speak(`${exercise.name}. ${exercise.description}`, { rate: 0.9 });
+            }
+        }
+        
+        // Start breathing cycle
+        function startBreathingCycle() {
+            if (!sessionActive) return;
+            
+            const exercise = exercises[currentExercise];
+            breathPhase = 'in';
+            breathTimer = exercise.pattern.in;
+            
+            updateUI();
+            
+            timerInterval = setInterval(() => {
+                if (!isPaused && sessionActive) {
+                    breathTimer--;
+                    
+                    if (breathTimer <= 0) {
+                        nextPhase();
+                    }
+                    
+                    updateUI();
+                }
+            }, 1000);
+        }
+        
+        // Next breath phase
+        function nextPhase() {
+            const exercise = exercises[currentExercise];
+            
+            if (breathPhase === 'in') {
+                breathPhase = 'hold';
+                breathTimer = exercise.pattern.hold;
+                
+                if (typeof voiceOver !== 'undefined' && currentCycle === 0) {
+                    voiceOver.speak('Hold', { rate: 1.0, priority: 'high' });
+                }
+            } else if (breathPhase === 'hold') {
+                breathPhase = 'out';
+                breathTimer = exercise.pattern.out;
+                
+                if (typeof voiceOver !== 'undefined' && currentCycle === 0) {
+                    voiceOver.speak('Breathe out', { rate: 1.0 });
+                }
+            } else {
+                // Cycle complete
+                currentCycle++;
+                document.getElementById('cycleCount').textContent = currentCycle + 1;
+                
+                // Update progress
+                const progress = ((currentCycle / exercise.cycles) * 100).toFixed(0);
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressText').textContent = progress + '%';
+                
+                if (currentCycle >= exercise.cycles) {
+                    // Exercise complete
+                    clearInterval(timerInterval);
+                    currentExercise++;
+                    
+                    if (typeof voiceOver !== 'undefined') {
+                        voiceOver.speak('Exercise complete. Moving to next.', { rate: 1.0 });
+                    }
+                    
+                    setTimeout(() => {
+                        loadExercise();
+                        startBreathingCycle();
+                    }, 3000);
+                } else {
+                    breathPhase = 'in';
+                    breathTimer = exercise.pattern.in;
+                }
+            }
+        }
+        
+        // Update UI
+        function updateUI() {
+            document.getElementById('breathTimer').textContent = breathTimer;
+            
+            const circle = document.querySelector('.breathing-circle');
+            const instruction = document.getElementById('breathInstruction');
+            
+            if (breathPhase === 'in') {
+                instruction.textContent = 'Breathe In 🌬️';
+                instruction.className = 'text-4xl font-bold text-blue-600 mb-4';
+                circle.style.animation = 'breathe 4s ease-in-out infinite';
+            } else if (breathPhase === 'hold') {
+                instruction.textContent = 'Hold 🫁';
+                instruction.className = 'text-4xl font-bold text-purple-600 mb-4';
+                circle.style.animation = 'none';
+            } else {
+                instruction.textContent = 'Breathe Out 💨';
+                instruction.className = 'text-4xl font-bold text-green-600 mb-4';
+                circle.style.animation = 'breathe-out 4s ease-in-out infinite';
+            }
+        }
+        
+        // Pause session
+        function pauseSession() {
+            isPaused = !isPaused;
+            const btn = event.target;
+            
+            if (isPaused) {
+                btn.textContent = '▶️ Resume';
+                btn.className = 'bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600';
+                
+                if (typeof voiceOver !== 'undefined') {
+                    voiceOver.speak('Session paused', { rate: 1.0 });
+                }
+            } else {
+                btn.textContent = '⏸️ Pause';
+                btn.className = 'bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600';
+                
+                if (typeof voiceOver !== 'undefined') {
+                    voiceOver.speak('Session resumed', { rate: 1.0 });
+                }
+            }
+        }
+        
+        // Stop session
+        function stopSession() {
+            if (confirm('Are you sure you want to stop the session?')) {
+                sessionActive = false;
+                if (timerInterval) clearInterval(timerInterval);
+                
+                if (typeof voiceOver !== 'undefined') {
+                    voiceOver.speak('Session stopped', { rate: 1.0 });
+                }
+                
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 2000);
+            }
+        }
+        
+        // Complete session
+        function completeSession() {
+            sessionActive = false;
+            if (timerInterval) clearInterval(timerInterval);
+            
+            if (typeof voiceOver !== 'undefined') {
+                voiceOver.speak('Breathing session complete! Well done!', { rate: 0.9 });
+            }
+            
+            setTimeout(() => {
+                window.location.href = '/session-complete';
+            }, 3000);
+        }
+        
+        // Start session on load
+        window.addEventListener('load', initSession);
+    </script>
+</body>
+</html>

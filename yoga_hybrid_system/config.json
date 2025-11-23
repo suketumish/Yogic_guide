@@ -1,0 +1,19 @@
+{
+  "model_config": {
+    "image_model_path": "models/yoga_model_final.h5",
+    "keypoint_model_path": "models/keypoint_mlp_classifier.pkl",
+    "img_size": 224,
+    "confidence_threshold": 0.5
+  },
+  "inference_config": {
+    "use_llm": true,
+    "llm_provider": "gemini",
+    "user_level": "beginner",
+    "max_feedback_words": 60
+  },
+  "fusion_config": {
+    "high_confidence_threshold": 0.85,
+    "keypoint_confidence_threshold": 0.8,
+    "disagreement_threshold": 0.2
+  }
+}

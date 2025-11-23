@@ -40,7 +40,7 @@ def test_app_imports():
 
 def main():
     """Run all tests"""
-    print("🧘 Testing Yogic Guide App")
+    print("🧘 Testing Zen_Align App")
     print("=" * 30)
     
     # Test syntax

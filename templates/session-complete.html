@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Session Complete - Yogic Guide{% endblock %}
+{% block title %}Session Complete - Zen_Align{% endblock %}
 
 {% block content %}
 <div class="flex items-center justify-center min-h-screen p-6">
@@ -76,7 +76,7 @@ function shareSession() {
     const text = `I just completed a yoga session! 🧘\n${stats.poses_completed || 0} poses in ${Math.floor((stats.duration || 0) / 60)} minutes`;
     
     if (navigator.share) {
-        navigator.share({ title: 'Yogic Guide', text: text });
+        navigator.share({ title: 'Zen_Align', text: text });
     } else {
         alert('Share feature not supported on this browser');
     }

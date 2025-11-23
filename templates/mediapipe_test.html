@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaPipe Test - Zen_Align</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">MediaPipe Pose Detection Test</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">System Status</h2>
+            <div id="status" class="space-y-2">
+                <div class="flex items-center gap-2">
+                    <span id="status-dom" class="text-gray-500">⏳</span>
+                    <span>DOM Ready</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="status-mediapipe" class="text-gray-500">⏳</span>
+                    <span>MediaPipe Pose Library</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="status-camera" class="text-gray-500">⏳</span>
+                    <span>Camera Utils Library</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="status-drawing" class="text-gray-500">⏳</span>
+                    <span>Drawing Utils Library</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="status-webcam" class="text-gray-500">⏳</span>
+                    <span>Webcam Access</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Video Feed</h2>
+            <div class="relative bg-black rounded-lg overflow-hidden" style="height: 480px;">
+                <video id="videoFeed" class="w-full h-full object-cover" autoplay playsinline></video>
+                <canvas id="poseCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+            </div>
+            <div class="mt-4 flex gap-4">
+                <button id="startBtn" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+                    Start Camera
+                </button>
+                <button id="retryBtn" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600" style="display: none;">
+                    Retry
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Console Log</h2>
+            <div id="console" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm h-64 overflow-y-auto">
+                <div>Waiting for initialization...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Console logging
+        const consoleDiv = document.getElementById('console');
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'text-red-400' : type === 'success' ? 'text-green-400' : 'text-blue-400';
+            consoleDiv.innerHTML += `<div class="${color}">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        // Status updates
+        function updateStatus(id, success) {
+            const element = document.getElementById(id);
+            element.textContent = success ? '✅' : '❌';
+            element.className = success ? 'text-green-500' : 'text-red-500';
+        }
+        
+        // Check DOM
+        updateStatus('status-dom', true);
+        log('DOM loaded successfully', 'success');
+        
+        // Check MediaPipe libraries
+        setTimeout(() => {
+            log('Checking MediaPipe libraries...');
+            
+            const poseAvailable = typeof Pose !== 'undefined';
+            const cameraAvailable = typeof Camera !== 'undefined';
+            const drawingAvailable = typeof drawConnectors !== 'undefined';
+            
+            updateStatus('status-mediapipe', poseAvailable);
+            updateStatus('status-camera', cameraAvailable);
+            updateStatus('status-drawing', drawingAvailable);
+            
+            if (poseAvailable) {
+                log('✅ MediaPipe Pose library loaded', 'success');
+            } else {
+                log('❌ MediaPipe Pose library NOT loaded', 'error');
+            }
+            
+            if (cameraAvailable) {
+                log('✅ Camera utils library loaded', 'success');
+            } else {
+                log('❌ Camera utils library NOT loaded', 'error');
+            }
+            
+            if (drawingAvailable) {
+                log('✅ Drawing utils library loaded', 'success');
+            } else {
+                log('❌ Drawing utils library NOT loaded', 'error');
+            }
+            
+            if (!poseAvailable || !cameraAvailable || !drawingAvailable) {
+                log('⚠️  Some libraries failed to load. Check your internet connection.', 'error');
+                document.getElementById('retryBtn').style.display = 'inline-block';
+            }
+        }, 1000);
+        
+        // Camera test
+        let pose, camera;
+        const video = document.getElementById('videoFeed');
+        const canvas = document.getElementById('poseCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        async function startCamera() {
+            try {
+                log('Requesting camera access...');
+                
+                if (typeof Pose === 'undefined') {
+                    throw new Error('MediaPipe Pose library not loaded');
+                }
+                
+                // Initialize MediaPipe Pose
+                log('Initializing MediaPipe Pose...');
+                pose = new Pose({
+                    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+                });
+                
+                pose.setOptions({
+                    modelComplexity: 1,
+                    smoothLandmarks: true,
+                    enableSegmentation: false,
+                    smoothSegmentation: false,
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+                
+                pose.onResults(onResults);
+                log('MediaPipe Pose configured', 'success');
+                
+                // Get camera stream
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 },
+                    audio: false
+                });
+                
+                video.srcObject = stream;
+                await video.play();
+                
+                updateStatus('status-webcam', true);
+                log('✅ Camera started successfully', 'success');
+                
+                // Set canvas size
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                // Start detection
+                detectPose();
+                
+            } catch (error) {
+                updateStatus('status-webcam', false);
+                log('❌ Camera error: ' + error.message, 'error');
+                document.getElementById('retryBtn').style.display = 'inline-block';
+            }
+        }
+        
+        async function detectPose() {
+            if (video.readyState === 4) {
+                await pose.send({ image: video });
+            }
+            requestAnimationFrame(detectPose);
+        }
+        
+        function onResults(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (results.poseLandmarks) {
+                // Draw skeleton
+                drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {
+                    color: '#00FF00',
+                    lineWidth: 4
+                });
+                drawLandmarks(ctx, results.poseLandmarks, {
+                    color: '#FF0000',
+                    lineWidth: 2
+                });
+                
+                log('Pose detected - ' + results.poseLandmarks.length + ' landmarks', 'success');
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', startCamera);
+        document.getElementById('retryBtn').addEventListener('click', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>

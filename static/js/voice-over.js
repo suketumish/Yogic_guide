@@ -1,5 +1,5 @@
 /**
- * Voice-Over Functionality for Yogic Guide
+ * Voice-Over Functionality for Zen_Align
  * Provides audio instructions, pose guidance, and results
  */
 
@@ -174,7 +174,7 @@ class VoiceOverManager {
     
     // Predefined messages
     welcomeMessage() {
-        this.speak("Welcome to Yogic Guide. Let's begin your wellness journey.");
+        this.speak("Welcome to Zen_Align. Let's begin your wellness journey.");
     }
     
     sessionStart(moduleName) {

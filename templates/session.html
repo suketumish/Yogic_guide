@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ module_name }} - Yogic Guide{% endblock %}
+{% block title %}{{ module_name }} - Zen_Align{% endblock %}
 
 {% block content %}
 <style>
@@ -37,6 +37,19 @@
     }
     
     .info-section::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .info-section::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+    
+    .info-section::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 2px;
+    }
+    
+    .info-section::-webkit-scrollbar {
         width: 6px;
     }
     
@@ -59,7 +72,7 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 700;
         text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
@@ -67,20 +80,37 @@
     .session-header {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .video-container {
         position: relative;
-        height: calc(100vh - 200px);
-        border-radius: 20px;
+        height: calc(100vh - 180px);
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.25);
         border: 3px solid rgba(255, 255, 255, 0.3);
+        flex: 1;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+    
+    .camera-error-message {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        border-radius: 16px;
     }
     
     #videoFeed {
@@ -163,15 +193,16 @@
 
     
     .reference-pose-container {
-        height: 320px;
+        min-height: 200px;
+        max-height: 280px;
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        border-radius: 16px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 12px;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         border: 2px solid rgba(99, 102, 241, 0.2);
         position: relative;
         overflow: hidden;
@@ -197,11 +228,11 @@
     
     .reference-pose-image {
         max-width: 100%;
-        max-height: 100%;
+        max-height: 250px;
         width: auto;
         height: auto;
         object-fit: contain;
-        border-radius: 12px;
+        border-radius: 10px;
         z-index: 3;
         position: relative;
         animation: float 3s ease-in-out infinite;
@@ -209,6 +240,15 @@
         transition: all 0.3s ease;
         opacity: 1 !important;
         display: block !important;
+    }
+    
+    .next-pose-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border: 2px solid rgba(99, 102, 241, 0.3);
     }
     
     @keyframes float {
@@ -219,10 +259,10 @@
     .info-card {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 10px;
         border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -432,13 +472,16 @@
         }
         
         .reference-pose-container {
-            height: 280px;
-            padding: 10px;
+            min-height: 280px;
+            max-height: 400px;
+            padding: 15px;
         }
         
         .reference-pose-image {
-            max-width: calc(100% - 8px);
-            max-height: calc(100% - 8px);
+            max-width: 100%;
+            max-height: 360px;
+            width: auto;
+            height: auto;
         }
         
         .reference-pose-container .pose-emoji {
@@ -448,14 +491,17 @@
     
     @media (max-width: 768px) {
         .reference-pose-container {
-            height: 240px;
-            padding: 8px;
+            min-height: 240px;
+            max-height: 350px;
+            padding: 12px;
         }
         
         .reference-pose-image {
             border-radius: 10px;
-            max-width: calc(100% - 6px);
-            max-height: calc(100% - 6px);
+            max-width: 100%;
+            max-height: 310px;
+            width: auto;
+            height: auto;
         }
     }
     
@@ -471,25 +517,37 @@
 <div class="session-container">
     <div class="h-full flex">
         
-        <!-- Camera Feed - Left Half -->
-        <div class="w-1/2 camera-section p-6 relative">
-            <!-- Session Header -->
+        <!-- Camera Feed - Left Side (60%) -->
+        <div class="w-3/5 camera-section p-4 relative">
+            <!-- Session Header - Compact -->
             <div class="session-header text-center">
-                <h1 class="yogic-heading text-2xl font-bold text-slate-800 mb-2">{{ module_name }}</h1>
-                <div class="flex items-center justify-center gap-4 mb-3">
-                    <h2 id="poseName" class="yogic-heading text-lg font-semibold text-slate-700">Show Namaste Gesture 🙏</h2>
-                    <span class="modern-body text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-semibold">
-                        Pose <span id="poseProgress">0/0</span>
+                <h1 class="yogic-heading text-lg font-bold text-slate-800 mb-1">{{ module_name }}</h1>
+                <div class="flex items-center justify-center gap-3 mb-2">
+                    <h2 id="poseName" class="yogic-heading text-base font-semibold text-slate-700">Show Namaste Gesture 🙏</h2>
+                    <span class="modern-body text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full font-semibold">
+                        <span id="poseProgress">0/0</span>
                     </span>
                 </div>
-                <p id="timer" class="session-timer mb-2">5</p>
-                <p class="modern-body text-sm text-slate-600">Hold your palms together at chest level</p>
+                <p id="timer" class="session-timer mb-1" style="font-size: 2rem;">5</p>
+                <p class="modern-body text-xs text-slate-600">Hold your palms together at chest level</p>
             </div>
             
             <!-- Video Container -->
             <div class="video-container">
-                <video id="videoFeed" autoplay playsinline muted></video>
+                <video id="videoFeed" autoplay playsinline muted style="display: block;"></video>
                 <canvas id="poseCanvas"></canvas>
+                
+                <!-- Camera Error Message -->
+                <div id="cameraError" class="camera-error-message" style="display: none;">
+                    <div class="text-center p-6">
+                        <div class="text-4xl mb-3">📷</div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Camera Not Available</h3>
+                        <p class="text-sm text-slate-600 mb-4">Please allow camera access to continue</p>
+                        <button id="retryCameraBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold transition">
+                            Retry Camera
+                        </button>
+                    </div>
+                </div>
                 
                 <!-- Session Status -->
                 <div id="sessionStatus" class="session-status">
@@ -526,114 +584,111 @@
 
             </div>
             
-            <!-- Progress Section -->
-            <div class="progress-container">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="modern-body text-sm font-semibold text-slate-700">Session Progress</span>
-                    <span class="modern-body text-sm font-semibold text-indigo-600" id="progressPercent">0%</span>
+            <!-- Progress Section - Compact -->
+            <div class="progress-container mt-2">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="modern-body text-xs font-semibold text-slate-700">Progress</span>
+                    <span class="modern-body text-xs font-semibold text-indigo-600" id="progressPercent">0%</span>
                 </div>
                 <div class="progress-bar-container">
                     <div id="progressBar" class="progress-bar" style="width: 0%"></div>
                 </div>
-                <div class="flex justify-between items-center mt-2 text-xs text-slate-500">
+                <div class="flex justify-between items-center mt-1 text-xs text-slate-500">
                     <span id="timeElapsed">00:00</span>
                     <span id="timeRemaining">--:--</span>
                 </div>
             </div>
         </div>
             
-        <!-- Information Panel - Right Half -->
-        <div class="w-1/2 info-section p-6">
-            <!-- Reference Pose - Large and Prominent -->
+        <!-- Information Panel - Right Side (40%) -->
+        <div class="w-2/5 info-section p-4">
+            <!-- Reference Pose - Compact -->
             <div class="info-card reference">
-                <h3 class="yogic-heading text-xl font-bold text-slate-800 mb-4 flex items-center">
-                    <span class="text-2xl mr-3">🎯</span>
+                <h3 class="yogic-heading text-base font-bold text-slate-800 mb-2 flex items-center">
+                    <span class="text-lg mr-2">🎯</span>
                     Reference Pose
                 </h3>
                 <div id="referenceImage" class="reference-pose-container">
                     <div class="image-loading-placeholder" id="imageLoader" style="display: none;">
                         <div class="loading-spinner"></div>
-                        <p>Loading pose...</p>
+                        <p>Loading...</p>
                     </div>
-                    <img id="poseReferenceImg" src="/static/src/Surya-Namaskar-step-1.jpg" 
+                    <img id="poseReferenceImg" src="/static/Module_suryanamaskar/Surya-Namaskar-Pose-1.png" 
                          alt="Current Pose Reference" 
                          class="reference-pose-image"
-                         onload="hideImageLoader()"
+                         onload="adjustContainerHeight(this); hideImageLoader();"
                          onerror="showImageError()">
                     <span class="pose-emoji" style="display: none;">🧘</span>
                 </div>
-                <div class="text-center">
-                    <p class="modern-body text-sm text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2 rounded-full inline-block">
-                        Follow this pose alignment carefully
-                    </p>
-                    <p class="modern-body text-xs text-slate-500 mt-2">Match your body position to the reference</p>
-                </div>
             </div>
             
-            <!-- Benefits -->
+            <!-- Benefits - Compact -->
             <div class="info-card benefits">
-                <h3 class="yogic-heading text-lg font-bold text-slate-800 mb-3 flex items-center">
-                    <span class="text-xl mr-3">✨</span>
+                <h3 class="yogic-heading text-base font-bold text-slate-800 mb-2 flex items-center">
+                    <span class="text-lg mr-2">✨</span>
                     Benefits
                 </h3>
-                <ul id="benefits" class="modern-body text-sm text-slate-700 space-y-2">
+                <ul id="benefits" class="modern-body text-xs text-slate-700 space-y-1">
                     <li class="flex items-start">
-                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-green-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Improves flexibility and range of motion</span>
                     </li>
                     <li class="flex items-start">
-                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-green-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Strengthens core and stabilizing muscles</span>
                     </li>
                     <li class="flex items-start">
-                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-green-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Enhances balance and coordination</span>
                     </li>
                     <li class="flex items-start">
-                        <span class="text-green-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-green-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Reduces stress and promotes mental clarity</span>
                     </li>
                 </ul>
             </div>
             
-            <!-- Cautions -->
+            <!-- Cautions - Compact -->
             <div class="info-card cautions">
-                <h3 class="yogic-heading text-lg font-bold text-slate-800 mb-3 flex items-center">
-                    <span class="text-xl mr-3">⚠️</span>
+                <h3 class="yogic-heading text-base font-bold text-slate-800 mb-2 flex items-center">
+                    <span class="text-lg mr-2">⚠️</span>
                     Important Cautions
                 </h3>
-                <ul id="cautions" class="modern-body text-sm text-red-600 space-y-2">
+                <ul id="cautions" class="modern-body text-xs text-red-600 space-y-1">
                     <li class="flex items-start">
-                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-red-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Avoid if you have acute back pain or injuries</span>
                     </li>
                     <li class="flex items-start">
-                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-red-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Never force or overstretch - listen to your body</span>
                     </li>
                     <li class="flex items-start">
-                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-red-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Stop if you feel dizzy or uncomfortable</span>
                     </li>
                     <li class="flex items-start">
-                        <span class="text-red-500 mr-3 mt-1 text-base">•</span>
+                        <span class="text-red-500 mr-2 mt-0.5 text-sm">•</span>
                         <span>Breathe steadily - never hold your breath</span>
                     </li>
                 </ul>
             </div>
             
-            <!-- Next Pose Preview -->
+            <!-- Next Pose Preview - With Image -->
             <div class="info-card next-pose">
-                <h3 class="yogic-heading text-lg font-bold text-slate-800 mb-3 flex items-center">
-                    <span class="text-xl mr-3">⏭️</span>
+                <h3 class="yogic-heading text-base font-bold text-slate-800 mb-2 flex items-center">
+                    <span class="text-lg mr-2">⏭️</span>
                     Coming Next
                 </h3>
-                <div class="flex items-center space-x-4">
-                    <div class="text-3xl bg-gradient-to-br from-purple-100 to-indigo-100 p-3 rounded-full">🔄</div>
+                <div class="flex items-center space-x-3">
+                    <img id="nextPoseImage" src="/static/Module_suryanamaskar/Surya-Namaskar-Pose-2.png" 
+                         alt="Next Pose" 
+                         class="next-pose-image"
+                         onerror="this.style.display='none'">
                     <div class="flex-1">
-                        <p id="nextPose" class="modern-body text-sm text-slate-700 font-semibold mb-1">Loading next pose...</p>
-                        <p class="modern-body text-xs text-slate-500">Prepare for smooth transition</p>
-                        <div class="mt-2 text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full inline-block font-medium">
+                        <p id="nextPose" class="modern-body text-sm text-slate-700 font-semibold mb-1">Hasta Uttanasana</p>
+                        <p id="nextPoseDesc" class="modern-body text-xs text-slate-500 mb-1">Raised Arms Pose</p>
+                        <div class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full inline-block font-medium">
                             <span id="nextPoseTime">Ready in 30s</span>
                         </div>
                     </div>
@@ -679,9 +734,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
-<script src="{{ url_for('static', filename='js/voice-over.js') }}"></script>
-<script src="{{ url_for('static', filename='js/session.js') }}"></script>
-<script src="{{ url_for('static', filename='js/pose-detection.js') }}"></script>
+<script src="{{ url_for('static', filename='js/simple-pose-detector.js') }}"></script>
 
 <script>
 // Session State Management
@@ -705,7 +758,115 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSession();
     setupEventListeners();
     startSessionTimer();
+    initializeCamera();
 });
+
+// Initialize Simple Pose Detector
+async function initializeCamera() {
+    try {
+        console.log('🚀 Initializing Simple Pose Detector...');
+        
+        // Wait for SimplePoseDetector to be available
+        let attempts = 0;
+        const maxAttempts = 20;
+        
+        const waitForDetector = setInterval(async () => {
+            attempts++;
+            
+            if (typeof SimplePoseDetector !== 'undefined' && window.simplePoseDetector) {
+                clearInterval(waitForDetector);
+                console.log('✅ SimplePoseDetector found, initializing...');
+                
+                const success = await window.simplePoseDetector.initialize();
+                
+                if (success) {
+                    console.log('✅ Pose detector ready!');
+                    const errorDiv = document.getElementById('cameraError');
+                    if (errorDiv) errorDiv.style.display = 'none';
+                    
+                    // Start session after 2 seconds
+                    setTimeout(() => {
+                        window.simplePoseDetector.startSession();
+                    }, 2000);
+                } else {
+                    console.error('❌ Failed to initialize pose detector');
+                }
+            } else if (attempts >= maxAttempts) {
+                clearInterval(waitForDetector);
+                console.error('❌ SimplePoseDetector not available after waiting');
+                const errorDiv = document.getElementById('cameraError');
+                if (errorDiv) {
+                    errorDiv.style.display = 'flex';
+                    const errorText = errorDiv.querySelector('p');
+                    if (errorText) {
+                        errorText.textContent = 'Failed to load pose detection. Please refresh the page.';
+                    }
+                }
+            }
+        }, 200);
+        
+    } catch (error) {
+        console.error('❌ Error initializing camera:', error);
+        const errorDiv = document.getElementById('cameraError');
+        if (errorDiv) {
+            errorDiv.style.display = 'flex';
+            const errorText = errorDiv.querySelector('p');
+            if (errorText) {
+                errorText.textContent = 'Error: ' + error.message;
+            }
+        }
+    }
+}
+
+// Retry camera button handler
+function setupRetryButton() {
+    const retryBtn = document.getElementById('retryCameraBtn');
+    if (retryBtn) {
+        retryBtn.addEventListener('click', async function() {
+            console.log('🔄 Retry button clicked');
+            const errorDiv = document.getElementById('cameraError');
+            
+            // Show loading state
+            retryBtn.disabled = true;
+            retryBtn.textContent = 'Retrying...';
+            
+            try {
+                // Hide error temporarily
+                if (errorDiv) errorDiv.style.display = 'none';
+                
+                // Wait a moment before retrying
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Try to reinitialize camera
+                console.log('🔄 Retrying camera initialization...');
+                await initializeCamera();
+                
+                retryBtn.textContent = 'Retry Camera';
+                retryBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('❌ Failed to restart camera:', error);
+                retryBtn.textContent = 'Retry Camera';
+                retryBtn.disabled = false;
+                
+                if (errorDiv) {
+                    errorDiv.style.display = 'flex';
+                    const errorText = errorDiv.querySelector('p');
+                    if (errorText) {
+                        errorText.textContent = 'Failed to start camera: ' + error.message;
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Setup retry button when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupRetryButton);
+} else {
+    setupRetryButton();
+}
 
 function initializeSession() {
     const progressBar = document.getElementById('progressBar');
@@ -760,9 +921,9 @@ function pauseSession() {
     sessionState.isPaused = true;
     sessionState.pausedTime = Date.now();
     
-    // Voice-over: Session paused
-    if (typeof voiceOver !== 'undefined') {
-        voiceOver.onSessionPause();
+    // Pause pose detector
+    if (window.simplePoseDetector) {
+        window.simplePoseDetector.pause();
     }
     
     // Update UI with smooth transitions
@@ -787,11 +948,6 @@ function pauseSession() {
     // Show pause popup
     showPopup('pausePopup');
     
-    // Pause pose detection if available
-    if (window.pausePoseDetection) {
-        window.pausePoseDetection();
-    }
-    
     // Show feedback
     showFeedback('Session paused - Take your time! 🛑', 'neutral');
 }
@@ -802,9 +958,9 @@ function resumeSession() {
     sessionState.isPaused = false;
     sessionState.startTime += (Date.now() - sessionState.pausedTime);
     
-    // Voice-over: Session resumed
-    if (typeof voiceOver !== 'undefined') {
-        voiceOver.onSessionResume();
+    // Resume pose detector
+    if (window.simplePoseDetector) {
+        window.simplePoseDetector.resume();
     }
     
     // Update UI with smooth transitions
@@ -829,11 +985,6 @@ function resumeSession() {
     // Hide popup
     hidePopup('pausePopup');
     
-    // Resume pose detection if available
-    if (window.resumePoseDetection) {
-        window.resumePoseDetection();
-    }
-    
     // Show feedback
     showFeedback('Session resumed - Let\'s continue! 🚀', 'positive');
 }
@@ -853,6 +1004,11 @@ function hideStopPopup() {
 function stopSession() {
     sessionState.isActive = false;
     sessionState.isPaused = false;
+    
+    // Stop pose detector
+    if (window.simplePoseDetector) {
+        window.simplePoseDetector.stop();
+    }
     
     // Clear pose sequence interval
     if (sessionState.poseInterval) {
@@ -877,14 +1033,9 @@ function stopSession() {
     
     localStorage.setItem('sessionStats', JSON.stringify(sessionData));
     
-    // Stop pose detection if available
-    if (window.stopPoseDetection) {
-        window.stopPoseDetection();
-    }
-    
     // Add a small delay for better UX
     setTimeout(() => {
-        window.location.href = "{{ url_for('session_complete') }}";
+        window.location.href = "/dashboard";
     }, 1000);
 }
 
@@ -993,6 +1144,8 @@ function updatePoseInfo(poseName, description, poseNumber) {
 function updateNextPose(nextPoseName, timeUntilNext = 30) {
     const nextPoseElement = document.getElementById('nextPose');
     const nextPoseTimeElement = document.getElementById('nextPoseTime');
+    const nextPoseImageElement = document.getElementById('nextPoseImage');
+    const nextPoseDescElement = document.getElementById('nextPoseDesc');
     
     // Get next pose from Surya Namaskar sequence
     const currentPose = sessionState.currentPose;
@@ -1000,10 +1153,26 @@ function updateNextPose(nextPoseName, timeUntilNext = 30) {
     
     if (suryaNamaskarPoses[nextPoseNumber]) {
         nextPoseName = suryaNamaskarPoses[nextPoseNumber].name;
-    }
-    
-    if (nextPoseElement) {
-        nextPoseElement.textContent = nextPoseName || 'Loading next pose...';
+        const nextPoseDesc = suryaNamaskarPoses[nextPoseNumber].description || '';
+        
+        if (nextPoseElement) {
+            nextPoseElement.textContent = nextPoseName || 'Loading next pose...';
+        }
+        
+        if (nextPoseDescElement) {
+            nextPoseDescElement.textContent = nextPoseDesc || '';
+        }
+        
+        // Update next pose image
+        if (nextPoseImageElement) {
+            nextPoseImageElement.src = `/static/Module_suryanamaskar/Surya-Namaskar-Pose-${nextPoseNumber}.png`;
+            nextPoseImageElement.alt = `${nextPoseName} - Next Pose`;
+            nextPoseImageElement.style.display = 'block';
+        }
+    } else {
+        if (nextPoseElement) {
+            nextPoseElement.textContent = nextPoseName || 'Loading next pose...';
+        }
     }
     
     if (nextPoseTimeElement) {
@@ -1067,12 +1236,13 @@ function updateReferencePose(poseNumber, poseName, description) {
         poseImg.style.opacity = '1';
         if (poseEmoji) poseEmoji.style.display = 'none';
         
-        // Update the image source based on pose number
-        poseImg.src = `/static/src/Surya-Namaskar-step-${poseNumber}.jpg`;
+        // Update the image source based on pose number - using Module_suryanamaskar folder
+        poseImg.src = `/static/Module_suryanamaskar/Surya-Namaskar-Pose-${poseNumber}.png`;
         poseImg.alt = `${poseName} - Reference Pose`;
         
         // Add loading and error handling
         poseImg.onload = function() {
+            adjustContainerHeight(this);
             hideImageLoader();
             this.style.opacity = '1';
             console.log(`Reference pose image loaded: Step ${poseNumber}`);
@@ -1149,6 +1319,47 @@ function hideImageLoader() {
     const img = document.getElementById('poseReferenceImg');
     if (loader) loader.style.display = 'none';
     if (img) img.style.opacity = '1';
+}
+
+// Adjust container height based on image dimensions
+function adjustContainerHeight(img) {
+    const container = document.getElementById('referenceImage');
+    if (!container || !img) return;
+    
+    // Use setTimeout to ensure image dimensions are available
+    setTimeout(function() {
+        const imgHeight = img.naturalHeight || img.height || img.offsetHeight;
+        const imgWidth = img.naturalWidth || img.width || img.offsetWidth;
+        
+        if (imgHeight > 0 && imgWidth > 0) {
+            // Get container width (account for padding - 20px on each side)
+            const containerWidth = container.offsetWidth - 40;
+            
+            if (containerWidth > 0) {
+                // Calculate aspect ratio
+                const aspectRatio = imgWidth / imgHeight;
+                
+                // Calculate appropriate height based on image aspect ratio and container width
+                let imageDisplayHeight = containerWidth / aspectRatio;
+                
+                // Add padding (20px top + 20px bottom)
+                let calculatedHeight = imageDisplayHeight + 40;
+                
+            // Set min and max constraints based on screen size
+            const minHeight = window.innerWidth < 768 ? 160 : 200;
+            const maxHeight = window.innerWidth < 768 ? 200 : 280;
+                
+                // Clamp height between min and max
+                calculatedHeight = Math.max(minHeight, Math.min(calculatedHeight, maxHeight));
+                
+                // Apply height to container with smooth transition
+                container.style.height = calculatedHeight + 'px';
+                container.style.transition = 'height 0.3s ease';
+                
+                console.log(`Container adjusted: Image ${imgWidth}x${imgHeight}, Aspect Ratio: ${aspectRatio.toFixed(2)}, Container height: ${calculatedHeight}px`);
+            }
+        }
+    }, 100); // Small delay to ensure image is fully loaded
 }
 
 function showImageError() {

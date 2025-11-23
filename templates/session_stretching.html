@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Body Stretching Session - Zen_Align</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .blink-green {
+            animation: blink-green 0.5s ease-in-out;
+        }
+        
+        @keyframes blink-green {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: #10b981; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-green-900">🤸 Full Body Stretching</h1>
+                <p class="text-gray-600">Stretch: <span id="poseProgress">0/5</span></p>
+            </div>
+            <div class="flex gap-4">
+                <button id="pauseBtn" onclick="pauseSession()" class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600">
+                    ⏸️ Pause
+                </button>
+                <button onclick="stopSession()" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+                    ⏹️ Stop
+                </button>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="bg-white rounded-lg shadow-lg p-4 mb-6">
+            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>Session Progress</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div id="progressBar" class="bg-green-600 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Video Feed -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="relative bg-black rounded-lg overflow-hidden mb-4" style="height: 500px;">
+                        <video id="videoFeed" class="w-full h-full object-cover" autoplay playsinline muted></video>
+                        <canvas id="poseCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+                        
+                        <!-- AI Detection Box -->
+                        <div id="yogaPoseDisplay" class="absolute top-4 right-4 bg-white bg-opacity-95 rounded-lg shadow-lg p-4 min-w-[200px]" style="display: none;">
+                            <div class="text-sm text-gray-600 mb-2">AI Detected Pose</div>
+                            <div id="aiPoseName" class="text-xl font-bold text-green-900 mb-2">-</div>
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="aiConfidenceBar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div id="aiConfidenceText" class="text-sm font-semibold">0%</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Timer Overlay -->
+                        <div class="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-lg px-6 py-3">
+                            <div class="text-sm text-gray-600">Hold Time</div>
+                            <div id="timer" class="text-4xl font-bold text-green-900">20</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Feedback -->
+                    <div id="feedback" class="text-center text-lg font-semibold text-gray-600 mt-4">
+                        Get ready to stretch!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="space-y-6">
+                <!-- Current Stretch -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-lg font-semibold mb-3 text-green-900">Current Stretch</h2>
+                    <div id="poseName" class="text-2xl font-bold text-gray-800 mb-3">
+                        Neck Stretch
+                    </div>
+                    <div id="instruction" class="text-gray-600 mb-4">
+                        Gently tilt your head to the side
+                    </div>
+                </div>
+                
+                <!-- Benefits -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-green-900">Benefits</h3>
+                    <ul id="benefits" class="space-y-2 text-gray-700">
+                        <li>• Relieves neck tension</li>
+                        <li>• Improves flexibility</li>
+                        <li>• Reduces stiffness</li>
+                    </ul>
+                </div>
+                
+                <!-- Cautions -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-orange-600">Cautions</h3>
+                    <ul id="cautions" class="space-y-2 text-gray-600">
+                        <li>⚠️ Move slowly and gently</li>
+                        <li>⚠️ Don't force the stretch</li>
+                        <li>⚠️ Stop if you feel pain</li>
+                    </ul>
+                </div>
+                
+                <!-- Next Stretch -->
+                <div class="bg-green-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-600 mb-1">Next Stretch</div>
+                    <div id="nextPose" class="text-lg font-semibold text-green-900">
+                        Shoulder Rolls
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="{{ url_for('static', filename='js/voice-over.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/yoga-pose-detector.js') }}"></script>
+    
+    <script>
+        // Stretching session configuration
+        const stretchingSequence = [
+            {
+                name: 'Neck Stretch',
+                instruction: 'Gently tilt your head to the side, hold for 20 seconds',
+                holdDuration: 20,
+                benefits: ['Relieves neck tension', 'Improves flexibility', 'Reduces stiffness'],
+                cautions: ['Move slowly', 'Don\'t force it', 'Stop if pain occurs']
+            },
+            {
+                name: 'Shoulder Rolls',
+                instruction: 'Roll shoulders backward in circles',
+                holdDuration: 20,
+                benefits: ['Releases shoulder tension', 'Improves posture', 'Increases mobility'],
+                cautions: ['Keep movements smooth', 'Breathe naturally', 'Don\'t rush']
+            },
+            {
+                name: 'Side Stretch',
+                instruction: 'Reach one arm overhead and lean to the side',
+                holdDuration: 25,
+                benefits: ['Stretches obliques', 'Opens rib cage', 'Improves breathing'],
+                cautions: ['Keep hips stable', 'Don\'t lean forward', 'Breathe deeply']
+            },
+            {
+                name: 'Forward Bend',
+                instruction: 'Bend forward from hips, let arms hang',
+                holdDuration: 30,
+                benefits: ['Stretches hamstrings', 'Releases back tension', 'Calms mind'],
+                cautions: ['Bend knees if needed', 'Don\'t bounce', 'Come up slowly']
+            },
+            {
+                name: 'Quad Stretch',
+                instruction: 'Stand on one leg, pull other foot to buttocks',
+                holdDuration: 25,
+                benefits: ['Stretches quadriceps', 'Improves balance', 'Increases flexibility'],
+                cautions: ['Hold wall for support', 'Keep knees together', 'Don\'t arch back']
+            }
+        ];
+        
+        // Session state
+        let currentIndex = 0;
+        let holdTimer = 20;
+        let isPaused = false;
+        let sessionActive = false;
+        let timerInterval = null;
+        
+        // MediaPipe
+        let video, canvas, ctx, pose;
+        
+        // Initialize
+        async function initSession() {
+            video = document.getElementById('videoFeed');
+            canvas = document.getElementById('poseCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // Start camera
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 }
+                });
+                
+                video.srcObject = stream;
+                await video.play();
+                
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                
+                // Initialize MediaPipe (optional - for skeleton)
+                if (typeof Pose !== 'undefined') {
+                    pose = new Pose({
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+                    });
+                    
+                    pose.setOptions({
+                        modelComplexity: 1,
+                        smoothLandmarks: true,
+                        minDetectionConfidence: 0.5,
+                        minTrackingConfidence: 0.5
+                    });
+                    
+                    pose.onResults(onPoseResults);
+                    detectPose();
+                }
+                
+                // Start session
+                sessionActive = true;
+                loadStretch();
+                
+                if (typeof voiceOver !== 'undefined') {
+                    voiceOver.speak('Welcome to full body stretching. Let us begin!', { rate: 0.9 });
+                }
+                
+            } catch (error) {
+                console.error('Camera error:', error);
+                alert('Camera access required for this session');
+            }
+        }
+        
+        // MediaPipe detection
+        async function detectPose() {
+            if (video.readyState === 4 && pose) {
+                await pose.send({ image: video });
+            }
+            requestAnimationFrame(detectPose);
+        }
+        
+        // Pose results
+        function onPoseResults(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (results.poseLandmarks && typeof drawConnectors !== 'undefined') {
+                drawConnectors(ctx, results.poseLandmarks, POSE_CONNECTIONS, {
+                    color: '#00FF00',
+                    lineWidth: 2
+                });
+                drawLandmarks(ctx, results.poseLandmarks, {
+                    color: '#FF0000',
+                    lineWidth: 1
+                });
+            }
+        }
+        
+        // Load stretch
+        function loadStretch() {
+            if (currentIndex >= stretchingSequence.length) {
+                completeSession();
+                return;
+            }
+            
+            const stretch = stretchingSequence[currentIndex];
+            holdTimer = stretch.holdDuration;
+            
+            // Update UI
+            document.getElementById('poseName').textContent = stretch.name;
+            document.getElementById('instruction').textContent = stretch.instruction;
+            document.getElementById('timer').textContent = holdTimer;
+            document.getElementById('benefits').innerHTML = stretch.benefits.map(b => `<li>• ${b}</li>`).join('');
+            document.getElementById('cautions').innerHTML = stretch.cautions.map(c => `<li>⚠️ ${c}</li>`).join('');
+            
+            // Update progress
+            document.getElementById('poseProgress').textContent = `${currentIndex + 1}/${stretchingSequence.length}`;
+            const progress = ((currentIndex + 1) / stretchingSequence.length * 100).toFixed(0);
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = progress + '%';
+            
+            // Next stretch
+            if (currentIndex + 1 < stretchingSequence.length) {
+                document.getElementById('nextPose').textContent = stretchingSequence[currentIndex + 1].name;
+            } else {
+                document.getElementById('nextPose').textContent = 'Session Complete!';
+            }
+            
+            // Voice instruction
+            if (typeof voiceOver !== 'undefined') {
+                voiceOver.speak(`${stretch.name}. ${stretch.instruction}`, { rate: 0.9 });
+            }
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                if (!isPaused && sessionActive) {
+                    holdTimer--;
+                    document.getElementById('timer').textContent = holdTimer;
+                    
+                    if (holdTimer <= 0) {
+                        clearInterval(timerInterval);
+                        currentIndex++;
+                        
+                        if (typeof voiceOver !== 'undefined') {
+                            voiceOver.speak('Good! Moving to next stretch', { rate: 1.0 });
+                        }
+                        
+                        setTimeout(() => loadStretch(), 2000);
+                    }
+                }
+            }, 1000);
+        }
+        
+        // Pause
+        function pauseSession() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('pauseBtn');
+            
+            if (isPaused) {
+                btn.textContent = '▶️ Resume';
+                btn.className = 'bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600';
+            } else {
+                btn.textContent = '⏸️ Pause';
+                btn.className = 'bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600';
+            }
+        }
+        
+        // Stop
+        function stopSession() {
+            if (confirm('Are you sure you want to stop?')) {
+                sessionActive = false;
+                if (timerInterval) clearInterval(timerInterval);
+                window.location.href = '/dashboard';
+            }
+        }
+        
+        // Complete
+        function completeSession() {
+            sessionActive = false;
+            if (timerInterval) clearInterval(timerInterval);
+            
+            if (typeof voiceOver !== 'undefined') {
+                voiceOver.speak('Stretching session complete! Well done!', { rate: 0.9 });
+            }
+            
+            setTimeout(() => {
+                window.location.href = '/session-complete';
+            }, 3000);
+        }
+        
+        // Start on load
+        window.addEventListener('load', initSession);
+    </script>
+</body>
+</html>

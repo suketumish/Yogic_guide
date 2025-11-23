@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Pose Detection - Simple Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-center mb-2 text-purple-900">
+                🧘 Yoga Pose Detection
+            </h1>
+            <p class="text-center text-gray-600 mb-8">
+                107 Yoga Poses ko detect kar sakte hain!
+            </p>
+            
+            <!-- Status -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4">System Status</h2>
+                <div id="systemStatus" class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <span id="status-api" class="text-gray-500">⏳</span>
+                        <span>API Connection</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="status-model" class="text-gray-500">⏳</span>
+                        <span>Model Ready (<span id="poseCount">0</span> poses)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="status-camera" class="text-gray-500">⏳</span>
+                        <span>Camera Access</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Feed -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4">Live Detection</h2>
+                <div class="relative bg-black rounded-lg overflow-hidden mb-4" style="height: 480px;">
+                    <video id="videoFeed" class="w-full h-full object-cover" autoplay playsinline muted></video>
+                    <canvas id="canvas" class="hidden"></canvas>
+                    
+                    <!-- Detection Result Overlay -->
+                    <div id="detectionResult" class="absolute top-4 right-4 bg-white bg-opacity-95 rounded-lg shadow-lg p-4 min-w-[250px]" style="display: none;">
+                        <div class="text-sm text-gray-600 mb-2">AI Detected Pose</div>
+                        <div id="poseName" class="text-2xl font-bold text-purple-900 mb-3">-</div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="confidenceBar" class="h-full bg-green-500 transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <div id="confidenceText" class="text-lg font-semibold text-gray-700">0%</div>
+                        </div>
+                        <div id="feedback" class="text-sm text-gray-600 mt-2"></div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button id="startBtn" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 font-semibold">
+                        📹 Start Camera
+                    </button>
+                    <button id="detectBtn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold" disabled>
+                        🔍 Auto Detect: OFF
+                    </button>
+                    <button id="stopBtn" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 font-semibold" disabled>
+                        ⏹️ Stop
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Console Log -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">Console Log</h2>
+                <div id="console" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm h-48 overflow-y-auto">
+                    <div>System initializing...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Console logging
+        const consoleDiv = document.getElementById('console');
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'text-red-400' : type === 'success' ? 'text-green-400' : 'text-blue-400';
+            consoleDiv.innerHTML += `<div class="${color}">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        // Status updates
+        function updateStatus(id, success) {
+            const element = document.getElementById(id);
+            element.textContent = success ? '✅' : '❌';
+            element.className = success ? 'text-green-500' : 'text-red-500';
+        }
+        
+        // Check API status
+        async function checkAPI() {
+            try {
+                log('Checking API status...');
+                const response = await fetch('/api/yoga/status');
+                const data = await response.json();
+                
+                updateStatus('status-api', true);
+                updateStatus('status-model', data.ready);
+                
+                if (data.ready) {
+                    document.getElementById('poseCount').textContent = data.available_poses || 0;
+                    log(`✅ API ready! ${data.available_poses} poses available`, 'success');
+                } else {
+                    log('⚠️ API not ready: ' + data.message, 'error');
+                }
+                
+                return data.ready;
+            } catch (error) {
+                updateStatus('status-api', false);
+                log('❌ API check failed: ' + error.message, 'error');
+                return false;
+            }
+        }
+        
+        // Camera and detection
+        let video, canvas, ctx;
+        let isDetecting = false;
+        let detectionInterval;
+        
+        async function startCamera() {
+            try {
+                log('Requesting camera access...');
+                
+                video = document.getElementById('videoFeed');
+                canvas = document.getElementById('canvas');
+                ctx = canvas.getContext('2d');
+                
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 },
+                    audio: false
+                });
+                
+                video.srcObject = stream;
+                await video.play();
+                
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                
+                updateStatus('status-camera', true);
+                log('✅ Camera started successfully', 'success');
+                
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('detectBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = false;
+                
+            } catch (error) {
+                updateStatus('status-camera', false);
+                log('❌ Camera error: ' + error.message, 'error');
+                alert('Camera access denied. Please allow camera access and try again.');
+            }
+        }
+        
+        function toggleDetection() {
+            isDetecting = !isDetecting;
+            const btn = document.getElementById('detectBtn');
+            
+            if (isDetecting) {
+                btn.textContent = '🔍 Auto Detect: ON';
+                btn.className = 'bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 font-semibold';
+                document.getElementById('detectionResult').style.display = 'block';
+                log('🔍 Auto detection started', 'success');
+                startDetection();
+            } else {
+                btn.textContent = '🔍 Auto Detect: OFF';
+                btn.className = 'bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold';
+                document.getElementById('detectionResult').style.display = 'none';
+                log('⏸️ Auto detection stopped');
+                if (detectionInterval) {
+                    clearInterval(detectionInterval);
+                }
+            }
+        }
+        
+        function startDetection() {
+            detectPose(); // Immediate first detection
+            detectionInterval = setInterval(detectPose, 2000); // Every 2 seconds
+        }
+        
+        async function detectPose() {
+            if (!isDetecting || !video || video.readyState !== 4) return;
+            
+            try {
+                // Capture frame
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = canvas.toDataURL('image/jpeg', 0.8);
+                
+                // Send to API
+                const response = await fetch('/api/yoga/detect-realtime', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ frame: imageData })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResult(result);
+                    log(`Detected: ${result.display_name} (${(result.confidence * 100).toFixed(1)}%)`, 'success');
+                } else {
+                    log('Detection failed: ' + result.error, 'error');
+                }
+                
+            } catch (error) {
+                log('Detection error: ' + error.message, 'error');
+            }
+        }
+        
+        function displayResult(result) {
+            const confidence = (result.confidence * 100).toFixed(1);
+            const color = result.confidence >= 0.85 ? '#10b981' : 
+                         result.confidence >= 0.70 ? '#f59e0b' : '#ef4444';
+            
+            document.getElementById('poseName').textContent = result.display_name || result.pose_name;
+            document.getElementById('confidenceBar').style.width = confidence + '%';
+            document.getElementById('confidenceBar').style.backgroundColor = color;
+            document.getElementById('confidenceText').textContent = confidence + '%';
+            document.getElementById('confidenceText').style.color = color;
+            
+            if (result.feedback) {
+                document.getElementById('feedback').textContent = result.feedback;
+            }
+        }
+        
+        function stopCamera() {
+            if (video && video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+                log('Camera stopped');
+            }
+            
+            if (detectionInterval) {
+                clearInterval(detectionInterval);
+            }
+            
+            isDetecting = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('detectBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('detectionResult').style.display = 'none';
+        }
+        
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', startCamera);
+        document.getElementById('detectBtn').addEventListener('click', toggleDetection);
+        document.getElementById('stopBtn').addEventListener('click', stopCamera);
+        
+        // Initialize
+        checkAPI();
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 """
-Enhanced Database Models for Yogic Guide
+Enhanced Database Models for Zen_Align
 Implements the comprehensive schema from the specification
 """
 

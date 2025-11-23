@@ -1,8 +1,7 @@
 // Session management
-let sessionId = null;
+// Note: sessionId, currentModule, and posesCompleted are declared in pose-detection.js
+// to avoid duplicate declarations
 let startTime = null;
-let posesCompleted = 0;
-let currentModule = null;
 let currentPose = null;
 let sessionPaused = false;
 
@@ -13,9 +12,9 @@ async function startSession(moduleType) {
         body: JSON.stringify({ module_type: moduleType })
     });
     const data = await response.json();
-    sessionId = data.session_id;
+    window.sessionId = data.session_id;
     startTime = Date.now();
-    currentModule = moduleType;
+    window.currentModule = moduleType;
     sessionPaused = false;
     
     // Voice-over: Session start
@@ -40,9 +39,9 @@ async function completeSession(accuracyScore = 85) {
     const calories = Math.floor(duration / 60 * 3);
     
     const sessionData = {
-        session_id: sessionId,
+        session_id: window.sessionId,
         duration: duration,
-        poses_completed: posesCompleted,
+        poses_completed: window.posesCompleted || 0,
         accuracy_score: accuracyScore,
         calories_burned: calories
     };

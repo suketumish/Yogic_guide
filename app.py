@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Yogic Guide - Clean Working Version
+Zen_Align - Clean Working Version
 Basic functionality without complex features
 """
 
@@ -11,6 +11,15 @@ from bson import ObjectId
 import bcrypt
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+
+# Import yoga pose detection API
+try:
+    from yoga_api_routes import register_yoga_api_routes
+    YOGA_API_AVAILABLE = True
+    print("✅ Yoga API module loaded")
+except Exception as e:
+    print(f"⚠️  Yoga API not available: {e}")
+    YOGA_API_AVAILABLE = False
 
 # Basic configuration
 app = Flask(__name__)
@@ -825,6 +834,26 @@ def pose_details(pose_id):
 def session_complete():
     """Basic session completion page"""
     return render_template('session-complete.html')
+
+@app.route('/yoga-test')
+def yoga_test():
+    """Yoga pose detection test page (no auth required for testing)"""
+    return render_template('yoga_test.html')
+
+@app.route('/mediapipe-test')
+def mediapipe_test():
+    """MediaPipe pose detection diagnostic page"""
+    return render_template('mediapipe_test.html')
+
+@app.route('/test-simple-pose')
+def test_simple_pose():
+    """Test page for simple pose detector"""
+    return render_template('test_simple_pose.html')
+
+@app.route('/simple-yoga-test')
+def simple_yoga_test():
+    """Simple yoga pose detection test (works without MediaPipe)"""
+    return render_template('simple_yoga_test.html')
 
 # ============================================================================
 # ADMIN ROUTES
@@ -2469,8 +2498,18 @@ def internal_error(error):
 # ============================================================================
 
 if __name__ == '__main__':
-    print("🧘 Yogic Guide - Starting Clean Version")
+    print("🧘 Zen_Align - Starting Clean Version")
     print("=" * 40)
+    
+    # Register Yoga API routes
+    if YOGA_API_AVAILABLE:
+        try:
+            register_yoga_api_routes(app)
+            print("✅ Yoga Pose Detection API enabled")
+        except Exception as e:
+            print(f"⚠️  Failed to register Yoga API: {e}")
+    else:
+        print("⚠️  Yoga Pose Detection API disabled (models not trained)")
     
     # Get port from environment variable (required for Render)
     port = int(os.getenv('PORT', 5000))

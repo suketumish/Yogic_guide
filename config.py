@@ -76,6 +76,11 @@ class Config:
     GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID')
     MIXPANEL_TOKEN = os.getenv('MIXPANEL_TOKEN')
     
+    # Gemini API Configuration
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+    GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-pro')  # Options: gemini-pro, gemini-pro-vision
+    GEMINI_ENABLED = os.getenv('GEMINI_ENABLED', 'True').lower() == 'true'
+    
     # Development/Production Settings
     DEBUG = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
     TESTING = os.getenv('TESTING', 'False').lower() == 'true'

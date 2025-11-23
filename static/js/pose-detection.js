@@ -1,4 +1,8 @@
 // Full Pose Detection with MediaPipe Pose
+// Make variables globally accessible
+window.video = null;
+window.canvas = null;
+window.ctx = null;
 let video, canvas, ctx;
 let pose, camera;
 let currentPoseIndex = 0;
@@ -7,9 +11,12 @@ let holdTimer = 0;
 let isSessionActive = false;
 let isPaused = false;
 let namasteDetected = false;
+window.currentModule = '';
 let currentModule = '';
 let poseSequences = {};
+window.sessionId = null;
 let sessionId = null;
+window.posesCompleted = 0;
 let posesCompleted = 0;
 let totalAccuracy = 0;
 let sessionStartTime = Date.now();
@@ -33,13 +40,60 @@ const MIN_CONFIDENCE = 0.6;
 let poseStabilityFrames = 0;
 const STABILITY_THRESHOLD = 5; // Frames needed for stable pose
 
-document.addEventListener('DOMContentLoaded', async () => {
+// Initialize when DOM is ready
+function initializePoseDetection() {
+    console.log('🚀 Initializing pose detection...');
+    console.log('Current URL:', window.location.href);
+    console.log('Document ready state:', document.readyState);
+    
     video = document.getElementById('videoFeed');
     canvas = document.getElementById('poseCanvas');
+    window.video = video;
+    window.canvas = canvas;
+    
+    if (!video) {
+        console.error('❌ Video element not found!');
+        showCameraError('Video element not found in page');
+        return;
+    }
+    
+    if (!canvas) {
+        console.error('❌ Canvas element not found!');
+        return;
+    }
+    
     ctx = canvas.getContext('2d');
+    window.ctx = ctx;
+    console.log('✅ Video and canvas elements found');
+    console.log('Video element:', video);
+    console.log('Canvas element:', canvas);
+    
+    // Make sure video is visible
+    video.style.display = 'block';
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.style.objectFit = 'cover';
     
     currentModule = window.location.pathname.split('/').pop();
+    console.log('Current module:', currentModule);
     loadPoseSequences();
+    
+    // Initialize Yoga Pose Detector (async check)
+    if (typeof window.yogaPoseDetector !== 'undefined') {
+        console.log('🧘 Checking yoga pose detector status...');
+        window.yogaPoseDetector.checkSystemStatus().then(ready => {
+            if (ready) {
+                console.log('✅ Yoga pose detector ready - AI detection enabled');
+            } else {
+                console.warn('⚠️  Yoga pose detector not ready - using MediaPipe only');
+                console.warn('   To enable AI detection, train models first');
+            }
+        }).catch(err => {
+            console.error('❌ Yoga detector check failed:', err);
+        });
+    } else {
+        console.warn('⚠️  Yoga pose detector script not loaded');
+    }
     
     // Initialize Strict Pose Correction System
     if (typeof StrictPoseCorrectionSystem !== 'undefined' && typeof voiceOver !== 'undefined') {
@@ -47,26 +101,91 @@ document.addEventListener('DOMContentLoaded', async () => {
             { pause: pauseSessionInternal, resume: resumeSessionInternal },
             voiceOver
         );
+        console.log('✅ Pose correction system initialized');
     }
     
     // Initialize Pose Comparison Canvas
     if (typeof PoseComparisonCanvas !== 'undefined') {
         poseComparisonCanvas = new PoseComparisonCanvas('poseCanvas');
+        console.log('✅ Pose comparison canvas initialized');
     }
     
     // Initialize MediaPipe Pose
-    await initMediaPipe();
+    console.log('🎥 Starting camera initialization...');
+    initMediaPipe().catch(error => {
+        console.error('❌ Failed to initialize MediaPipe:', error);
+        showCameraError('Failed to initialize camera: ' + error.message);
+    });
     
     // Button handlers
     document.getElementById('pauseBtn')?.addEventListener('click', pauseSession);
     document.getElementById('stopBtn')?.addEventListener('click', stopSession);
-});
+    console.log('✅ Event listeners attached');
+}
 
-async function initMediaPipe() {
+// Wait for both DOM and MediaPipe to be ready
+let mediaPipeLoadAttempts = 0;
+const MAX_MEDIAPIPE_LOAD_ATTEMPTS = 50; // 5 seconds max wait
+
+function waitForMediaPipeAndInitialize() {
+    mediaPipeLoadAttempts++;
+    
+    if (typeof Pose !== 'undefined') {
+        console.log('✅ MediaPipe Pose library loaded');
+        initializePoseDetection();
+    } else if (mediaPipeLoadAttempts < MAX_MEDIAPIPE_LOAD_ATTEMPTS) {
+        console.log(`⏳ Waiting for MediaPipe Pose library... (attempt ${mediaPipeLoadAttempts}/${MAX_MEDIAPIPE_LOAD_ATTEMPTS})`);
+        setTimeout(waitForMediaPipeAndInitialize, 100);
+    } else {
+        console.error('❌ MediaPipe Pose library failed to load after 5 seconds');
+        showCameraError('Failed to load pose detection library. Please check your internet connection and refresh the page.');
+    }
+}
+
+// Call initialization when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForMediaPipeAndInitialize);
+} else {
+    // DOM already loaded, wait for MediaPipe
+    waitForMediaPipeAndInitialize();
+}
+
+// Helper function to show camera error
+function showCameraError(message) {
+    const errorDiv = document.getElementById('cameraError');
+    if (errorDiv) {
+        errorDiv.style.display = 'flex';
+        const errorText = errorDiv.querySelector('p');
+        if (errorText) {
+            errorText.textContent = message;
+        }
+    } else {
+        console.error('Camera error:', message);
+    }
+}
+
+// Make initMediaPipe globally accessible for retry functionality
+window.initMediaPipe = async function initMediaPipe() {
     try {
+        console.log('Starting MediaPipe initialization...');
+        console.log('Checking MediaPipe availability...');
+        console.log('Pose defined:', typeof Pose !== 'undefined');
+        console.log('Camera defined:', typeof Camera !== 'undefined');
+        
+        // Check if Pose is available
+        if (typeof Pose === 'undefined') {
+            throw new Error('MediaPipe Pose library not loaded. Please check your internet connection and refresh the page.');
+        }
+        
+        console.log('Creating MediaPipe Pose instance...');
+        
         // Load MediaPipe Pose
         pose = new Pose({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+            locateFile: (file) => {
+                const url = `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+                console.log('Loading MediaPipe file:', url);
+                return url;
+            }
         });
         
         pose.setOptions({
@@ -79,6 +198,7 @@ async function initMediaPipe() {
         });
         
         pose.onResults(onPoseResults);
+        console.log('MediaPipe Pose configured');
         
         // Get camera access with better constraints
         console.log('Requesting camera access...');
@@ -97,51 +217,106 @@ async function initMediaPipe() {
         };
         
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        console.log('Camera access granted');
+        console.log('✅ Camera access granted');
+        
+        if (!video) {
+            console.error('Video element not found!');
+            showCameraError('Video element not found');
+            return;
+        }
+        
+        // Hide error message if camera starts successfully
+        const errorDiv = document.getElementById('cameraError');
+        if (errorDiv) {
+            errorDiv.style.display = 'none';
+        }
         
         video.srcObject = stream;
+        console.log('Video stream connected');
         video.setAttribute('playsinline', true); // Important for iOS
         video.setAttribute('autoplay', true);
         video.setAttribute('muted', true);
         
-        await video.play(); // Explicitly start video
+        // Ensure video plays
+        try {
+            await video.play();
+            console.log('✅ Video playback started');
+        } catch (playError) {
+            console.error('Error playing video:', playError);
+            // Try again after a short delay
+            setTimeout(async () => {
+                try {
+                    await video.play();
+                    console.log('✅ Video playback started on retry');
+                } catch (retryError) {
+                    console.error('❌ Failed to play video after retry:', retryError);
+                    showCameraError('Failed to start video playback: ' + retryError.message);
+                }
+            }, 500);
+        }
         
+        // Wait for video metadata to load
         video.onloadedmetadata = () => {
-            console.log('Video metadata loaded');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            console.log('✅ Video metadata loaded:', video.videoWidth, 'x', video.videoHeight);
+            if (canvas && ctx) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                console.log('Canvas dimensions set:', canvas.width, 'x', canvas.height);
+            }
             detectPoseContinuously();
             startNamasteDetection();
         };
         
-        // Fallback if metadata doesn't load
+        video.onerror = (error) => {
+            console.error('❌ Video error:', error);
+            showCameraError('Video playback error');
+        };
+        
+        // Fallback: if metadata doesn't load within 2 seconds, use defaults
         setTimeout(() => {
-            if (video.readyState >= 2) {
-                canvas.width = video.videoWidth || 640;
-                canvas.height = video.videoHeight || 480;
+            if (video.videoWidth === 0 || video.videoHeight === 0) {
+                console.warn('⚠️ Video dimensions not available, using default 640x480');
+                if (canvas && ctx) {
+                    canvas.width = 640;
+                    canvas.height = 480;
+                }
                 detectPoseContinuously();
                 startNamasteDetection();
             }
-        }, 1000);
+        }, 2000);
         
     } catch (err) {
-        console.error('Camera initialization failed:', err);
+        console.error('❌ Camera initialization failed:', err);
+        
+        // Show error in UI
+        const errorDiv = document.getElementById('cameraError');
         let errorMessage = 'Camera access required. ';
         
         if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-            errorMessage += 'Please allow camera permissions in your browser settings.';
+            errorMessage = 'Camera permission denied. Please allow camera access in your browser settings and click Retry.';
         } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-            errorMessage += 'No camera found. Please connect a camera.';
+            errorMessage = 'No camera found. Please connect a camera device and click Retry.';
         } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-            errorMessage += 'Camera is already in use by another application.';
+            errorMessage = 'Camera is being used by another application. Please close other apps using the camera and click Retry.';
         } else if (err.name === 'OverconstrainedError') {
-            errorMessage += 'Camera does not support required settings.';
+            errorMessage = 'Camera does not support required settings. Try using a different camera.';
         } else {
-            errorMessage += err.message || 'Unknown error occurred.';
+            errorMessage = 'Camera error: ' + (err.message || 'Unknown error occurred. Please check your camera and try again.');
         }
         
-        alert(errorMessage);
+        if (errorDiv) {
+            errorDiv.style.display = 'flex';
+            const errorText = errorDiv.querySelector('p');
+            if (errorText) {
+                errorText.textContent = errorMessage;
+            }
+        } else {
+            // Fallback to console if UI element not found
+            console.error('Error message:', errorMessage);
+        }
+        
         console.error('Full error details:', err);
+        throw err; // Re-throw to allow caller to handle
     }
 }
 
@@ -152,18 +327,247 @@ async function detectPoseContinuously() {
     requestAnimationFrame(detectPoseContinuously);
 }
 
+// Yoga detection state
+let lastYogaDetectionTime = 0;
+const YOGA_DETECTION_INTERVAL = 2000; // Detect every 2 seconds
+let detectedYogaPose = null;
+let yogaConfidence = 0;
+
 function onPoseResults(results) {
+    if (!ctx || !canvas) {
+        console.error('❌ Canvas context not available');
+        return;
+    }
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     if (results.poseLandmarks) {
         drawSkeleton(results.poseLandmarks);
+        
+        // Try yoga pose detection if system is ready
+        detectYogaPoseFromFrame();
         
         if (!namasteDetected) {
             checkNamasteGesture(results.poseLandmarks);
         } else if (isSessionActive && !isPaused) {
             validateCurrentPose(results.poseLandmarks);
         }
+    } else {
+        console.log('⚠️ No pose landmarks detected in frame');
     }
+}
+
+// Detect yoga pose using trained model
+async function detectYogaPoseFromFrame() {
+    // Check if yoga detector is available and ready
+    if (typeof window.yogaPoseDetector === 'undefined') {
+        console.log('⚠️ Yoga detector not loaded');
+        return;
+    }
+    
+    // Check if system is ready (only once)
+    if (!window.yogaPoseDetector.isReady && !window.yogaDetectorChecked) {
+        window.yogaDetectorChecked = true;
+        const ready = await window.yogaPoseDetector.checkSystemStatus();
+        if (!ready) {
+            console.warn('⚠️ Yoga detection system not ready - models not trained');
+            console.warn('   Pose detection will work with MediaPipe only');
+            return;
+        }
+    }
+    
+    // If not ready, skip detection
+    if (!window.yogaPoseDetector.isReady) {
+        return;
+    }
+    
+    // Throttle detection
+    const now = Date.now();
+    if (now - lastYogaDetectionTime < YOGA_DETECTION_INTERVAL) {
+        return;
+    }
+    
+    try {
+        // Detect pose from canvas
+        const result = await window.yogaPoseDetector.detectPoseFromCanvas(canvas);
+        
+        if (result.success) {
+            detectedYogaPose = result.pose_name;
+            yogaConfidence = result.confidence;
+            lastYogaDetectionTime = now;
+            
+            // Display detected pose
+            displayYogaPoseDetection(result);
+            
+            // Check if detected pose matches current pose in session
+            if (isSessionActive && !isPaused) {
+                checkPoseMatch(result);
+            }
+            
+            // Log for debugging
+            console.log(`Yoga Pose Detected: ${result.display_name} (${(result.confidence * 100).toFixed(1)}%)`);
+        } else if (result.error !== 'Throttled') {
+            console.log('Yoga detection:', result.error);
+        }
+    } catch (error) {
+        console.error('Yoga detection error:', error);
+    }
+}
+
+// Check if detected pose matches current pose
+function checkPoseMatch(detectionResult) {
+    const sequence = poseSequences[currentModule];
+    if (!sequence || currentPoseIndex >= sequence.length) return;
+    
+    // Don't check again if already validated
+    if (poseValidatedByAI) return;
+    
+    const currentPose = sequence[currentPoseIndex];
+    
+    // Normalize pose names for comparison
+    const detectedPoseName = detectionResult.pose_name.toLowerCase()
+        .replace(/[_\s-()]/g, '')
+        .replace(/asana/g, '');
+    
+    const currentPoseName = currentPose.name.toLowerCase()
+        .replace(/[_\s-()]/g, '')
+        .replace(/asana/g, '');
+    
+    // Extract key words for matching
+    const detectedWords = detectedPoseName.split(/[_\s-]/);
+    const currentWords = currentPoseName.split(/[_\s-]/);
+    
+    // Check if pose names match (fuzzy matching)
+    let matchScore = 0;
+    for (const word of currentWords) {
+        if (word.length > 3) { // Only check meaningful words
+            for (const detWord of detectedWords) {
+                if (detWord.includes(word) || word.includes(detWord)) {
+                    matchScore++;
+                    break;
+                }
+            }
+        }
+    }
+    
+    const isMatch = matchScore > 0 || 
+                    detectedPoseName.includes(currentPoseName) || 
+                    currentPoseName.includes(detectedPoseName);
+    
+    // High confidence threshold for pose validation
+    const isHighConfidence = detectionResult.confidence >= 0.70;
+    
+    if (isMatch && isHighConfidence && !poseValidatedByAI) {
+        poseValidatedByAI = true;
+        
+        // Pose is correct!
+        console.log(`✅ Correct pose detected: ${currentPose.name} (${(detectionResult.confidence * 100).toFixed(1)}%)`);
+        
+        // Voice-over: Correct pose (Hindi + English)
+        if (typeof voiceOver !== 'undefined') {
+            voiceOver.speak('Correct! Bilkul sahi!', { priority: 'high', rate: 1.0 });
+        } else {
+            speak('Correct!');
+        }
+        
+        // Visual feedback - Green border
+        if (canvas) {
+            canvas.style.border = '5px solid #10b981';
+            canvas.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.5)';
+        }
+        
+        // Update feedback with celebration
+        const feedbackEl = document.getElementById('feedback');
+        if (feedbackEl) {
+            feedbackEl.textContent = `✅ बहुत बढ़िया! ${currentPose.name} perfect hai!`;
+            feedbackEl.className = 'mt-4 text-center text-lg font-semibold text-green-600 animate-pulse';
+        }
+        
+        // Clear existing timer
+        if (currentPoseTimer) {
+            clearInterval(currentPoseTimer);
+            currentPoseTimer = null;
+        }
+        
+        // Auto-advance to next pose after 3 seconds
+        setTimeout(() => {
+            if (canvas) {
+                canvas.style.border = 'none';
+                canvas.style.boxShadow = 'none';
+            }
+            
+            if (isSessionActive && !isPaused) {
+                posesCompleted++;
+                currentPoseIndex++;
+                
+                if (typeof voiceOver !== 'undefined') {
+                    voiceOver.speak('Moving to next pose. Agle pose par ja rahe hain.', { rate: 1.0 });
+                } else {
+                    speak('Moving to next pose');
+                }
+                
+                setTimeout(() => loadCurrentPose(), 1500);
+            }
+        }, 3000);
+    } else if (!isMatch && isHighConfidence) {
+        // Wrong pose detected
+        console.log(`⚠️ Wrong pose: Expected ${currentPose.name}, got ${detectionResult.display_name}`);
+        
+        const feedbackEl = document.getElementById('feedback');
+        if (feedbackEl) {
+            feedbackEl.textContent = `⚠️ ${currentPose.name} karein, abhi ${detectionResult.display_name} ho raha hai`;
+            feedbackEl.className = 'mt-4 text-center text-lg font-semibold text-orange-600';
+        }
+    }
+}
+
+// Display yoga pose detection result
+function displayYogaPoseDetection(result) {
+    // Find or create display element
+    let displayDiv = document.getElementById('yogaPoseDisplay');
+    
+    if (!displayDiv) {
+        // Create display element if it doesn't exist
+        displayDiv = document.createElement('div');
+        displayDiv.id = 'yogaPoseDisplay';
+        displayDiv.style.cssText = `
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 200px;
+        `;
+        
+        // Add to video container
+        const videoContainer = document.querySelector('.video-container');
+        if (videoContainer) {
+            videoContainer.appendChild(displayDiv);
+        }
+    }
+    
+    // Update content
+    const confidence = (result.confidence * 100).toFixed(1);
+    const confidenceColor = result.confidence >= 0.85 ? '#10b981' : 
+                           result.confidence >= 0.70 ? '#f59e0b' : '#ef4444';
+    
+    displayDiv.innerHTML = `
+        <div style="font-size: 12px; color: #6b7280; margin-bottom: 5px;">AI Detected Pose</div>
+        <div style="font-size: 18px; font-weight: bold; color: #1f2937; margin-bottom: 8px;">
+            ${result.display_name || result.pose_name}
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                <div style="height: 100%; background: ${confidenceColor}; width: ${confidence}%; transition: width 0.3s;"></div>
+            </div>
+            <div style="font-size: 14px; font-weight: 600; color: ${confidenceColor};">
+                ${confidence}%
+            </div>
+        </div>
+    `;
 }
 
 function drawSkeleton(landmarks) {
@@ -303,6 +707,10 @@ function startPoseSequence() {
     loadCurrentPose();
 }
 
+// Track if pose was validated by AI
+let poseValidatedByAI = false;
+let currentPoseTimer = null;
+
 function loadCurrentPose() {
     const sequence = poseSequences[currentModule];
     if (!sequence || currentPoseIndex >= sequence.length) {
@@ -310,8 +718,15 @@ function loadCurrentPose() {
         return;
     }
     
-    // Reset stability counter for new pose
+    // Reset for new pose
     poseStabilityFrames = 0;
+    poseValidatedByAI = false;
+    
+    // Clear any existing timer
+    if (currentPoseTimer) {
+        clearInterval(currentPoseTimer);
+        currentPoseTimer = null;
+    }
     
     const currentPose = sequence[currentPoseIndex];
     holdTimer = currentPose.holdDuration;
@@ -334,18 +749,33 @@ function loadCurrentPose() {
         document.getElementById('nextPose').textContent = 'Session Complete!';
     }
     
-    speak(`${currentPose.name}. ${currentPose.instruction}`);
+    // Voice instruction
+    if (typeof voiceOver !== 'undefined') {
+        voiceOver.speak(`${currentPose.name}. ${currentPose.instruction}`, { rate: 0.9 });
+    } else {
+        speak(`${currentPose.name}. ${currentPose.instruction}`);
+    }
     
-    const timerInterval = setInterval(() => {
+    // Start timer
+    currentPoseTimer = setInterval(() => {
         if (!isPaused && isSessionActive) {
             holdTimer--;
             document.getElementById('timer').textContent = holdTimer;
             
             if (holdTimer <= 0) {
-                clearInterval(timerInterval);
+                clearInterval(currentPoseTimer);
+                currentPoseTimer = null;
+                
+                // Move to next pose
                 posesCompleted++;
                 currentPoseIndex++;
-                speak('Well done! Moving to next pose');
+                
+                if (typeof voiceOver !== 'undefined') {
+                    voiceOver.speak('Time up! Moving to next pose', { rate: 1.1 });
+                } else {
+                    speak('Well done! Moving to next pose');
+                }
+                
                 setTimeout(() => loadCurrentPose(), 2000);
             }
         }
