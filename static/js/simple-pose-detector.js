@@ -15,12 +15,21 @@ class SimplePoseDetector {
         this.isActive = false;
         this.isPaused = false;
         
-        // Pose sequences for Surya Namaskar
+        // Pose sequences for Surya Namaskar with instructor guidance
         this.poses = [
             {
                 name: 'Pranamasana (Prayer Pose)',
                 nameHindi: 'प्रणामासन',
+                shortName: 'Prayer Pose | प्रणामासन',
                 instruction: 'Stand with palms together at chest | छाती पर हाथ जोड़कर खड़े हों',
+                detailedGuidance: {
+                    hindi: 'प्रणामासन। पहला आसन। सीधे खड़े हो जाएं। दोनों हाथ छाती के सामने जोड़ें। आंखें बंद करें। गहरी सांस लें।',
+                    english: 'Pranamasana. First pose. Stand straight. Join both palms at chest. Close your eyes. Take a deep breath.'
+                },
+                breathing: {
+                    hindi: 'सांस अंदर लें। सांस बाहर छोड़ें।',
+                    english: 'Breathe in. Breathe out.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftElbow: 90,
@@ -35,7 +44,16 @@ class SimplePoseDetector {
             {
                 name: 'Hasta Uttanasana (Raised Arms)',
                 nameHindi: 'हस्त उत्तानासन',
+                shortName: 'Raised Arms | हस्त उत्तानासन',
                 instruction: 'Raise arms overhead, arch back | हाथ ऊपर उठाएं, पीछे झुकें',
+                detailedGuidance: {
+                    hindi: 'हस्त उत्तानासन। दूसरा आसन। सांस अंदर लेते हुए दोनों हाथ ऊपर उठाएं। हथेलियां आपस में जोड़ें। पीछे की ओर झुकें। ऊपर देखें।',
+                    english: 'Hasta Uttanasana. Second pose. Inhale and raise both arms up. Join palms together. Arch back gently. Look up.'
+                },
+                breathing: {
+                    hindi: 'सांस अंदर लें।',
+                    english: 'Breathe in.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftShoulder: 180,
@@ -50,7 +68,16 @@ class SimplePoseDetector {
             {
                 name: 'Hasta Padasana (Forward Bend)',
                 nameHindi: 'हस्त पादासन',
+                shortName: 'Forward Bend | हस्त पादासन',
                 instruction: 'Bend forward, touch the ground | आगे झुकें, जमीन छुएं',
+                detailedGuidance: {
+                    hindi: 'हस्त पादासन। तीसरा आसन। सांस बाहर छोड़ते हुए आगे की ओर झुकें। हाथों से पैरों के पास जमीन छुएं। घुटने सीधे रखें।',
+                    english: 'Hasta Padasana. Third pose. Exhale and bend forward. Touch the ground near your feet. Keep knees straight.'
+                },
+                breathing: {
+                    hindi: 'सांस बाहर छोड़ें।',
+                    english: 'Breathe out.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftKnee: 170,
@@ -63,7 +90,16 @@ class SimplePoseDetector {
             {
                 name: 'Ashwa Sanchalanasana (Lunge)',
                 nameHindi: 'अश्व संचालनासन',
+                shortName: 'Lunge Pose | अश्व संचालनासन',
                 instruction: 'Right leg back, left knee bent | दायां पैर पीछे, बायां घुटना मुड़ा',
+                detailedGuidance: {
+                    hindi: 'अश्व संचालनासन। चौथा आसन। सांस अंदर लेते हुए दायां पैर पीछे ले जाएं। बायां घुटना मोड़ें। ऊपर देखें। छाती खोलें।',
+                    english: 'Ashwa Sanchalanasana. Fourth pose. Inhale and take right leg back. Bend left knee. Look up. Open your chest.'
+                },
+                breathing: {
+                    hindi: 'सांस अंदर लें।',
+                    english: 'Breathe in.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftKnee: 90,
@@ -76,7 +112,16 @@ class SimplePoseDetector {
             {
                 name: 'Dandasana (Plank)',
                 nameHindi: 'दंडासन',
+                shortName: 'Plank Pose | दंडासन',
                 instruction: 'Straight body like a plank | शरीर सीधा तख्ते की तरह',
+                detailedGuidance: {
+                    hindi: 'दंडासन। पांचवां आसन। सांस रोकें। बायां पैर भी पीछे ले जाएं। शरीर को सीधा रखें। तख्ते की तरह।',
+                    english: 'Dandasana. Fifth pose. Hold breath. Take left leg back too. Keep body straight. Like a plank.'
+                },
+                breathing: {
+                    hindi: 'सांस रोकें।',
+                    english: 'Hold breath.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftElbow: 180,
@@ -91,7 +136,16 @@ class SimplePoseDetector {
             {
                 name: 'Ashtanga Namaskara (Eight Points)',
                 nameHindi: 'अष्टांग नमस्कार',
+                shortName: 'Eight Points | अष्टांग नमस्कार',
                 instruction: 'Knees, chest, chin on ground | घुटने, छाती, ठोड़ी जमीन पर',
+                detailedGuidance: {
+                    hindi: 'अष्टांग नमस्कार। छठा आसन। सांस बाहर छोड़ें। घुटने नीचे लाएं। छाती नीचे लाएं। ठोड़ी जमीन पर लगाएं। आठ अंग जमीन पर।',
+                    english: 'Ashtanga Namaskara. Sixth pose. Exhale. Lower knees down. Lower chest down. Touch chin to ground. Eight points touching.'
+                },
+                breathing: {
+                    hindi: 'सांस बाहर छोड़ें।',
+                    english: 'Breathe out.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftElbow: 90,
@@ -104,7 +158,16 @@ class SimplePoseDetector {
             {
                 name: 'Bhujangasana (Cobra)',
                 nameHindi: 'भुजंगासन',
+                shortName: 'Cobra Pose | भुजंगासन',
                 instruction: 'Lift chest, look up | छाती उठाएं, ऊपर देखें',
+                detailedGuidance: {
+                    hindi: 'भुजंगासन। सातवां आसन। सांस अंदर लेते हुए आगे की ओर खिसकें। छाती ऊपर उठाएं। कोहनी मोड़ें। ऊपर देखें। सांप की तरह।',
+                    english: 'Bhujangasana. Seventh pose. Inhale and slide forward. Lift chest up. Bend elbows. Look up. Like a cobra.'
+                },
+                breathing: {
+                    hindi: 'सांस अंदर लें।',
+                    english: 'Breathe in.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftElbow: 140,
@@ -117,7 +180,16 @@ class SimplePoseDetector {
             {
                 name: 'Adho Mukha Svanasana (Downward Dog)',
                 nameHindi: 'अधो मुख श्वानासन',
+                shortName: 'Downward Dog | अधो मुख श्वानासन',
                 instruction: 'Hips up, inverted V shape | कूल्हे ऊपर, उल्टा V आकार',
+                detailedGuidance: {
+                    hindi: 'अधो मुख श्वानासन। आठवां आसन। सांस बाहर छोड़ते हुए कूल्हे ऊपर उठाएं। उल्टा V बनाएं। एड़ियां जमीन की ओर। सिर नीचे।',
+                    english: 'Adho Mukha Svanasana. Eighth pose. Exhale and lift hips up. Form inverted V. Heels towards ground. Head down.'
+                },
+                breathing: {
+                    hindi: 'सांस बाहर छोड़ें।',
+                    english: 'Breathe out.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftKnee: 175,
@@ -132,7 +204,16 @@ class SimplePoseDetector {
             {
                 name: 'Ashwa Sanchalanasana (Lunge)',
                 nameHindi: 'अश्व संचालनासन',
+                shortName: 'Lunge Pose | अश्व संचालनासन',
                 instruction: 'Right foot forward | दायां पैर आगे',
+                detailedGuidance: {
+                    hindi: 'अश्व संचालनासन। नौवां आसन। सांस अंदर लेते हुए दायां पैर आगे लाएं। बायां पैर पीछे। ऊपर देखें।',
+                    english: 'Ashwa Sanchalanasana. Ninth pose. Inhale and bring right foot forward. Left leg back. Look up.'
+                },
+                breathing: {
+                    hindi: 'सांस अंदर लें।',
+                    english: 'Breathe in.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftKnee: 90,
@@ -145,7 +226,16 @@ class SimplePoseDetector {
             {
                 name: 'Hasta Padasana (Forward Bend)',
                 nameHindi: 'हस्त पादासन',
+                shortName: 'Forward Bend | हस्त पादासन',
                 instruction: 'Bend forward again | फिर से आगे झुकें',
+                detailedGuidance: {
+                    hindi: 'हस्त पादासन। दसवां आसन। सांस बाहर छोड़ते हुए बायां पैर भी आगे लाएं। आगे झुकें। हाथ जमीन पर।',
+                    english: 'Hasta Padasana. Tenth pose. Exhale and bring left foot forward too. Bend forward. Hands on ground.'
+                },
+                breathing: {
+                    hindi: 'सांस बाहर छोड़ें।',
+                    english: 'Breathe out.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftKnee: 170,
@@ -158,7 +248,16 @@ class SimplePoseDetector {
             {
                 name: 'Hasta Uttanasana (Raised Arms)',
                 nameHindi: 'हस्त उत्तानासन',
+                shortName: 'Raised Arms | हस्त उत्तानासन',
                 instruction: 'Rise up, arms overhead | उठें, हाथ ऊपर',
+                detailedGuidance: {
+                    hindi: 'हस्त उत्तानासन। ग्यारहवां आसन। सांस अंदर लेते हुए ऊपर उठें। हाथ ऊपर। पीछे झुकें। ऊपर देखें।',
+                    english: 'Hasta Uttanasana. Eleventh pose. Inhale and rise up. Arms overhead. Arch back. Look up.'
+                },
+                breathing: {
+                    hindi: 'सांस अंदर लें।',
+                    english: 'Breathe in.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftShoulder: 180,
@@ -171,7 +270,16 @@ class SimplePoseDetector {
             {
                 name: 'Tadasana (Mountain Pose)',
                 nameHindi: 'ताड़ासन',
+                shortName: 'Mountain Pose | ताड़ासन',
                 instruction: 'Return to standing | खड़े होकर वापस आएं',
+                detailedGuidance: {
+                    hindi: 'ताड़ासन। बारहवां आसन। सांस बाहर छोड़ते हुए सीधे खड़े हो जाएं। हाथ नीचे लाएं। शांत हो जाएं। एक चक्र पूरा हुआ।',
+                    english: 'Tadasana. Twelfth pose. Exhale and stand straight. Lower arms down. Relax. One cycle complete.'
+                },
+                breathing: {
+                    hindi: 'सांस बाहर छोड़ें।',
+                    english: 'Breathe out.'
+                },
                 holdTime: 10,
                 referenceAngles: {
                     leftElbow: 180,
@@ -188,10 +296,49 @@ class SimplePoseDetector {
         this.correctFrames = 0;
         this.requiredCorrectFrames = 3; // Need 3 consecutive correct frames
         this.lastVoiceFeedback = null; // For throttling voice feedback
+        this.voicesLoaded = false; // Track if voices are loaded
+    }
+    
+    loadVoices() {
+        // Load available voices for Indian English
+        if ('speechSynthesis' in window) {
+            const loadVoicesHandler = () => {
+                const voices = window.speechSynthesis.getVoices();
+                console.log('📢 Available voices:', voices.length);
+                
+                // Log Indian English voices
+                const indianVoices = voices.filter(voice => 
+                    voice.lang === 'en-IN' || 
+                    voice.name.includes('Indian') ||
+                    voice.name.includes('India')
+                );
+                
+                if (indianVoices.length > 0) {
+                    console.log('✅ Indian English voices found:');
+                    indianVoices.forEach(voice => {
+                        console.log(`  - ${voice.name} (${voice.lang})`);
+                    });
+                } else {
+                    console.log('⚠️ No Indian English voice found, will use slower en-US');
+                }
+                
+                this.voicesLoaded = true;
+            };
+            
+            // Load voices
+            if (window.speechSynthesis.getVoices().length > 0) {
+                loadVoicesHandler();
+            } else {
+                window.speechSynthesis.onvoiceschanged = loadVoicesHandler;
+            }
+        }
     }
     
     async initialize() {
         console.log('🚀 Initializing Simple Pose Detector...');
+        
+        // Load voices for Indian English accent
+        this.loadVoices();
         
         this.video = document.getElementById('videoFeed');
         this.canvas = document.getElementById('poseCanvas');
@@ -615,7 +762,7 @@ class SimplePoseDetector {
     }
     
     speakBilingual(hindiText, englishText) {
-        // Speak Hindi first, then English
+        // Speak Hindi first, then English with Indian accent
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             
@@ -625,11 +772,29 @@ class SimplePoseDetector {
             hindiUtterance.pitch = 1.0;
             hindiUtterance.lang = 'hi-IN';
             
-            // English part
+            // English part with Indian accent
             const englishUtterance = new SpeechSynthesisUtterance(englishText);
-            englishUtterance.rate = 0.9;
-            englishUtterance.pitch = 1.0;
-            englishUtterance.lang = 'en-US';
+            englishUtterance.rate = 0.75;  // Slower for Indian accent
+            englishUtterance.pitch = 1.1;   // Slightly higher pitch
+            englishUtterance.lang = 'en-IN'; // Indian English
+            
+            // Try to select Indian English voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const indianVoice = voices.find(voice => 
+                voice.lang === 'en-IN' || 
+                voice.name.includes('Indian') ||
+                voice.name.includes('India')
+            );
+            
+            if (indianVoice) {
+                englishUtterance.voice = indianVoice;
+                console.log('Using Indian English voice:', indianVoice.name);
+            } else {
+                // Fallback: Use en-US but with slower rate for Indian accent feel
+                englishUtterance.lang = 'en-US';
+                englishUtterance.rate = 0.7; // Even slower
+                console.log('Indian voice not found, using slower en-US');
+            }
             
             // Speak Hindi first
             window.speechSynthesis.speak(hindiUtterance);
@@ -638,7 +803,7 @@ class SimplePoseDetector {
             hindiUtterance.onend = () => {
                 setTimeout(() => {
                     window.speechSynthesis.speak(englishUtterance);
-                }, 300);
+                }, 400); // Slightly longer pause
             };
         }
     }
@@ -657,7 +822,18 @@ class SimplePoseDetector {
     startSession() {
         this.isActive = true;
         this.currentPoseIndex = 0;
-        this.loadPose();
+        
+        // Welcome message like a yoga instructor
+        this.speakBilingual(
+            'नमस्ते। सूर्य नमस्कार शुरू करते हैं। बारह आसन हैं। तैयार हो जाएं।',
+            'Namaste. Let us begin Surya Namaskar. Twelve poses. Get ready.'
+        );
+        
+        // Load first pose after welcome
+        setTimeout(() => {
+            this.loadPose();
+        }, 4000);
+        
         console.log('✅ Session started');
     }
     
@@ -668,10 +844,10 @@ class SimplePoseDetector {
             return;
         }
         
-        // Update UI
+        // Update UI - Show pose name prominently
         const poseNameEl = document.getElementById('poseName');
         if (poseNameEl) {
-            poseNameEl.textContent = `${pose.name} | ${pose.nameHindi}`;
+            poseNameEl.textContent = pose.shortName || `${pose.name} | ${pose.nameHindi}`;
         }
         
         const timerEl = document.getElementById('timer');
@@ -685,13 +861,8 @@ class SimplePoseDetector {
             refImg.src = `/static/Module_suryanamaskar/Surya-Namaskar-Pose-${this.currentPoseIndex + 1}.png`;
         }
         
-        // Speak instruction in both languages
-        const instructions = pose.instruction.split('|');
-        if (instructions.length === 2) {
-            this.speakBilingual(instructions[1].trim(), instructions[0].trim());
-        } else {
-            this.speak(pose.instruction);
-        }
+        // Instructor-style guidance with detailed instructions
+        this.speakInstructorGuidance(pose);
         
         // Reset
         this.correctFrames = 0;
@@ -707,10 +878,40 @@ class SimplePoseDetector {
             this.holdTimer--;
             if (timerEl) timerEl.textContent = this.holdTimer;
             
+            // Give breathing reminder at halfway point
+            if (this.holdTimer === Math.floor(pose.holdTime / 2) && pose.breathing) {
+                this.speakBilingual(pose.breathing.hindi, pose.breathing.english);
+            }
+            
             if (this.holdTimer <= 0) {
                 this.nextPose();
             }
         }, 1000);
+    }
+    
+    speakInstructorGuidance(pose) {
+        // Speak like a yoga instructor with detailed guidance
+        if (pose.detailedGuidance) {
+            // First announce the pose name clearly
+            const poseName = `${pose.nameHindi}. ${pose.name}.`;
+            this.speak(poseName, 'hi-IN');
+            
+            // Wait a moment, then give detailed instructions
+            setTimeout(() => {
+                this.speakBilingual(
+                    pose.detailedGuidance.hindi,
+                    pose.detailedGuidance.english
+                );
+            }, 2000);
+        } else {
+            // Fallback to simple instruction
+            const instructions = pose.instruction.split('|');
+            if (instructions.length === 2) {
+                this.speakBilingual(instructions[1].trim(), instructions[0].trim());
+            } else {
+                this.speak(pose.instruction);
+            }
+        }
     }
     
     nextPose() {
@@ -721,8 +922,15 @@ class SimplePoseDetector {
         if (this.currentPoseIndex >= this.poses.length) {
             this.completeSession();
         } else {
-            this.speakBilingual('अगले pose पर जा रहे हैं', 'Moving to next pose');
-            setTimeout(() => this.loadPose(), 2000);
+            // Announce transition like an instructor
+            const nextPose = this.poses[this.currentPoseIndex];
+            const transitionMessage = {
+                hindi: `बहुत अच्छा। अब ${nextPose.nameHindi}।`,
+                english: `Very good. Now ${nextPose.name}.`
+            };
+            
+            this.speakBilingual(transitionMessage.hindi, transitionMessage.english);
+            setTimeout(() => this.loadPose(), 2500);
         }
     }
     
@@ -730,11 +938,15 @@ class SimplePoseDetector {
         this.isActive = false;
         if (this.holdInterval) clearInterval(this.holdInterval);
         
-        this.speakBilingual('सत्र पूरा हुआ! बहुत बढ़िया!', 'Session complete! Excellent work!');
+        // Completion message like a yoga instructor
+        this.speakBilingual(
+            'बहुत बढ़िया! सूर्य नमस्कार पूरा हुआ। आप बहुत अच्छा कर रहे हैं। नमस्ते।',
+            'Excellent! Surya Namaskar complete. You are doing very well. Namaste.'
+        );
         
         setTimeout(() => {
             window.location.href = '/dashboard';
-        }, 3000);
+        }, 5000);
     }
     
     pause() {
